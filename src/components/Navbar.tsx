@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
+import LOGO_IMG from '../assets/LOGO_MAIN_W.png';
 const navLinks = [
   { name: 'Câu Chuyện', section: 'story' },
   { name: 'Ca Kịch', section: 'plays' },
@@ -11,8 +11,8 @@ const navLinks = [
 ];
 
 const Logo = ({ onClick }: { onClick?: () => void }) => (
-  <Link to="/" onClick={onClick} className="serif text-2xl font-semibold tracking-[0.05em] text-white">
-    CKCGSG
+  <Link to="/" onClick={onClick}>
+    <img src={LOGO_IMG} alt="CKCGSG" className="h-12 w-auto object-contain" />
   </Link>
 );
 

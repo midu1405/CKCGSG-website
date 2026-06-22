@@ -1,11 +1,9 @@
 import { Youtube, Mail } from 'lucide-react';
-
+import LOGO_IMG from '../assets/LOGO_MAIN_W.png';
 const Footer = () => (
   <footer className="py-12 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-      <div className="serif text-xl font-semibold tracking-[0.05em] text-white">
-        CKCGSG
-      </div>
+      <img src={LOGO_IMG} alt="CKCGSG" className="h-14 w-auto object-contain" />
       <div className="text-white/30 text-xs uppercase tracking-widest font-medium text-center">
         © {new Date().getFullYear()} Nhóm Ca Kịch Công Giáo Sài Gòn. All rights reserved.
       </div>
