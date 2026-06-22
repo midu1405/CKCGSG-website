@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LOGO_IMG from '../assets/LOGO_MAIN_W.png';
+
 const navLinks = [
   { name: 'Câu Chuyện', section: 'story' },
+  { name: 'Tuyển Diễn Viên', section: 'casting' },
   { name: 'Ca Kịch', section: 'plays' },
   { name: 'Thiện Nguyện', section: 'charity' },
   { name: 'Liên Hệ', section: 'contact' },

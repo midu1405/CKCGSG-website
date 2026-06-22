@@ -7,6 +7,7 @@ import { PLAYS, CHARITY, OTHER_PROGRAMS } from '../constants';
 import { Project } from '../types';
 import Modal from '../components/Modal';
 import ProjectCard from '../components/ProjectCard';
+import CastingSection from '../components/CastingSection';
 import { Link } from 'react-router-dom';
 
 const STATS = [
@@ -51,7 +52,7 @@ export default function HomePage() {
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <span className="text-gold uppercase tracking-[0.5em] text-sm font-bold mb-6 block">Hành trình 10 năm +</span>
-            <h1 className="text-4xl sm:text-5xl md:text-8xl font-bold serif mb-8 leading-[1.04]">
+            <h1 className="text-4xl sm:text-5xl md:text-8xl font-bold serif mb-8 leading-[1.04] text-balance">
               Mang Tin Mừng Qua <br />
               <span className="text-gold italic">Nghệ Thuật Ca Kịch</span>
             </h1>
@@ -109,7 +110,7 @@ export default function HomePage() {
                 <span className="w-9 h-px bg-gold" />
                 <span className="text-gold uppercase tracking-[0.25em] text-xs font-bold">Câu chuyện của chúng tôi</span>
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold serif leading-[1.08] mb-6">
+              <h2 className="text-3xl md:text-5xl font-bold serif leading-[1.08] mb-6 text-balance">
                 Bắt đầu từ 33 trái tim,<br />nay là một gia đình 120+.
               </h2>
               <p className="text-white/60 font-light text-lg leading-[1.8] max-w-md mb-8">
@@ -133,6 +134,25 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Stats — ngay dưới Câu chuyện để các ý đồng bộ */}
+      <section className="py-16 md:py-24 bg-card/50 border-y border-white/5">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 text-center">
+            {STATS.map((stat, i) => (
+              <motion.div key={stat.label} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.1 }} viewport={{ once: true }}>
+                <div className="text-gold/50 text-2xl mb-2">◆</div>
+                <div className="text-4xl md:text-5xl font-bold serif mb-2">{stat.value}</div>
+                <div className="text-xs uppercase tracking-widest text-white/40 font-bold">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tuyển diễn viên */}
+      <CastingSection />
+
       {/* 4 — PLAYS: lưới không đều */}
       <section id="plays" className="py-16 md:py-32">
         <div className="max-w-7xl mx-auto px-6">
@@ -141,7 +161,7 @@ export default function HomePage() {
               <Music className="text-gold" size={22} />
               <span className="text-gold uppercase tracking-[0.25em] text-xs font-bold">Các vở ca kịch</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold serif leading-tight">Những câu chuyện đã sống trên sân khấu</h2>
+            <h2 className="text-3xl md:text-5xl font-bold serif leading-tight text-balance">Những câu chuyện đã sống trên sân khấu</h2>
           </motion.div>
 
           {feature && (
@@ -181,22 +201,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5 — STATS */}
-      <section className="py-16 md:py-24 bg-card/50 border-y border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 text-center">
-            {STATS.map((stat, i) => (
-              <motion.div key={stat.label} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }} viewport={{ once: true }}>
-                <div className="text-gold/50 text-2xl mb-2">◆</div>
-                <div className="text-4xl md:text-5xl font-bold serif mb-2">{stat.value}</div>
-                <div className="text-xs uppercase tracking-widest text-white/40 font-bold">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* 6 — CHARITY */}
       <section id="charity" className="py-16 md:py-32 bg-card/30">
         <div className="max-w-7xl mx-auto px-6">
@@ -205,7 +209,7 @@ export default function HomePage() {
               <Heart className="text-gold" size={22} />
               <span className="text-gold uppercase tracking-[0.25em] text-xs font-bold">Thiện nguyện</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold serif leading-tight">Lan tỏa yêu thương đến cộng đồng</h2>
+            <h2 className="text-3xl md:text-5xl font-bold serif leading-tight text-balance">Lan tỏa yêu thương đến cộng đồng</h2>
           </motion.div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {CHARITY.map(project => (
@@ -223,7 +227,7 @@ export default function HomePage() {
               <Star className="text-gold" size={22} />
               <span className="text-gold uppercase tracking-[0.25em] text-xs font-bold">Các chương trình khác</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold serif leading-tight">Hoạt động văn hóa & cộng đồng qua các năm</h2>
+            <h2 className="text-3xl md:text-5xl font-bold serif leading-tight text-balance">Hoạt động văn hóa & cộng đồng qua các năm</h2>
           </motion.div>
           <div className="flex flex-wrap justify-center gap-2 mb-12">
             {years.map(year => (
@@ -267,7 +271,7 @@ export default function HomePage() {
                 <Mail className="text-gold" size={22} />
                 <span className="text-gold uppercase tracking-[0.25em] text-xs font-bold">Liên hệ & Ủng hộ</span>
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold serif leading-tight mb-4">Đồng hành cùng sứ vụ</h2>
+              <h2 className="text-3xl md:text-5xl font-bold serif leading-tight mb-4 text-balance">Đồng hành cùng sứ vụ</h2>
               <p className="text-white/50 text-lg leading-relaxed mb-10">Chúng tôi luôn trân trọng mọi sự đóng góp và đồng hành từ quý ân nhân để tiếp tục sứ vụ.</p>
               <div className="space-y-8">
                 <div className="flex items-start gap-6">
@@ -341,7 +345,7 @@ function FeatureCard({ project, onClick }: { project: Project; onClick: (p: Proj
       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-8">
         <div className="text-gold/70 text-[10px] uppercase tracking-[0.2em] font-bold mb-2">Dấu mốc nổi bật</div>
-        <h4 className="text-3xl md:text-4xl font-bold serif leading-[1.05] mb-3">{project.title}</h4>
+        <h4 className="text-3xl md:text-4xl font-bold serif leading-[1.05] mb-3 text-balance">{project.title}</h4>
         {project.date && <div className="text-xs text-white/45 font-mono">{project.date}</div>}
       </div>
     </div>

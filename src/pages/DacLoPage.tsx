@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Calendar, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CastingSection from '../components/CastingSection';
 
 function useCountdown(targetDate: Date) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -54,7 +55,7 @@ export default function DacLoPage() {
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center pt-32 pb-20">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <span className="text-gold uppercase tracking-[0.5em] text-xs font-bold mb-4 block">Dự án sắp ra mắt • CKCGSG</span>
-            <h1 className="text-6xl sm:text-7xl md:text-9xl font-bold serif mb-6 leading-none">
+            <h1 className="text-6xl sm:text-7xl md:text-9xl font-bold serif mb-6 leading-none text-balance">
               Đắc Lộ
             </h1>
             <p className="text-white/60 text-lg max-w-xl mx-auto mb-16 leading-relaxed">
@@ -126,7 +127,7 @@ export default function DacLoPage() {
             viewport={{ once: true }}
           >
             <span className="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-4 block">Về vở diễn</span>
-            <h2 className="text-4xl font-bold serif mb-6">Đang được chuẩn bị</h2>
+            <h2 className="text-4xl font-bold serif mb-6 text-balance">Đang được chuẩn bị</h2>
             <p className="text-white/50 text-lg leading-relaxed max-w-2xl mx-auto mb-16">
               Nhóm Ca Kịch Công Giáo Sài Gòn đang dồn toàn bộ tâm huyết vào dự án mới nhất này.
               Hãy theo dõi để không bỏ lỡ những thông tin đầu tiên về vở diễn Đắc Lộ.
@@ -150,7 +151,7 @@ export default function DacLoPage() {
                   <div className="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center text-gold mx-auto mb-4">
                     <item.icon size={24} />
                   </div>
-                  <h3 className="font-bold serif text-lg mb-2">{item.title}</h3>
+                  <h3 className="font-bold serif text-lg mb-2 text-balance">{item.title}</h3>
                   <p className="text-white/30 text-sm">{item.desc}</p>
                 </motion.div>
               ))}
@@ -158,6 +159,9 @@ export default function DacLoPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Tuyển diễn viên */}
+      <CastingSection id="casting-daclo" />
 
       {/* Back to home */}
       <section className="py-16 text-center">
