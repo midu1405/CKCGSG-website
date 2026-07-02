@@ -226,8 +226,8 @@ export default function HomePage() {
             <div className="flex items-center gap-3.5 mb-4">
               <Star className="text-gold" size={22} />
               <span className="text-gold uppercase tracking-[0.25em] text-xs font-bold">Các chương trình khác</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-bold serif leading-tight text-balance">Hoạt động văn hóa & cộng đồng qua các năm</h2>
+           </div>
+            <h2 className="text-3xl md:text-5xl font-bold serif leading-tight text-balance"></h2>
           </motion.div>
           <div className="flex flex-wrap justify-center gap-2 mb-12">
             {years.map(year => (
