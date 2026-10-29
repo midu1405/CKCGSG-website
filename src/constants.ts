@@ -1,169 +1,153 @@
 import { Project } from './types';
-import IMG_FEATURE from './assets/photos/feature-daclo.jpg';
+import IMG_DACLO_COVER from './assets/photos/daclo-cover.jpg';
 import IMG_STAGE from './assets/photos/stage-wide.jpg';
 import IMG_DUO from './assets/photos/duo.jpg';
 import IMG_JERICHO1 from './assets/photos/jericho-1.jpg';
-import IMG_JERICHO2 from './assets/photos/jericho-2.jpg';
 import IMG_JERICHO3 from './assets/photos/jericho-3.jpg';
+import IMG_JERICHO_STAGE from './assets/photos/jericho-stage.jpg';
+import IMG_INHAXIO from './assets/photos/di-tim-inhaxio.jpg';
+import POSTER_DON_BOSCO from './assets/photos/poster-don-bosco.jpg';
+import POSTER_TEN_TU_TU from './assets/photos/poster-ten-tu-tu.jpg';
+import POSTER_BUC_LINH_ANH from './assets/photos/poster-buc-linh-anh.jpg';
+import POSTER_10_CO_TRINH_NU from './assets/photos/poster-10-co-trinh-nu.jpg';
+import POSTER_HAI_NHI from './assets/photos/poster-hai-nhi-la-ai.jpg';
+import POSTER_KHI_LONG_DA_TIN from './assets/photos/poster-khi-long-da-tin.jpg';
+import POSTER_HOANG_TU_NHO from './assets/photos/poster-hoang-tu-nho.jpg';
+import POSTER_CON_CHIEN from './assets/photos/poster-con-chien-khong-moi.jpg';
+import POSTER_MOT_TINH_YEU from './assets/photos/poster-mot-tinh-yeu.jpg';
+
+/**
+ * Ngày diễn hiển thị dạng "MM.YYYY" (theo poster trong proposal).
+ * Dùng playSortKey() để sắp xếp từ mới đến cũ.
+ */
+export function playSortKey(date?: string): number {
+  if (!date) return 0;
+  const m = date.match(/(\d{1,2})\.(\d{4})/);
+  if (m) return Number(m[2]) * 100 + Number(m[1]);
+  const y = date.match(/\d{4}/);
+  return y ? Number(y[0]) * 100 : 0;
+}
 
 export const PLAYS: Project[] = [
   {
     id: 'dac-lo',
     title: 'Đắc Lộ',
-    description: 'Dự án ca kịch sắp ra mắt của Nhóm Ca Kịch Công Giáo Sài Gòn.',
-    content: 'Thông tin chi tiết về vở diễn "Đắc Lộ" sẽ được cập nhật sớm nhất. Vui lòng theo dõi fanpage và website của nhóm để không bỏ lỡ những thông tin mới nhất về dự án này.',
-    imageUrl: IMG_FEATURE,
+    description: 'Vở nhạc kịch kỷ niệm 400 năm Cha Đắc Lộ đặt chân đến Đàng Ngoài (1627 – 2027).',
+    content: 'Vở ca kịch "Đắc Lộ" không chỉ khắc họa chân dung một nhà truyền giáo thế kỷ XVII, mà làm nổi bật những biến cố, thành quả và ảnh hưởng lâu dài mà Cha Đắc Lộ cùng các cha Dòng Tên đã để lại cho Giáo Hội và xã hội Việt Nam.',
+    imageUrl: IMG_DACLO_COVER,
     status: 'upcoming',
-    date: '2027'
+    date: '04.06.2027'
+  },
+  {
+    id: 'di-tim-inhaxio',
+    title: 'ĐI TÌM INHAXIO',
+    description: 'Vở ca kịch trình diễn trong chương trình Tĩnh tâm Mùa Vọng, tháng 12/2025.',
+    content: 'Vở ca kịch "Đi Tìm Inhaxio" được trình diễn trong chương trình Tĩnh tâm Mùa Vọng vào tháng 12/2025.',
+    imageUrl: IMG_INHAXIO,
+    status: 'archived',
+    date: '12.2025'
   },
   {
     id: 'jericho',
-    title: 'BỨC TƯỜNG JERICO',
-    description: 'Vở ca kịch kể về câu chuyện hùng vĩ trong Kinh Thánh về sự sụp đổ của thành Jericho.',
-    content: 'Vở ca kịch "Bức tường Jericho" là một trong những dự án tâm huyết nhất của nhóm trong năm nay. Vở diễn tái hiện lại hành trình đức tin của dân Israel dưới sự dẫn dắt của Joshua. Với âm nhạc hào hùng và những màn vũ đạo công phu, chúng tôi hy vọng sẽ mang đến cho khán giả một trải nghiệm tâm linh sâu sắc về sức mạnh của sự vâng phục và lòng tin vào Thiên Chúa.',
-    imageUrl: IMG_JERICHO1,
-    images: [
-      IMG_JERICHO1,
-      IMG_JERICHO2,
-      IMG_JERICHO3
-    ],
+    title: 'BỨC TƯỜNG JERICHO',
+    description: 'Trình diễn tại Đại hội Giới trẻ TGP Sài Gòn, tháng 11/2024.',
+    content: 'Vở ca kịch "Bức tường Jericho" được trình diễn tại Đại hội Giới trẻ Tổng Giáo phận Sài Gòn vào tháng 11/2024. Vở diễn tái hiện lại hành trình đức tin của dân Israel dưới sự dẫn dắt của Joshua. Với âm nhạc hào hùng và những màn vũ đạo công phu, chúng tôi hy vọng sẽ mang đến cho khán giả một trải nghiệm tâm linh sâu sắc về sức mạnh của sự vâng phục và lòng tin vào Thiên Chúa.',
+    imageUrl: IMG_JERICHO_STAGE,
+    images: [IMG_JERICHO1, IMG_JERICHO3],
     status: 'archived',
-    date: '2024'
+    date: '11.2024'
   },
   {
     id: 'don-bosco',
     title: 'DON BOSCO',
     description: 'Vở diễn chính thức đầu tiên của Nhóm Ca Kịch Công Giáo Sài Gòn.',
     content: 'Vở Don Bosco là vở diễn chính thức đầu tiên của Nhóm Ca Kịch Công Giáo Sài Gòn.',
-    imageUrl: 'https://picsum.photos/seed/donbosco/800/600',
-    images: [
-      'https://picsum.photos/seed/tet1/800/600',
-      'https://picsum.photos/seed/tet2/800/600',
-      'https://picsum.photos/seed/tet3/800/600'
-    ],
+    imageUrl: POSTER_DON_BOSCO,
     youtubeUrl: 'https://www.youtube.com/watch?v=placeholder1',
     status: 'archived',
-    date: 'Thành lập'
+    date: '04.2015'
   },
   {
     id: 'ten-tu-tu',
-    title: 'TÊN TỬ TÙ',
+    title: 'TÊN TỬ TÙ – MỘT CHỨNG NHÂN',
     description: 'Vở ca kịch về sự hối cải, biểu diễn lần đầu vào năm 2015.',
     content: 'Vở ca kịch Tên Tử Tù được biểu diễn lần đầu vào năm 2015, trong chương trình Cafe Thánh ca số 3, Giới trẻ Giáo xứ Tân Hương. Sau đó là Giáo xứ Thanh Đa và Giáo xứ Mân Côi (Đa Minh).',
-    imageUrl: 'https://picsum.photos/seed/tentutu/800/600',
-    images: [
-      'https://picsum.photos/seed/tentutu1/800/600',
-      'https://picsum.photos/seed/tentutu2/800/600'
-    ],
+    imageUrl: POSTER_TEN_TU_TU,
     youtubeUrl: 'https://www.youtube.com/watch?v=placeholder2',
     status: 'archived',
-    date: '2015'
+    date: '05.2015'
   },
   {
     id: '10-co-trinh-nu',
-    title: '10 CÔ TRINH NỮ',
+    title: 'MƯỜI CÔ TRINH NỮ',
     description: 'Vở diễn về dụ ngôn 10 cô trinh nữ, công diễn năm 2015 và 2019.',
     content: 'Vở diễn 10 Cô Trinh Nữ được công diễn vào năm 2015. Sau đó, nhóm tiếp tục công diễn vở ca kịch vào năm 2019.',
-    imageUrl: 'https://picsum.photos/seed/10virgins/800/600',
-    images: [
-      'https://picsum.photos/seed/10virgins1/800/600',
-      'https://picsum.photos/seed/10virgins2/800/600',
-      'https://picsum.photos/seed/10virgins3/800/600'
-    ],
+    imageUrl: POSTER_10_CO_TRINH_NU,
     youtubeUrl: 'https://www.youtube.com/watch?v=placeholder3',
     status: 'archived',
-    date: '2015 - 2019'
+    date: '12.2015 · 2019'
   },
   {
     id: 'khi-long-da-tin',
     title: 'KHI LÒNG ĐÃ TIN',
     description: 'Vở diễn gây quỹ cho người dân Miền Trung năm 2016.',
     content: 'Khi lòng đã Tin - được thực hiện nhằm gây Quỹ cho người dân Miền Trung vào năm 2016 tại Dòng Chúa Cứu Thế - Nhà thờ Kỳ Đồng. Sân khấu của vở được dàn dựng khá đặc biệt, tái hiện lại quang cảnh của một vùng quê nghèo nơi đó có những con người vẫn luôn đặt niềm tin nơi Thiên Chúa.',
-    imageUrl: 'https://picsum.photos/seed/faith/800/600',
-    images: [
-      'https://picsum.photos/seed/tet1/800/600',
-      'https://picsum.photos/seed/tet2/800/600',
-      'https://picsum.photos/seed/tet3/800/600'
-    ],
+    imageUrl: POSTER_KHI_LONG_DA_TIN,
     youtubeUrl: 'https://www.youtube.com/watch?v=placeholder4',
     status: 'archived',
-    date: '2016'
+    date: '11.2016'
   },
   {
     id: 'buc-linh-anh',
     title: 'BỨC LINH ẢNH BỊ ĐÁNH CẮP',
     description: 'Công diễn lần đầu vào năm 2015 tại Nhà Thờ Kỳ Đồng.',
     content: 'Vở diễn Bức Linh Ảnh Bị Đánh Cắp được công diễn lần đầu vào 10/2015 & 12/2015 tại Dòng Chúa Cứu Thế - Nhà Thờ Kỳ Đồng. Sau đó, nhóm tiếp tục công diễn vở ca kịch vào năm 2017 tại Phú Dòng - Gia Kiệm.',
-    imageUrl: 'https://picsum.photos/seed/icon/800/600',
-    images: [
-      'https://picsum.photos/seed/tet1/800/600',
-      'https://picsum.photos/seed/tet2/800/600',
-      'https://picsum.photos/seed/tet3/800/600'
-    ],
+    imageUrl: POSTER_BUC_LINH_ANH,
     youtubeUrl: 'https://www.youtube.com/watch?v=placeholder5',
     status: 'archived',
-    date: '2015 - 2017'
+    date: '10.2015 · 2017'
   },
   {
     id: 'hai-nhi-la-ai',
     title: 'HÀI NHI LÀ AI',
     description: 'Vở ca kịch Giáng Sinh công diễn năm 2016 và 2017.',
     content: 'Vở ca kịch Hài Nhi Là Ai được công diễn vào năm 2016 tại Hội trường Anphong, nhà thờ Kỳ Đồng, Giáo xứ Đức Mẹ Hằng Cứu Giúp. Năm 2017, Nhóm đã tái diễn vớ ca kịch này tại Giáo Xứ Tam Hải và Đại Hội Giới trẻ FMA.',
-    imageUrl: 'https://picsum.photos/seed/child/800/600',
-    images: [
-      'https://picsum.photos/seed/tet1/800/600',
-      'https://picsum.photos/seed/tet2/800/600',
-      'https://picsum.photos/seed/tet3/800/600'
-    ],
+    imageUrl: POSTER_HAI_NHI,
     youtubeUrl: 'https://www.youtube.com/watch?v=placeholder6',
     status: 'archived',
-    date: '2016 - 2017'
+    date: '06.2016 · 2017'
   },
   {
     id: 'hoang-tu-nho',
     title: 'HOÀNG TỬ NHỎ',
     description: 'Vở diễn mừng Giáng Sinh tại Nhà Thờ Kỳ Đồng năm 2016.',
     content: 'Vở Hoàng Tử Nhỏ được công diễn tại Nhà Thờ Kỳ Đồng - Giáo Xứ Đức Mẹ Hằng Cứu Giúp vào năm 2016 - trong khuôn khổ chương trình văn nghệ mừng Giáng Sinh của giáo xứ',
-    imageUrl: 'https://picsum.photos/seed/prince/800/600',
-    images: [
-      'https://picsum.photos/seed/tet1/800/600',
-      'https://picsum.photos/seed/tet2/800/600',
-      'https://picsum.photos/seed/tet3/800/600'
-    ],
+    imageUrl: POSTER_HOANG_TU_NHO,
     youtubeUrl: 'https://www.youtube.com/watch?v=placeholder7',
     status: 'archived',
-    date: '2016'
+    date: '12.2016'
   },
   {
     id: 'con-chien-khong-moi',
     title: 'CON CHIÊN KHÔNG MỎI',
     description: 'Vở ca kịch đánh dấu mốc quan trọng 10 năm hành trình của nhóm.',
     content: 'Vở Con Chiên Không Mỏi được công diễn 2 lần vào năm 2023 tại Nhà thờ Kỳ Đồng - Giáo xứ Đức Mẹ Hằng Cứu Giúp - thuộc DCCT Sài Gòn; và tại Dòng Đức Bà Truyền Giáo. Vở ca kịch tái hiện lịch sử cứu độ và cuộc thương khó của Chúa Giê-su. Đây là vở ca kịch mà nhóm đã ấp ủ từ ngày thành lập, cũng là vở diễn tạo nên dấu mốc quan trọng trong hành trình 10 năm của Nhóm Ca Kịch - Đó là sự tái hợp và quay trở lại chính thức của Nhóm.',
-    imageUrl: IMG_STAGE,
-    images: [
-      'https://picsum.photos/seed/sheep1/800/600',
-      'https://picsum.photos/seed/sheep2/800/600',
-      'https://picsum.photos/seed/sheep3/800/600',
-      'https://picsum.photos/seed/sheep4/800/600'
-    ],
+    imageUrl: POSTER_CON_CHIEN,
+    images: [IMG_STAGE],
     youtubeUrl: 'https://www.youtube.com/watch?v=placeholder8',
     status: 'archived',
-    date: '2023'
+    date: '04.2023'
   },
   {
     id: 'mot-tinh-yeu',
     title: 'MỘT TÌNH YÊU',
     description: 'Trình diễn tại Đại Hội Giới Trẻ TGP Sài Gòn năm 2023.',
     content: '“Một Tình Yêu” được trình diễn trong Đại Hội Giới Trẻ của Tổng Giáo Phận Sài Gòn vào ngày 25.11.2023 tại Trung Tâm Mục Vụ, Tổng Giáo Phận Sài Gòn. Ngoài ra, nhóm đã công diễn lần thứ 2 vở ca kịch này tại Tu Viện Dòng Tên. “Một Tình Yêu” đã để lại nhiều ấn tượng và cảm xúc khác nhau nơi các tham dự viên. Dựa trên suy niệm về chặng đàng thánh giá của Đại Hội Giới Trẻ thế giới tại Lisbon 2023, đạo diễn Jean Kiệt cùng với các thành viên trong Nhóm đã tái hiện lại chặng đàng thánh giá trên hành trình cuộc đời mà người trẻ đang phải đối diện.',
-    imageUrl: IMG_DUO,
-    images: [
-      'https://picsum.photos/seed/tet1/800/600',
-      'https://picsum.photos/seed/tet2/800/600',
-      'https://picsum.photos/seed/tet3/800/600'
-    ],
+    imageUrl: POSTER_MOT_TINH_YEU,
+    images: [IMG_DUO],
     youtubeUrl: 'https://www.youtube.com/watch?v=placeholder9',
     status: 'archived',
-    date: '2023'
+    date: '11.2023'
   }
 ];
 

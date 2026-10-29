@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { Heart, Music, Calendar, Mail, Star } from 'lucide-react';
 import HERO_IMG from '../assets/photos/hero.jpg';
 import STORY_IMG from '../assets/photos/story.jpg';
-import { PLAYS, CHARITY, OTHER_PROGRAMS } from '../constants';
+import { PLAYS, CHARITY, OTHER_PROGRAMS, playSortKey } from '../constants';
 import { Project } from '../types';
 import Modal from '../components/Modal';
 import ProjectCard from '../components/ProjectCard';
@@ -30,7 +30,7 @@ export default function HomePage() {
 
   const upcoming = PLAYS.find(p => p.status === 'upcoming');
   const archived = PLAYS.filter(p => p.status === 'archived')
-    .sort((a, b) => parseInt(b.date?.toString() ?? '0') - parseInt(a.date?.toString() ?? '0'));
+    .sort((a, b) => playSortKey(b.date) - playSortKey(a.date));
   const feature = archived[0];
   const restPlays = archived.slice(1, 5);
 
