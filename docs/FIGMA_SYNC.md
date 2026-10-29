@@ -13,6 +13,18 @@ Vì vậy các thay đổi code được **gom lại và cập nhật sang Figma
   4 thông điệp, sơ nét Cha Đắc Lộ + dòng thời gian, kế hoạch công diễn + số liệu, quy mô dàn dựng,
   lời mời cộng tác (3 lĩnh vực) + thẻ liên hệ chị Teresa Nguyễn Lan Nghi (0908 033 357, ckcgsg@gmail.com),
   nhận thông báo, tuyển diễn viên. Ảnh đã có sẵn trong khung "📷 Thư viện ảnh".
+- [ ] **Tách trang (tham khảo sight-sound.com)** — cấu trúc mới:
+  - **01 · Trang chủ** (desktop + mobile) dựng lại: hero = vở sắp tới (Đắc Lộ) → 3 thẻ "Nhóm làm gì"
+    (Ca kịch / Thiện nguyện / Thánh ca & hợp xướng) → câu chuyện rút gọn + số liệu → 3 vở gần nhất
+    + nút "Tất cả vở diễn" → 2 thẻ Tham gia / Đồng hành. Bỏ kho lưu trữ, thiện nguyện, chương trình
+    khác, liên hệ khỏi trang chủ.
+  - Trang mới: **/vo-dien** (khối Sắp diễn + chia giai đoạn "2023 – nay" / "2015 – 2019"),
+    **/hoat-dong** (Thiện nguyện + Thánh ca & hợp xướng có tab năm), **/cau-chuyen** (đôi nét,
+    6 cột mốc, 4 giá trị có ảnh, sứ mệnh + Mt 5,14–16), **/tuyen-dien-vien**, **/lien-he**.
+  - Navbar: Vở diễn · Hoạt động · Câu chuyện · Tuyển diễn viên · Liên hệ + nút vàng "Vở Đắc Lộ".
+    Footer: cột Khám phá + Kết nối.
+  - Ảnh mới cho trang Câu chuyện: story-10-nam, value-san-khau, value-cau-nguyen, value-thanh-le,
+    value-gia-dinh, mission (cần đưa vào "📷 Thư viện ảnh").
 
 ## Đã đồng bộ
 
