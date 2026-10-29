@@ -14,7 +14,8 @@ Vì vậy các thay đổi code được **gom lại và cập nhật sang Figma
   lời mời cộng tác (3 lĩnh vực) + thẻ liên hệ chị Teresa Nguyễn Lan Nghi (0908 033 357, ckcgsg@gmail.com),
   nhận thông báo, tuyển diễn viên. Ảnh đã có sẵn trong khung "📷 Thư viện ảnh".
 - [ ] **Tách trang (tham khảo sight-sound.com)** — cấu trúc mới:
-  - **01 · Trang chủ** (desktop + mobile) dựng lại: hero = vở sắp tới (Đắc Lộ) → 3 thẻ "Nhóm làm gì"
+  - **01 · Trang chủ** (desktop + mobile) dựng lại: GIỮ hero cũ (ảnh hero.jpg, "Mang Tin Mừng Qua Nghệ Thuật
+    Ca Kịch") → mục vở sắp tới (Đắc Lộ, nền chân dung) → 3 thẻ "Nhóm làm những gì?"
     (Ca kịch / Thiện nguyện / Thánh ca & hợp xướng) → câu chuyện rút gọn + số liệu → 3 vở gần nhất
     + nút "Tất cả vở diễn" → 2 thẻ Tham gia / Đồng hành. Bỏ kho lưu trữ, thiện nguyện, chương trình
     khác, liên hệ khỏi trang chủ.

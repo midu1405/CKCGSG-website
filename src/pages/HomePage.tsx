@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { Calendar, MapPin, Music, Heart, Star, ArrowRight, Mic2, HandHeart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import HERO_IMG from '../assets/photos/hero.jpg';
 import STORY_IMG from '../assets/photos/story.jpg';
 import CASTING_BG from '../assets/photos/casting-banner.jpg';
 import { PLAYS, CHARITY, OTHER_PROGRAMS, playSortKey } from '../constants';
@@ -36,18 +37,48 @@ export default function HomePage() {
     <div>
       <AnimatePresence>{selected && <Modal project={selected} onClose={() => setSelected(null)} />}</AnimatePresence>
 
-      {/* 1 — VỞ DIỄN SẮP TỚI */}
-      {upcoming && (
-        <section className="relative min-h-screen flex items-center overflow-hidden">
-          <motion.div style={{ y: heroY }} className="absolute inset-0 z-0">
-            <img src={upcoming.imageUrl} alt="Chân dung Cha Đắc Lộ" className="w-full h-[115%] object-cover object-left opacity-60" />
-            <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/55 to-dark lg:bg-gradient-to-l lg:from-dark lg:via-dark/75 lg:to-transparent" />
+      {/* 1 — HERO (giữ theme cũ) */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ y: heroY }} className="absolute inset-0 z-0">
+          <img src={HERO_IMG} alt="Sân khấu" className="w-full h-[120%] object-cover opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-dark via-dark/30 to-dark" />
+        </motion.div>
+        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <span className="text-gold uppercase tracking-[0.5em] text-sm font-bold mb-6 block">Hành trình 10 năm +</span>
+            <h1 className="text-4xl sm:text-5xl md:text-8xl font-bold serif mb-8 leading-[1.04] text-balance">
+              Mang Tin Mừng Qua <br />
+              <span className="text-gold italic">Nghệ Thuật Ca Kịch</span>
+            </h1>
+            <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+              Nhóm Ca Kịch Công Giáo Sài Gòn lan tỏa tình yêu và đức tin qua những vở diễn đầy ý nghĩa — hoàn toàn miễn phí cho cộng đồng.
+            </p>
+            <div className="flex flex-col items-center gap-5">
+              <a href="#vo-sap-toi" className="bg-gold text-black px-10 py-4 rounded-full font-bold text-lg hover:bg-white transition-all duration-300 shadow-lg shadow-gold/20">
+                KHÁM PHÁ VỞ DIỄN
+              </a>
+              <Link to="/tuyen-dien-vien" className="text-sm uppercase tracking-[0.15em] text-white/50 border-b border-white/20 pb-1 hover:text-gold hover:border-gold transition-all">
+                Tham gia cùng chúng tôi
+              </Link>
+            </div>
           </motion.div>
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-32 pb-24 flex lg:justify-end">
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
-              className="w-full lg:max-w-xl text-center lg:text-left">
+        </div>
+        <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute bottom-10 left-1/2 -translate-x-1/2">
+          <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center p-1"><div className="w-1 h-2 bg-gold rounded-full" /></div>
+        </motion.div>
+      </section>
+
+      {/* 2 — VỞ DIỄN SẮP TỚI */}
+      {upcoming && (
+        <section id="vo-sap-toi" className="relative min-h-[86vh] flex items-center overflow-hidden scroll-mt-0">
+          <div className="absolute inset-0">
+            <img src={upcoming.imageUrl} alt="Chân dung Cha Đắc Lộ" className="w-full h-full object-cover object-left opacity-60" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/55 to-dark lg:bg-gradient-to-l lg:from-dark lg:via-dark/75 lg:to-transparent" />
+          </div>
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-24 flex lg:justify-end">
+            <motion.div {...fadeUp} className="w-full lg:max-w-xl text-center lg:text-left">
               <span className="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-5 block">Vở diễn sắp tới · Kỷ niệm 400 năm</span>
-              <h1 className="text-7xl md:text-9xl font-bold serif leading-none mb-6">{upcoming.title}</h1>
+              <h2 className="text-7xl md:text-9xl font-bold serif leading-none mb-6">{upcoming.title}</h2>
               <p className="text-white/70 text-lg md:text-xl font-light leading-relaxed mb-8">{upcoming.description}</p>
               <div className="flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-3 text-sm text-white/70 mb-10">
                 <span className="flex items-center gap-2"><Calendar size={16} className="text-gold" /> {upcoming.date}</span>
@@ -62,12 +93,12 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* 2 — NHÓM LÀM GÌ */}
+      {/* 3 — NHÓM LÀM GÌ */}
       <section className="py-20 md:py-32">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div {...fadeUp} className="max-w-3xl mb-14">
             <Eyebrow>Nhóm Ca Kịch Công Giáo Sài Gòn</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold serif leading-tight mb-5 text-balance">Mang Tin Mừng qua nghệ thuật ca kịch</h2>
+            <h2 className="text-4xl md:text-5xl font-bold serif leading-tight mb-5 text-balance">Nhóm làm những gì?</h2>
             <p className="text-white/60 text-lg font-light leading-relaxed">
               Hơn 10 năm qua, nhóm lan tỏa tình yêu và đức tin qua sân khấu, thánh ca và những chuyến thiện nguyện — hoàn toàn
               miễn phí, trên tinh thần tự nguyện và cống hiến.
@@ -93,7 +124,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3 — CÂU CHUYỆN (rút gọn) */}
+      {/* 4 — CÂU CHUYỆN (rút gọn) */}
       <section className="py-20 md:py-28 bg-card/50 border-y border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-20 items-center">
           <motion.div {...fadeUp}>
@@ -126,7 +157,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4 — VỞ DIỄN GẦN ĐÂY */}
+      {/* 5 — VỞ DIỄN GẦN ĐÂY */}
       <section className="py-20 md:py-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -144,7 +175,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5 — THAM GIA / ĐỒNG HÀNH */}
+      {/* 6 — THAM GIA / ĐỒNG HÀNH */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
           <img src={CASTING_BG} alt="" className="w-full h-full object-cover opacity-30" loading="lazy" />
