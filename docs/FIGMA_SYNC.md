@@ -27,6 +27,10 @@ Vì vậy các thay đổi code được **gom lại và cập nhật sang Figma
   - Ảnh mới cho trang Câu chuyện: story-10-nam, value-san-khau, value-cau-nguyen, value-thanh-le,
     value-gia-dinh, mission (cần đưa vào "📷 Thư viện ảnh").
 
+- [ ] **Font mới toàn bộ wireframe**: tiêu đề + con số = **Playfair Display** (Bold, nghiêng vàng cho
+  "Nghệ Thuật Ca Kịch"), chữ thường / nhãn / nút = **Be Vietnam Pro**. Wireframe hiện đang dùng Inter.
+  Cả hai font đều có sẵn trong Figma (Google Fonts).
+
 ## Đã đồng bộ
 
 - 29/10/2026 — Trang chủ (desktop + mobile): poster thật cho 11 vở từ proposal, ngày diễn mới,

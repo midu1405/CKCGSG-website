@@ -42,7 +42,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
               <div className="text-gold/60 text-[10px] uppercase tracking-[0.2em] font-bold mb-1">CKCGSG</div>
               <h3 className="text-xl font-bold serif text-white">{project.title}</h3>
             </div>
-            {project.date && <span className="text-[10px] text-white/30 font-mono">{project.date}</span>}
+            {project.date && <span className="text-[11px] text-white/40 tabular-nums tracking-wider">{project.date}</span>}
           </div>
         </div>
         {project.status === 'upcoming' && (

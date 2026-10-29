@@ -70,7 +70,7 @@ const Modal = ({ project, onClose }: { project: Project, onClose: () => void }) 
         <div className="p-5 md:p-12">
           <div className="flex items-center gap-4 mb-6">
             <span className="text-gold uppercase tracking-[0.3em] text-xs font-bold">Dự án CKCGSG</span>
-            {project.date && <span className="text-white/30 text-xs font-mono">{project.date}</span>}
+            {project.date && <span className="text-white/40 text-xs tabular-nums tracking-wider">{project.date}</span>}
           </div>
           <h2 className="text-4xl md:text-5xl font-bold serif mb-8 text-gold">{project.title}</h2>
           <div className="prose prose-invert max-w-none">
