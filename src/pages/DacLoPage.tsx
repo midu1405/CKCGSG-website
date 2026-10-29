@@ -347,9 +347,9 @@ export default function DacLoPage() {
 
           <motion.div {...fadeUp} className="bg-gold text-black rounded-3xl p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div>
-              <div className="uppercase tracking-[0.2em] text-xs font-bold mb-1">Liên hệ cộng tác</div>
-              <div className="text-xs text-black/65 mb-5">Teresa Nguyễn Lan Nghi · Đại diện phụ trách dự án</div>
-              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-10 gap-y-2 serif font-bold text-3xl md:text-4xl leading-tight">
+              <div className="uppercase tracking-[0.2em] text-sm font-bold mb-1.5">Liên hệ cộng tác</div>
+              <div className="text-base text-black/75 mb-4"><span className="font-semibold text-black">Teresa Nguyễn Lan Nghi</span> · Đại diện phụ trách dự án</div>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-1 font-bold text-lg md:text-xl">
                 <a href="tel:0908033357" className="lining-nums tabular-nums hover:underline underline-offset-4">0908 033 357</a>
                 <a href="mailto:ckcgsg@gmail.com" className="break-all hover:underline underline-offset-4">ckcgsg@gmail.com</a>
               </div>
