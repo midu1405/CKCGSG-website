@@ -31,7 +31,8 @@ Vì vậy các thay đổi code được **gom lại và cập nhật sang Figma
   "Nghệ Thuật Ca Kịch"), chữ thường / nhãn / nút = **Be Vietnam Pro**. Wireframe hiện đang dùng Inter.
   Cả hai font đều có sẵn trong Figma (Google Fonts).
 
-- [ ] **Thẻ liên hệ Đắc Lộ**: tên "Teresa Nguyễn Lan Nghi" nhỏ lại (khoảng 24px thay vì 36px).
+- [ ] **Thẻ liên hệ Đắc Lộ**: tên "Teresa Nguyễn Lan Nghi · Đại diện phụ trách dự án" nhỏ bằng nhãn
+  "Liên hệ cộng tác" (~12px); số điện thoại + email thành chữ lớn nổi bật (Playfair ~36px).
   (Hiệu ứng chuyển động — số chạy, timeline tự vẽ — chỉ có trên web, không cần vẽ trong Figma; có thể ghi chú.)
 
 ## Đã đồng bộ

@@ -276,7 +276,7 @@ export default function DacLoPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center border-t border-white/10 pt-12">
             {STATS.map(s => (
               <div key={s.label}>
-                <div className="text-3xl md:text-5xl font-bold serif text-gold mb-2"><CountUp value={s.value} /></div>
+                <div className="text-2xl sm:text-3xl lg:text-[2rem] xl:text-[2.6rem] font-bold serif text-gold mb-2 whitespace-nowrap"><CountUp value={s.value} /></div>
                 <div className="text-xs uppercase tracking-widest text-white/45 font-bold">{s.label}</div>
               </div>
             ))}
@@ -347,12 +347,11 @@ export default function DacLoPage() {
 
           <motion.div {...fadeUp} className="bg-gold text-black rounded-3xl p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div>
-              <div className="uppercase tracking-[0.2em] text-xs font-bold mb-2">Liên hệ cộng tác</div>
-              <div className="serif text-xl md:text-2xl font-bold mb-1">Teresa Nguyễn Lan Nghi</div>
-              <div className="text-black/70">Đại diện phụ trách dự án</div>
-              <div className="flex flex-wrap gap-x-6 gap-y-1 mt-3 font-bold">
-                <a href="tel:0908033357" className="hover:underline">0908 033 357</a>
-                <a href="mailto:ckcgsg@gmail.com" className="hover:underline">ckcgsg@gmail.com</a>
+              <div className="uppercase tracking-[0.2em] text-xs font-bold mb-1">Liên hệ cộng tác</div>
+              <div className="text-xs text-black/65 mb-5">Teresa Nguyễn Lan Nghi · Đại diện phụ trách dự án</div>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-10 gap-y-2 serif font-bold text-3xl md:text-4xl leading-tight">
+                <a href="tel:0908033357" className="lining-nums tabular-nums hover:underline underline-offset-4">0908 033 357</a>
+                <a href="mailto:ckcgsg@gmail.com" className="break-all hover:underline underline-offset-4">ckcgsg@gmail.com</a>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 shrink-0">

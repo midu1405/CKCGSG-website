@@ -39,7 +39,7 @@ export function CountUp({ value, duration = 1.8, className }: { value: string; d
   }, [inView, reduce, duration, nums.length]);
 
   return (
-    <span ref={ref} className={`tabular-nums ${className ?? ''}`} aria-label={value}>
+    <span ref={ref} className={`lining-nums tabular-nums ${className ?? ''}`} aria-label={value}>
       {parts.map((txt, i) => (
         <span key={i} aria-hidden="true">
           {txt}
