@@ -1,7 +1,7 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import {
-  Calendar, MapPin, Clock, ArrowLeft, BookOpen, Church, Users, Flame, Mail, User,
+  Calendar, MapPin, Clock, ArrowLeft, BookOpen, Church, Users, Flame, Mail, Phone, User,
   Music, Shirt, Lightbulb, ScrollText, Theater, Camera, Building2, HandHeart,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -354,12 +354,22 @@ export default function DacLoPage() {
             <div>
               <div className="uppercase tracking-[0.2em] text-xs font-bold mb-2">Liên hệ cộng tác</div>
               <div className="serif text-3xl md:text-4xl font-bold mb-2">Teresa Nguyễn Lan Nghi</div>
-              <div className="text-black/70">Đại diện phụ trách dự án · ckcgsg@gmail.com</div>
+              <div className="text-black/70">Đại diện phụ trách dự án</div>
+              <div className="flex flex-wrap gap-x-6 gap-y-1 mt-3 font-bold">
+                <a href="tel:0908033357" className="hover:underline">0908 033 357</a>
+                <a href="mailto:ckcgsg@gmail.com" className="hover:underline">ckcgsg@gmail.com</a>
+              </div>
             </div>
-            <a href={`mailto:ckcgsg@gmail.com?subject=${encodeURIComponent('[ĐẮC LỘ 2027] Cộng tác dự án')}`}
-              className="inline-flex items-center justify-center gap-3 bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-dark/80 transition-all shrink-0">
-              <Mail size={18} /> GỬI EMAIL CỘNG TÁC
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+              <a href="tel:0908033357"
+                className="inline-flex items-center justify-center gap-3 border-2 border-black px-7 py-3.5 rounded-full font-bold hover:bg-black hover:text-white transition-all">
+                <Phone size={18} /> GỌI ĐIỆN
+              </a>
+              <a href={`mailto:ckcgsg@gmail.com?subject=${encodeURIComponent('[ĐẮC LỘ 2027] Cộng tác dự án')}`}
+                className="inline-flex items-center justify-center gap-3 bg-black text-white px-7 py-3.5 rounded-full font-bold hover:bg-dark/80 transition-all">
+                <Mail size={18} /> GỬI EMAIL
+              </a>
+            </div>
           </motion.div>
         </div>
       </section>
