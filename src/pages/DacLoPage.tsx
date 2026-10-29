@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CastingSection from '../components/CastingSection';
+import { CountUp, DrawnTimeline, TimelineItem, staggerParent, staggerChild } from '../components/Motion';
 import IMG_COVER from '../assets/photos/daclo-cover.jpg';
 import IMG_PORTRAIT from '../assets/photos/daclo-portrait-2.jpg';
 import IMG_ENGRAVING from '../assets/photos/daclo-engraving.jpg';
@@ -234,15 +235,9 @@ export default function DacLoPage() {
             </p>
           </motion.div>
 
-          <motion.ol {...fadeUp} className="relative border-l border-gold/30 ml-2 space-y-8 self-center">
-            {TIMELINE.map(e => (
-              <li key={e.year} className="pl-8 relative">
-                <span className="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full bg-gold ring-4 ring-dark" />
-                <div className="text-gold serif text-2xl font-bold leading-none mb-1.5">{e.year}</div>
-                <p className="text-white/65 leading-relaxed">{e.text}</p>
-              </li>
-            ))}
-          </motion.ol>
+          <DrawnTimeline className="self-center">
+            {TIMELINE.map(e => <TimelineItem key={e.year} year={e.year} text={e.text} />)}
+          </DrawnTimeline>
         </div>
       </section>
 
@@ -281,7 +276,7 @@ export default function DacLoPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center border-t border-white/10 pt-12">
             {STATS.map(s => (
               <div key={s.label}>
-                <div className="text-3xl md:text-5xl font-bold serif text-gold mb-2">{s.value}</div>
+                <div className="text-3xl md:text-5xl font-bold serif text-gold mb-2"><CountUp value={s.value} /></div>
                 <div className="text-xs uppercase tracking-widest text-white/45 font-bold">{s.label}</div>
               </div>
             ))}
@@ -304,17 +299,17 @@ export default function DacLoPage() {
           <motion.div {...fadeUp} className="order-1 lg:order-2">
             <Eyebrow>Quy mô dàn dựng</Eyebrow>
             <h2 className="text-4xl md:text-5xl font-bold serif leading-tight mb-10 text-balance">Sân khấu tái hiện thế kỷ XVII</h2>
-            <ol className="space-y-7">
+            <motion.ol {...staggerParent} className="space-y-7">
               {PRODUCTION.map((p, i) => (
-                <li key={p.title} className="flex gap-5">
+                <motion.li key={p.title} {...staggerChild} className="flex gap-5">
                   <div className="w-11 h-11 bg-gold/10 rounded-xl flex items-center justify-center text-gold shrink-0"><p.icon size={22} /></div>
                   <div>
                     <h3 className="font-bold serif text-xl mb-1"><span className="text-gold/60 mr-2">0{i + 1}.</span>{p.title}</h3>
                     <p className="text-white/55 leading-relaxed">{p.desc}</p>
                   </div>
-                </li>
+                </motion.li>
               ))}
-            </ol>
+            </motion.ol>
           </motion.div>
         </div>
       </section>
@@ -339,13 +334,13 @@ export default function DacLoPage() {
                   <div className="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><c.icon size={24} /></div>
                   <h3 className="text-2xl font-bold serif">{c.title}</h3>
                 </div>
-                <ul className="space-y-3">
+                <motion.ul {...staggerParent} className="space-y-3">
                   {c.items.map(it => (
-                    <li key={it} className="flex gap-3 text-white/65 leading-relaxed text-[15px]">
+                    <motion.li key={it} {...staggerChild} className="flex gap-3 text-white/65 leading-relaxed text-[15px]">
                       <span className="text-gold mt-1.5 w-1.5 h-1.5 rounded-full bg-gold shrink-0" />{it}
-                    </li>
+                    </motion.li>
                   ))}
-                </ul>
+                </motion.ul>
               </motion.div>
             ))}
           </div>
@@ -353,7 +348,7 @@ export default function DacLoPage() {
           <motion.div {...fadeUp} className="bg-gold text-black rounded-3xl p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div>
               <div className="uppercase tracking-[0.2em] text-xs font-bold mb-2">Liên hệ cộng tác</div>
-              <div className="serif text-3xl md:text-4xl font-bold mb-2">Teresa Nguyễn Lan Nghi</div>
+              <div className="serif text-xl md:text-2xl font-bold mb-1">Teresa Nguyễn Lan Nghi</div>
               <div className="text-black/70">Đại diện phụ trách dự án</div>
               <div className="flex flex-wrap gap-x-6 gap-y-1 mt-3 font-bold">
                 <a href="tel:0908033357" className="hover:underline">0908 033 357</a>

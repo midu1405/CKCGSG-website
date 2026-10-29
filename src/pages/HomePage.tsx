@@ -10,6 +10,7 @@ import { Project } from '../types';
 import Modal from '../components/Modal';
 import ProjectCard from '../components/ProjectCard';
 import { Eyebrow, fadeUp } from '../components/PageParts';
+import { CountUp } from '../components/Motion';
 
 const STATS = [
   { label: 'Năm thành lập', value: '2014' },
@@ -136,7 +137,7 @@ export default function HomePage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-10">
               {STATS.map(s => (
                 <div key={s.label}>
-                  <div className="text-3xl font-bold serif">{s.value}</div>
+                  <div className="text-3xl font-bold serif"><CountUp value={s.value} /></div>
                   <div className="text-[10px] uppercase tracking-widest text-white/40 font-bold mt-1">{s.label}</div>
                 </div>
               ))}
@@ -150,7 +151,7 @@ export default function HomePage() {
               <img src={STORY_IMG} alt="Một cảnh diễn của CKCGSG" className="w-full h-full object-cover" loading="lazy" />
             </div>
             <div className="absolute -bottom-6 -left-4 md:-left-8 bg-gold p-6 md:p-8 rounded-2xl text-black">
-              <div className="text-4xl md:text-5xl font-bold serif leading-none mb-1">10+</div>
+              <div className="text-4xl md:text-5xl font-bold serif leading-none mb-1"><CountUp value="10+" duration={1.4} /></div>
               <div className="text-xs font-bold uppercase tracking-[0.14em]">Năm hành trình</div>
             </div>
           </motion.div>

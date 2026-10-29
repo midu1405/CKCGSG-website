@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageHeader, Eyebrow, fadeUp } from '../components/PageParts';
+import { GrowLine } from '../components/Motion';
 import HEADER_IMG from '../assets/photos/value-gia-dinh.jpg';
 import IMG_10_NAM from '../assets/photos/story-10-nam.jpg';
 import IMG_STAGE from '../assets/photos/value-san-khau.jpg';
@@ -65,7 +66,9 @@ export default function StoryPage() {
           </motion.div>
           <ol className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12">
             {TIMELINE.map((t, i) => (
-              <motion.li key={t.when} {...fadeUp} transition={{ duration: 0.6, delay: (i % 3) * 0.08 }} className="border-t border-gold/40 pt-6">
+              <motion.li key={t.when} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6, delay: (i % 3) * 0.15 }}>
+                <GrowLine delay={(i % 3) * 0.15 + 0.1} />
                 <div className="text-gold serif text-3xl font-bold mb-2">{t.when}</div>
                 <h3 className="text-xl font-bold serif mb-2">{t.title}</h3>
                 <p className="text-white/55 leading-relaxed">{t.text}</p>
