@@ -2,7 +2,7 @@ import { useState, useEffect, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import {
   Calendar, MapPin, Clock, ArrowLeft, BookOpen, Church, Users, Flame, Mail, Phone, User,
-  Music, Shirt, Lightbulb, ScrollText, Theater, Camera, Building2, HandHeart,
+  Music, Shirt, Lightbulb, ScrollText, Theater, Camera, Building2, HandHeart, Box,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CastingSection from '../components/CastingSection';
@@ -281,6 +281,11 @@ export default function DacLoPage() {
               </div>
             ))}
           </div>
+          <div className="text-center mt-12">
+            <Link to="/dac-lo/so-do" className="inline-flex items-center gap-2 bg-gold text-black px-8 py-4 rounded-full font-bold hover:bg-white transition-all">
+              <Box size={18} /> XEM SƠ ĐỒ SÂN KHẤU 3D
+            </Link>
+          </div>
           <p className="text-center text-white/35 text-xs mt-8">Thông tin dự kiến, có thể thay đổi.</p>
         </div>
       </section>
@@ -344,6 +349,12 @@ export default function DacLoPage() {
               </motion.div>
             ))}
           </div>
+
+          <motion.div {...fadeUp} className="mb-6 text-center">
+            <Link to="/dac-lo/so-do" className="inline-flex items-center gap-2 text-gold font-bold text-sm uppercase tracking-[0.08em] border-b border-gold pb-1 hover:text-white hover:border-white transition-all">
+              Xem vị trí từng hạng mục trên sơ đồ 3D →
+            </Link>
+          </motion.div>
 
           <motion.div {...fadeUp} className="bg-gold text-black rounded-3xl p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div>

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -9,6 +9,9 @@ import ActivitiesPage from './pages/ActivitiesPage';
 import StoryPage from './pages/StoryPage';
 import CastingPage from './pages/CastingPage';
 import ContactPage from './pages/ContactPage';
+
+// Trang 3D nặng (three.js) — chỉ tải khi mở trang
+const StageMapPage = lazy(() => import('./pages/StageMapPage'));
 
 /** Sang trang mới thì lên đầu trang; nếu link có #mục thì cuộn tới mục đó. */
 function ScrollManager() {
@@ -32,6 +35,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/dac-lo" element={<DacLoPage />} />
+          <Route path="/dac-lo/so-do" element={<Suspense fallback={<div className="h-screen" />}><StageMapPage /></Suspense>} />
           <Route path="/vo-dien" element={<PlaysPage />} />
           <Route path="/hoat-dong" element={<ActivitiesPage />} />
           <Route path="/cau-chuyen" element={<StoryPage />} />

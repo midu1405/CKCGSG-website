@@ -1,9 +1,12 @@
 import { Youtube, Mail } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import LOGO_IMG from '../assets/LOGO_MAIN_W.png';
 import { NAV_LINKS } from './Navbar';
 
-const Footer = () => (
+const Footer = () => {
+  const { pathname } = useLocation();
+  if (pathname === '/dac-lo/so-do') return null; // trang sơ đồ 3D dùng toàn màn hình
+  return (
   <footer className="pt-16 pb-10 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-6">
       <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr] mb-14">
@@ -45,6 +48,7 @@ const Footer = () => (
       </div>
     </div>
   </footer>
-);
+  );
+};
 
 export default Footer;
