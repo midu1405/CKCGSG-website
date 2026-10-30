@@ -137,8 +137,10 @@ export default function StageMapPage() {
             )}
 
             <p className="text-[11px] leading-relaxed text-white/40 border-t border-white/10 pt-3">
-              Sơ đồ minh hoạ, chưa phải mặt bằng chính thức. Sân khấu dựng theo phối cảnh thiết kế của ekip; kích thước sân, cách chia khu
-              và số chỗ là dự kiến tại Trung Tâm Mục Vụ TGP Sài Gòn và sẽ được cập nhật khi có sơ đồ từ Ban tổ chức.
+              Sơ đồ minh hoạ, chưa phải mặt bằng chính thức. Sân khấu dựng theo phối cảnh thiết kế của ekip, đặt trên sân trống lớn nhất
+              (~64 × 60 m) của khuôn viên Trung Tâm Mục Vụ; toà nhà, Nhà nguyện cổ và đường xung quanh lấy từ OpenStreetMap
+              (© OpenStreetMap contributors). Sân này xếp ghế được khoảng {fmt(TOTAL_SEATS)} chỗ — để đạt 6.000 – 7.000 khán giả như
+              proposal cần thêm khu đứng hoặc khu xem qua màn LED. Cách chia khu và số chỗ sẽ cập nhật khi có sơ đồ từ Ban tổ chức.
             </p>
           </div>
         </aside>
