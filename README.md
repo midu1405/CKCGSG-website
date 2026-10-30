@@ -18,6 +18,8 @@ Website chính thức của **Nhóm Ca Kịch Công Giáo Sài Gòn (CKCGSG)** �
 |---|---|---|
 | `/` | Trang chủ | Mở đầu, vở sắp tới, nhóm làm những gì, câu chuyện rút gọn, 3 vở gần nhất |
 | `/dac-lo` | Vở Đắc Lộ | Landing page theo proposal 2027: đếm ngược, thông điệp, Cha Đắc Lộ, kế hoạch công diễn, lời mời cộng tác |
+| `/dac-lo/so-do` | Sơ đồ sân khấu 3D | Bản dự kiến: sân khấu theo thiết kế, khán đài, chế độ Khán giả / Nhà tài trợ |
+| `/dac-lo/khuon-vien` | Sơ đồ khuôn viên | Trung Tâm Mục Vụ & Đại Chủng Viện Thánh Giuse từ dữ liệu OpenStreetMap; chế độ đánh dấu để thêm bãi xe, cổng… |
 | `/vo-dien` | Vở diễn | Tất cả vở ca kịch, chia theo giai đoạn |
 | `/hoat-dong` | Hoạt động | Thiện nguyện, thánh ca & hợp xướng |
 | `/cau-chuyen` | Câu chuyện | Đôi nét về nhóm, cột mốc, giá trị, sứ mệnh |
@@ -31,6 +33,8 @@ Website chính thức của **Nhóm Ca Kịch Công Giáo Sài Gòn (CKCGSG)** �
 - [React Router](https://reactrouter.com) cho các trang, [Motion](https://motion.dev) cho hiệu ứng
 - Font tự chứa qua [Fontsource](https://fontsource.org): **Playfair Display** (tiêu đề, con số) + **Be Vietnam Pro** (chữ thường)
 - Biểu tượng: [Lucide](https://lucide.dev)
+- Sơ đồ 3D: [three.js](https://threejs.org) + [React Three Fiber](https://r3f.docs.pmnd.rs) (chỉ tải khi mở trang sơ đồ)
+- Dữ liệu bản đồ khuôn viên: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors (ODbL)
 - Triển khai: [Vercel](https://vercel.com)
 
 ## Chạy trên máy
@@ -103,6 +107,8 @@ vercel.json                 # cho phép mở thẳng /vo-dien, /dac-lo... không
 **Thay ảnh** — đặt ảnh vào `src/assets/photos/`, nén trước khi đưa lên (rộng tối đa ~2000px, chất lượng ~80%).
 
 **Đổi ngày diễn Đắc Lộ** — sửa `PREMIERE` trong `src/pages/DacLoPage.tsx` (đồng hồ đếm ngược) và `date` của mục `dac-lo` trong `constants.ts`.
+
+**Thêm bãi xe / cổng trên sơ đồ khuôn viên** — mở `/dac-lo/khuon-vien`, bật *Chế độ đánh dấu*, bấm vào vị trí, bấm *Sao chép dòng thêm điểm* rồi dán vào `MARKERS` trong `src/components/campus/data.ts`.
 
 **Thêm một trang** — tạo file trong `src/pages/`, khai báo route trong `App.tsx`, thêm link vào `NAV_LINKS` trong `Navbar.tsx`.
 

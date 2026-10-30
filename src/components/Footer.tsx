@@ -5,7 +5,7 @@ import { NAV_LINKS } from './Navbar';
 
 const Footer = () => {
   const { pathname } = useLocation();
-  if (pathname === '/dac-lo/so-do') return null; // trang sơ đồ 3D dùng toàn màn hình
+  if (pathname.startsWith('/dac-lo/so-do') || pathname.startsWith('/dac-lo/khuon-vien')) return null; // trang sơ đồ dùng toàn màn hình
   return (
   <footer className="pt-16 pb-10 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-6">

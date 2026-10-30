@@ -12,6 +12,7 @@ import ContactPage from './pages/ContactPage';
 
 // Trang 3D nặng (three.js) — chỉ tải khi mở trang
 const StageMapPage = lazy(() => import('./pages/StageMapPage'));
+const CampusMapPage = lazy(() => import('./pages/CampusMapPage'));
 
 /** Sang trang mới thì lên đầu trang; nếu link có #mục thì cuộn tới mục đó. */
 function ScrollManager() {
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/dac-lo" element={<DacLoPage />} />
           <Route path="/dac-lo/so-do" element={<Suspense fallback={<div className="h-screen" />}><StageMapPage /></Suspense>} />
+          <Route path="/dac-lo/khuon-vien" element={<Suspense fallback={<div className="h-screen" />}><CampusMapPage /></Suspense>} />
           <Route path="/vo-dien" element={<PlaysPage />} />
           <Route path="/hoat-dong" element={<ActivitiesPage />} />
           <Route path="/cau-chuyen" element={<StoryPage />} />

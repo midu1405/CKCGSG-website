@@ -4,6 +4,7 @@ import { Users, Handshake, Eye, Maximize2, ArrowUpFromLine, Theater, Mail, X, In
 import StageScene, { type Mode, type SceneHandle } from '../components/stage/StageScene';
 import { ZONES, SPONSOR, TOTAL_SEATS, zoneCount, type Zone } from '../components/stage/data';
 import STAGE_DESIGN from '../assets/photos/stage-design.jpg';
+import MapTabs from '../components/MapTabs';
 
 const fmt = (n: number) => n.toLocaleString('vi-VN');
 
@@ -34,6 +35,7 @@ export default function StageMapPage() {
       {/* Tiêu đề + điều khiển */}
       <div className="absolute z-20 top-[88px] left-4 right-4 md:right-auto md:max-w-[560px] pointer-events-none">
         <div className="pointer-events-auto">
+          <div className="mb-2"><MapTabs active="stage" /></div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-gold uppercase tracking-[0.25em] text-[10px] font-bold">Đắc Lộ · 04.06.2027</span>
             <span className="bg-white/10 text-white/70 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">Bản dự kiến</span>
