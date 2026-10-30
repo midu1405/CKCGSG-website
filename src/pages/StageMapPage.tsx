@@ -2,7 +2,7 @@ import { Suspense, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, Handshake, Eye, Maximize2, ArrowUpFromLine, Theater, Mail, X, Info } from 'lucide-react';
 import StageScene, { type Mode, type SceneHandle } from '../components/stage/StageScene';
-import { ZONES, SPONSOR, TOTAL_SEATS, zoneCount, type Zone } from '../components/stage/data';
+import { ZONES, SPONSOR, TOTAL_SEATS, TOTAL_STANDING, STAND_DENSITY, zoneCount, type Zone } from '../components/stage/data';
 import STAGE_DESIGN from '../assets/photos/stage-design.jpg';
 import MapTabs from '../components/MapTabs';
 
@@ -74,7 +74,7 @@ export default function StageMapPage() {
         <aside className="absolute z-30 left-0 right-0 bottom-0 max-h-[46svh] md:max-h-none md:left-auto md:right-4 md:top-[88px] md:bottom-4 md:w-[360px] bg-black/85 backdrop-blur-md border border-white/10 rounded-t-3xl md:rounded-3xl overflow-y-auto">
           <div className="sticky top-0 bg-black/90 backdrop-blur px-5 pt-4 pb-3 border-b border-white/10 flex items-center justify-between">
             <div className="text-gold uppercase tracking-[0.2em] text-[11px] font-bold">
-              {mode === 'audience' ? `Khán đài · khoảng ${fmt(TOTAL_SEATS)} chỗ` : 'Hạng mục cần đồng hành'}
+              {mode === 'audience' ? `~${fmt(TOTAL_SEATS)} ghế · ~${fmt(TOTAL_STANDING)} chỗ đứng` : 'Hạng mục cần đồng hành'}
             </div>
             <button onClick={() => setPanelOpen(false)} aria-label="Thu gọn" className="text-white/50 hover:text-white"><X size={18} /></button>
           </div>
@@ -83,21 +83,24 @@ export default function StageMapPage() {
             {mode === 'audience' && zone && (
               <div className="rounded-2xl border border-gold/40 bg-gold/10 p-4">
                 <div className="flex items-center gap-2 mb-1"><span className="w-3 h-3 rounded-sm" style={{ background: zone.color }} /><span className="font-bold serif text-lg">{zone.name}</span></div>
-                <div className="text-gold text-sm font-bold mb-2">Khoảng {fmt(zoneCount(zone))} chỗ</div>
+                <div className="text-gold text-sm font-bold mb-2">{zone.kind === 'stand' ? `Khu đứng · ~${fmt(zone.area!.s[0] * zone.area!.s[1])} m² · khoảng ${fmt(zoneCount(zone))} người (dự kiến)` : `Ghế ngồi · khoảng ${fmt(zoneCount(zone))} chỗ`}</div>
                 <p className="text-white/65 text-sm leading-relaxed mb-3">{zone.desc}</p>
                 <button onClick={() => scene.current?.seatView(zone)} className="w-full flex items-center justify-center gap-2 bg-gold text-black rounded-full py-2.5 font-bold text-sm">
-                  <Eye size={16} /> Xem từ chỗ ngồi này
+                  <Eye size={16} /> {zone.kind === 'stand' ? 'Xem từ khu đứng này' : 'Xem từ chỗ ngồi này'}
                 </button>
               </div>
             )}
 
             {mode === 'audience' && (
               <ul className="space-y-1">
-                {ZONES.map(z => (
+                {ZONES.map((z, i) => (
                   <li key={z.id}>
+                    {(i === 0 || ZONES[i - 1].kind !== z.kind) && (
+                      <div className="text-white/40 uppercase tracking-widest text-[10px] font-bold px-3 pt-2 pb-1">{z.kind === 'seat' ? 'Ghế ngồi trước sân khấu' : 'Khu đứng'}</div>
+                    )}
                     <button onClick={() => pickZone(z)}
                       className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-left transition-colors ${zone?.id === z.id ? 'bg-white/10' : 'hover:bg-white/5'}`}>
-                      <span className="flex items-center gap-3"><span className="w-3 h-3 rounded-sm shrink-0" style={{ background: z.color }} /><span className="text-sm">{z.name}</span></span>
+                      <span className="flex items-center gap-3"><span className={`w-3 h-3 shrink-0 ${z.kind === 'stand' ? 'rounded-full' : 'rounded-sm'}`} style={{ background: z.color }} /><span className="text-sm">{z.name}</span></span>
                       <span className="text-white/45 text-xs tabular-nums lining-nums shrink-0">{fmt(zoneCount(z))}</span>
                     </button>
                   </li>
@@ -137,10 +140,10 @@ export default function StageMapPage() {
             )}
 
             <p className="text-[11px] leading-relaxed text-white/40 border-t border-white/10 pt-3">
-              Sơ đồ minh hoạ, chưa phải mặt bằng chính thức. Sân khấu dựng theo phối cảnh thiết kế của ekip, đặt trên sân trống lớn nhất
-              (~64 × 60 m) của khuôn viên Trung Tâm Mục Vụ; toà nhà, Nhà nguyện cổ và đường xung quanh lấy từ OpenStreetMap
-              (© OpenStreetMap contributors). Sân này xếp ghế được khoảng {fmt(TOTAL_SEATS)} chỗ — để đạt 6.000 – 7.000 khán giả như
-              proposal cần thêm khu đứng hoặc khu xem qua màn LED. Cách chia khu và số chỗ sẽ cập nhật khi có sơ đồ từ Ban tổ chức.
+              Sơ đồ minh hoạ, chưa phải mặt bằng chính thức. Sân khấu dựng theo phối cảnh thiết kế của ekip, đặt ở khoảng sân giữa toà nhà
+              bên trái và Nhà nguyện cổ; khu đứng, nhà vệ sinh và bãi giữ xe (sân lớn, sân trước) theo vị trí Ban tổ chức khoanh. Toà nhà và
+              đường lấy từ OpenStreetMap (© OpenStreetMap contributors). Sức chứa khu đứng tính theo {STAND_DENSITY} người/m² — tổng khoảng{' '}
+              {fmt(TOTAL_SEATS + TOTAL_STANDING)} khán giả tại chỗ; số chỗ sẽ cập nhật khi có sơ đồ chính thức.
             </p>
           </div>
         </aside>

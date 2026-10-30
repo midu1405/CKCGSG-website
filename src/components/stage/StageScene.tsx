@@ -2,10 +2,10 @@ import { useEffect, useLayoutEffect, useMemo, useRef, forwardRef, useImperativeH
 import { Canvas, useLoader, useThree } from '@react-three/fiber';
 import { CameraControls, Html, Line } from '@react-three/drei';
 import * as THREE from 'three';
-import { ZONES, FACILITIES, SPONSOR, CAMERAS, STAGE_FOCUS, seatsIn, type Zone } from './data';
+import { ZONES, FACILITIES, PARKING, SPONSOR, CAMERAS, STAGE_FOCUS, seatsIn, type Zone } from './data';
 import BACKDROP_IMG from '../../assets/photos/stage-backdrop.jpg';
-import { BUILDINGS, CAMPUS, ROADS, type XY } from '../campus/data';
-import { STAGE_POS, STAGE_ROT_Y, YARD, U, V, toWorld } from './frame';
+import { BUILDINGS, CAMPUS, ROADS, EVENT_AREAS, areaPts, xy2uv, uv2xy, type Area, type XY } from '../campus/data';
+import { STAGE_POS, STAGE_ROT_Y, U, V, toWorld } from './frame';
 
 export type Mode = 'audience' | 'sponsor';
 export type SceneHandle = {
@@ -116,23 +116,23 @@ function Stage({ sel }: { sel: string | null }) {
       ))}
 
       {/* Màn LED hai bên */}
-      {[-20.5, 20.5].map(x => (
-        <group key={x} position={[x, 0, -0.5]}>
-          <Box p={[-3.6, 4.5, 0]} s={[0.35, 9, 0.35]} c="#777" metal={0.5} />
-          <Box p={[3.6, 4.5, 0]} s={[0.35, 9, 0.35]} c="#777" metal={0.5} />
-          <Box p={[0, 7.2, -0.1]} s={[7.8, 4.6, 0.3]} c="#111" on={led} />
-          <mesh position={[0, 7.2, 0.07]}><planeGeometry args={[7.4, 4.2]} /><meshBasicMaterial map={backdrop} toneMapped={false} /></mesh>
+      {[-17.5, 17.5].map(x => (
+        <group key={x} position={[x, 0, 1.6]}>
+          <Box p={[-2.9, 4.5, 0]} s={[0.35, 9, 0.35]} c="#777" metal={0.5} />
+          <Box p={[2.9, 4.5, 0]} s={[0.35, 9, 0.35]} c="#777" metal={0.5} />
+          <Box p={[0, 7.2, -0.1]} s={[6.2, 3.8, 0.3]} c="#111" on={led} />
+          <mesh position={[0, 7.2, 0.07]}><planeGeometry args={[5.8, 3.4]} /><meshBasicMaterial map={backdrop} toneMapped={false} /></mesh>
         </group>
       ))}
 
-      {/* Hậu đài: lều phục trang – trang điểm (bên trái sân khấu) */}
-      <group position={[-25.5, 0, -9]}>
+      {/* Hậu đài: lều phục trang – trang điểm (phía sau, bên trái sân khấu) */}
+      <group position={[-16, 0, -11]}>
         <Box p={[0, 1.4, 0]} s={[7, 2.8, 6]} c="#e8e2d6" on={bk} />
         <mesh position={[0, 3.5, 0]} rotation={[0, Math.PI / 4, 0]}><coneGeometry args={[5, 1.6, 4]} /><Hi on={bk} color="#f2eee6" /></mesh>
       </group>
-      {/* Hậu cần: suất ăn – nước uống (bên phải sân khấu) */}
-      <group position={[25.5, 0, -9]}>
-        <Box p={[0, 1.3, 0]} s={[8, 2.6, 5]} c="#d8cfbf" on={hc} />
+      {/* Hậu cần: suất ăn – nước uống (phía sau, bên phải sân khấu) */}
+      <group position={[16, 0, -11]}>
+        <Box p={[0, 1.3, 0]} s={[7, 2.6, 5]} c="#d8cfbf" on={hc} />
         <mesh position={[0, 3.2, 0]} rotation={[0, Math.PI / 4, 0]}><coneGeometry args={[5.2, 1.4, 4]} /><Hi on={hc} color="#efe9df" /></mesh>
       </group>
     </group>
@@ -142,7 +142,7 @@ function Stage({ sel }: { sel: string | null }) {
 /* ---------- Khán đài ---------- */
 function ZoneSeats({ zone, dim, onPick }: { zone: Zone; dim: boolean; onPick: (z: Zone) => void }) {
   const ref = useRef<THREE.InstancedMesh>(null);
-  const seats = useMemo(() => zone.rects.flatMap(seatsIn), [zone]);
+  const seats = useMemo(() => (zone.rects ?? []).flatMap(seatsIn), [zone]);
   useLayoutEffect(() => {
     const m = new THREE.Matrix4();
     seats.forEach(([x, z], i) => { m.makeTranslation(x, 0.4, z); ref.current!.setMatrixAt(i, m); });
@@ -154,7 +154,7 @@ function ZoneSeats({ zone, dim, onPick }: { zone: Zone; dim: boolean; onPick: (z
         <boxGeometry args={[0.44, 0.8, 0.42]} />
         <meshStandardMaterial color={dim ? '#3a3a3a' : zone.color} roughness={0.7} transparent opacity={dim ? 0.55 : 1} />
       </instancedMesh>
-      {zone.rects.map((r, i) => (
+      {(zone.rects ?? []).map((r, i) => (
         <mesh key={i} position={[(r.x0 + r.x1) / 2, 0.85, (r.z0 + r.z1) / 2]} rotation={[-Math.PI / 2, 0, 0]}
           onClick={e => { e.stopPropagation(); onPick(zone); }}
           onPointerOver={() => (document.body.style.cursor = 'pointer')} onPointerOut={() => (document.body.style.cursor = '')}>
@@ -169,7 +169,7 @@ function ZoneSeats({ zone, dim, onPick }: { zone: Zone; dim: boolean; onPick: (z
 function FOH({ sel }: { sel: string | null }) {
   const snd = sel === 'am-thanh', cam = sel === 'livestream', lit = sel === 'anh-sang';
   return (
-    <group position={[0, 0, 33.5]}>
+    <group position={[0, 0, 31]}>
       <Box p={[0, 0.3, 0]} s={[9, 0.6, 5.5]} c="#2b2b2b" on={snd} />
       <Box p={[-1.5, 1.1, 0.5]} s={[4, 1, 1.2]} c="#111" on={snd} />
       <Box p={[0, 3.4, 0]} s={[9.4, 0.15, 5.9]} c="#444" />
@@ -186,14 +186,14 @@ function Cameras({ sel }: { sel: string | null }) {
   const on = sel === 'livestream';
   return (
     <group>
-      {[-31, 31].map(x => (
-        <group key={x} position={[x, 0, 22]}>
+      {[-20.5, 20.5].map(x => (
+        <group key={x} position={[x, 0, 18]}>
           <Box p={[0, 1.5, 0]} s={[2.4, 3, 2.4]} c="#3a3a3a" on={on} />
           <Box p={[0, 3.35, 0]} s={[0.5, 0.5, 0.9]} c="#0d0d0d" on={on} />
         </group>
       ))}
       {/* máy quay cẩu trước sân khấu */}
-      <group position={[10, 0, 3.6]}>
+      <group position={[11.5, 0, 2.8]}>
         <mesh position={[0, 1.3, 0]}><cylinderGeometry args={[0.15, 0.25, 2.6, 8]} /><Hi on={on} color="#555" /></mesh>
         <mesh position={[-1.6, 3.1, -0.6]} rotation={[0, 0.4, 0.5]}><boxGeometry args={[4.4, 0.16, 0.16]} /><Hi on={on} color="#777" /></mesh>
         <Box p={[-3.5, 4.2, -1.4]} s={[0.4, 0.4, 0.7]} c="#0d0d0d" on={on} />
@@ -206,23 +206,74 @@ function Cameras({ sel }: { sel: string | null }) {
 const w3 = ([x, y]: XY, h = 0) => new THREE.Vector3(x, h, -y);
 const shapeOf = (pts: XY[]) => new THREE.Shape(pts.map(([x, y]) => new THREE.Vector2(x, y)));
 const inPoly = ([x, y]: XY, poly: XY[]) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c; } return c; };
-const inYard = ([x, y]: XY, pad = 0) => { const d: XY = [x - YARD.center[0], y - YARD.center[1]]; const u = d[0] * U[0] + d[1] * U[1], v = d[0] * V[0] + d[1] * V[1]; return Math.abs(u) < YARD.size[0] / 2 + pad && Math.abs(v) < YARD.size[1] / 2 + pad; };
+const inArea = (p: XY, a: Area, pad = 0) => { const [u, v] = xy2uv(p), [cu, cv] = xy2uv(a.c); return Math.abs(u - cu) < a.s[0] / 2 + pad && Math.abs(v - cv) < a.s[1] / 2 + pad; };
+const rand = (a: number, b: number) => { const t = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return t - Math.floor(t); };
+
+/* ---------- Khu đứng (vẽ theo toạ độ khuôn viên) ---------- */
+function StandZone({ zone, dim, active, onPick }: { zone: Zone; dim: boolean; active: boolean; onPick: (z: Zone) => void }) {
+  const a = zone.area!;
+  const geo = useMemo(() => new THREE.ShapeGeometry(shapeOf(areaPts(a))), [a]);
+  const outline = useMemo(() => { const p = areaPts(a); return [...p, p[0]].map(q => w3(q, 0.08)); }, [a]);
+  const people = useMemo(() => {
+    const [cu, cv] = xy2uv(a.c), [w, h] = a.s, out: XY[] = [];
+    for (let i = 0.7; i < w - 0.5; i += 1.25) for (let j = 0.7; j < h - 0.5; j += 1.25)
+      out.push(uv2xy([cu - w / 2 + i + (rand(i, j) - 0.5) * 0.7, cv - h / 2 + j + (rand(j, i) - 0.5) * 0.7]));
+    return out;
+  }, [a]);
+  const ref = useRef<THREE.InstancedMesh>(null);
+  useLayoutEffect(() => {
+    const m = new THREE.Matrix4();
+    people.forEach(([x, y], i) => { m.makeTranslation(x, 0.8, -y); ref.current!.setMatrixAt(i, m); });
+    ref.current!.instanceMatrix.needsUpdate = true;
+  }, [people]);
+  return (
+    <group>
+      <mesh geometry={geo} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}
+        onClick={e => { e.stopPropagation(); onPick(zone); }}
+        onPointerOver={() => (document.body.style.cursor = 'pointer')} onPointerOut={() => (document.body.style.cursor = '')}>
+        <meshBasicMaterial color={dim ? '#3a3a3a' : zone.color} transparent opacity={active ? 0.55 : 0.3} depthWrite={false} />
+      </mesh>
+      <Line points={outline} color={dim ? '#555' : zone.color} lineWidth={1.5} dashed dashSize={2} gapSize={1.2} />
+      <instancedMesh ref={ref} args={[undefined, undefined, people.length]}>
+        <cylinderGeometry args={[0.2, 0.26, 1.6, 6]} />
+        <meshStandardMaterial color={dim ? '#3a3a3a' : zone.color} roughness={0.8} transparent opacity={dim ? 0.5 : 1} />
+      </instancedMesh>
+    </group>
+  );
+}
+
+/* ---------- Bãi giữ xe ---------- */
+function ParkingArea({ area }: { area: Area }) {
+  const geo = useMemo(() => new THREE.ShapeGeometry(shapeOf(areaPts(area))), [area]);
+  const stalls = useMemo(() => {
+    const [cu, cv] = xy2uv(area.c), [w, h] = area.s, arr: number[] = [];
+    const seg = (a: XY, b: XY) => arr.push(a[0], 0.07, -a[1], b[0], 0.07, -b[1]);
+    for (let v = -h / 2 + 3; v <= h / 2 - 3; v += 6) {
+      seg(uv2xy([cu - w / 2 + 2, cv + v]), uv2xy([cu + w / 2 - 2, cv + v]));
+      for (let u = -w / 2 + 2; u <= w / 2 - 2; u += 2.5) seg(uv2xy([cu + u, cv + v - 1.6]), uv2xy([cu + u, cv + v + 1.6]));
+    }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3)); return g;
+  }, [area]);
+  const outline = useMemo(() => { const p = areaPts(area); return [...p, p[0]].map(q => w3(q, 0.1)); }, [area]);
+  return (
+    <group>
+      <mesh geometry={geo} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]}><meshStandardMaterial color="#26303b" roughness={1} /></mesh>
+      <lineSegments geometry={stalls}><lineBasicMaterial color="#6f8197" /></lineSegments>
+      <Line points={outline} color="#5C7FA3" lineWidth={1.5} />
+    </group>
+  );
+}
 const inFrontStrip = ([x, y]: XY) => { const d: XY = [x + 41, y + 65]; const u = d[0] * U[0] + d[1] * U[1], v = d[0] * V[0] + d[1] * V[1]; return Math.abs(u) < 77 && Math.abs(v) < 15; };
 
 function CampusContext({ showLabels }: { showLabels: boolean }) {
   const campusGeo = useMemo(() => new THREE.ShapeGeometry(shapeOf(CAMPUS)), []);
-  const yardGeo = useMemo(() => {
-    const [w, h] = YARD.size, c = YARD.center;
-    const pts = ([[-w / 2, -h / 2], [w / 2, -h / 2], [w / 2, h / 2], [-w / 2, h / 2]] as XY[]).map(([u, v]) => [c[0] + u * U[0] + v * V[0], c[1] + u * U[1] + v * V[1]] as XY);
-    return new THREE.ShapeGeometry(shapeOf(pts));
-  }, []);
   const blds = useMemo(() => BUILDINGS.map(b => ({ b, geo: new THREE.ExtrudeGeometry(shapeOf(b.pts), { depth: b.h, bevelEnabled: false }) })), []);
   const trunks = useRef<THREE.InstancedMesh>(null), crowns = useRef<THREE.InstancedMesh>(null);
   const trees = useMemo(() => {
     const out: [number, number, number][] = [];
     for (let x = -130; x <= 130; x += 11) for (let y = -150; y <= 70; y += 11) {
       const p: XY = [x + ((y * 7) % 5), y + ((x * 3) % 5)];
-      if (!inPoly(p, CAMPUS) || inYard(p, 3) || inFrontStrip(p) || BUILDINGS.some(b => inPoly(p, b.pts))) continue;
+      if (!inPoly(p, CAMPUS) || Object.values(EVENT_AREAS).some(a => inArea(p, a, 3)) || inFrontStrip(p) || BUILDINGS.some(b => inPoly(p, b.pts))) continue;
       out.push([p[0], p[1], 0.8 + (((x + y) * 13) % 5) * 0.08]);
     }
     return out;
@@ -240,7 +291,7 @@ function CampusContext({ showLabels }: { showLabels: boolean }) {
     <group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}><planeGeometry args={[1000, 1000]} /><meshStandardMaterial color="#141210" /></mesh>
       <mesh geometry={campusGeo} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]}><meshStandardMaterial color="#232a24" roughness={1} /></mesh>
-      <mesh geometry={yardGeo} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}><meshStandardMaterial color="#3a352e" roughness={1} /></mesh>
+      {PARKING.map(p => <ParkingArea key={p.id} area={p.area} />)}
       <Line points={CAMPUS.map(p => w3(p, 0.3))} color="#D4AF37" lineWidth={1.5} transparent opacity={0.6} />
       {ROADS.map(([name, lines]) => lines.map((l, i) => (
         <Line key={name + i} points={l.map(p => w3(p, 0.01))} color="#4f4a43" lineWidth={name === 'Lý Tự Trọng' || name === 'Nguyễn Du' ? 9 : 14} worldUnits />
@@ -253,6 +304,7 @@ function CampusContext({ showLabels }: { showLabels: boolean }) {
       <instancedMesh ref={trunks} args={[undefined, undefined, trees.length]}><cylinderGeometry args={[0.3, 0.45, 3.2, 6]} /><meshStandardMaterial color="#3b2a1d" /></instancedMesh>
       <instancedMesh ref={crowns} args={[undefined, undefined, trees.length]}><icosahedronGeometry args={[3.4, 0]} /><meshStandardMaterial color="#21402c" flatShading /></instancedMesh>
       {showLabels && <>
+        {PARKING.map(p => <Tag key={p.id} pos={w3(p.area.c, 2).toArray() as [number, number, number]} tone="light">🅿 {p.label}</Tag>)}
         {BUILDINGS.filter(b => b.name).map(b => <Tag key={b.i} pos={w3(b.center, b.h + 4).toArray() as [number, number, number]} tone={b.name === 'Nhà nguyện cổ' ? 'light' : 'dark'}>{b.name}</Tag>)}
         {ROADS.filter(([n]) => n === 'Tôn Đức Thắng' || n === 'Nguyễn Bỉnh Khiêm').map(([name, lines]) => {
           const l = lines.reduce((a, b) => (b.length > a.length ? b : a)); const mid = l[Math.floor(l.length / 2)];
@@ -280,7 +332,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, selZone, sel
   useImperativeHandle(ref, () => ({
     preset: k => { const c = presetPos(k); cc.current?.setLookAt(...c.pos, ...c.look, true); },
     flyTo: (pos, look) => cc.current?.setLookAt(...toWorld(pos), ...toWorld(look), true),
-    seatView: z => cc.current?.setLookAt(...toWorld([z.seat[0], 1.25, z.seat[1]]), ...toWorld(STAGE_FOCUS), true),
+    seatView: z => cc.current?.setLookAt(...toWorld([z.seat[0], z.kind === 'stand' ? 2.6 : 1.25, z.seat[1]]), ...toWorld(STAGE_FOCUS), true),
   }), [far]);
   useEffect(() => { const c = presetPos('overview'); cc.current?.setLookAt(...c.pos, ...c.look, false); }, [far]);
   const item = mode === 'sponsor' ? selItem : null;
@@ -297,27 +349,35 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, selZone, sel
       <group position={STAGE_POS} rotation={[0, STAGE_ROT_Y, 0]}>
       <pointLight position={[0, 16, 14]} intensity={2200} distance={70} decay={2} color="#ffd9a0" />
       {/* lối đi giữa và hai lối ngang */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 24.5]}><planeGeometry args={[2, 41]} /><meshStandardMaterial color="#4a4239" /></mesh>
-      {[16.05, 30.05].map(z => <mesh key={z} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, z]}><planeGeometry args={[58, 1.4]} /><meshStandardMaterial color="#4a4239" /></mesh>)}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 10]}><planeGeometry args={[42, 50]} /><meshStandardMaterial color="#3a352e" roughness={1} /></mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 15.9]}><planeGeometry args={[2, 23.8]} /><meshStandardMaterial color="#4a4239" /></mesh>
+      {[9.95, 16.45].map(z => <mesh key={z} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, z]}><planeGeometry args={[40, 1.1]} /><meshStandardMaterial color="#4a4239" /></mesh>)}
       <Stage sel={item} />
       <FOH sel={item} />
       <Cameras sel={item} />
-      {ZONES.map(z => <ZoneSeats key={z.id} zone={z} dim={mode === 'sponsor' || (!!selZone && selZone.id !== z.id)} onPick={onPickZone} />)}
+      {ZONES.filter(z => z.kind === 'seat').map(z => <ZoneSeats key={z.id} zone={z} dim={mode === 'sponsor' || (!!selZone && selZone.id !== z.id)} onPick={onPickZone} />)}
 
       {mode === 'audience' && <>
         <Tag pos={[0, 15.5, -1]} tone="gold">Sân khấu</Tag>
-        {ZONES.map(z => {
-          const r = z.rects[0];
+        {ZONES.filter(z => z.kind === 'seat').map(z => {
+          const r = z.rects![0];
           return <Tag key={z.id} pos={[(r.x0 + r.x1) / 2, 3, (r.z0 + r.z1) / 2]} tone={selZone?.id === z.id ? 'gold' : 'dark'} onClick={() => onPickZone(z)}>{z.short}</Tag>;
         })}
         {FACILITIES.map(f => <Tag key={f.id} pos={[f.pos[0], 2.2, f.pos[2]]} tone="light">{f.label}</Tag>)}
-        <Tag pos={[0, 5, 33.5]}>FOH · Âm thanh – Ánh sáng</Tag>
+        <Tag pos={[0, 5, 31]}>FOH · Âm thanh – Ánh sáng</Tag>
       </>}
 
       {mode === 'sponsor' && SPONSOR.map(s => (
         <Tag key={s.id} pos={s.label} tone={selItem === s.id ? 'gold' : 'dark'} onClick={() => onPickItem(s.id)}>{s.name}</Tag>
       ))}
       </group>
+
+      {ZONES.filter(z => z.kind === 'stand').map(z => (
+        <StandZone key={z.id} zone={z} active={selZone?.id === z.id} dim={mode === 'sponsor' || (!!selZone && selZone.id !== z.id)} onPick={onPickZone} />
+      ))}
+      {mode === 'audience' && ZONES.filter(z => z.kind === 'stand').map(z => (
+        <Tag key={z.id} pos={w3(z.area!.c, 3.5).toArray() as [number, number, number]} tone={selZone?.id === z.id ? 'gold' : 'dark'} onClick={() => onPickZone(z)}>{z.short}</Tag>
+      ))}
 
       <CameraControls ref={cc} minDistance={4} maxDistance={420} maxPolarAngle={Math.PI / 2.05} smoothTime={0.6} />
     </>

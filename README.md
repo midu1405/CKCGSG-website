@@ -18,7 +18,7 @@ Website chính thức của **Nhóm Ca Kịch Công Giáo Sài Gòn (CKCGSG)** �
 |---|---|---|
 | `/` | Trang chủ | Mở đầu, vở sắp tới, nhóm làm những gì, câu chuyện rút gọn, 3 vở gần nhất |
 | `/dac-lo` | Vở Đắc Lộ | Landing page theo proposal 2027: đếm ngược, thông điệp, Cha Đắc Lộ, kế hoạch công diễn, lời mời cộng tác |
-| `/dac-lo/so-do` | Sơ đồ sân khấu 3D | Bản dự kiến: sân khấu theo thiết kế, khán đài, chế độ Khán giả / Nhà tài trợ |
+| `/dac-lo/so-do` | Sơ đồ sân khấu 3D | Bản dự kiến: sân khấu theo thiết kế đặt đúng vị trí trong khuôn viên, ghế ngồi, khu đứng, bãi giữ xe; chế độ Khán giả / Nhà tài trợ |
 | `/dac-lo/khuon-vien` | Sơ đồ khuôn viên | Trung Tâm Mục Vụ & Đại Chủng Viện Thánh Giuse từ dữ liệu OpenStreetMap; chế độ đánh dấu để thêm bãi xe, cổng… |
 | `/vo-dien` | Vở diễn | Tất cả vở ca kịch, chia theo giai đoạn |
 | `/hoat-dong` | Hoạt động | Thiện nguyện, thánh ca & hợp xướng |
@@ -109,6 +109,8 @@ vercel.json                 # cho phép mở thẳng /vo-dien, /dac-lo... không
 **Đổi ngày diễn Đắc Lộ** — sửa `PREMIERE` trong `src/pages/DacLoPage.tsx` (đồng hồ đếm ngược) và `date` của mục `dac-lo` trong `constants.ts`.
 
 **Thêm bãi xe / cổng trên sơ đồ khuôn viên** — mở `/dac-lo/khuon-vien`, bật *Chế độ đánh dấu*, bấm vào vị trí, bấm *Sao chép dòng thêm điểm* rồi dán vào `MARKERS` trong `src/components/campus/data.ts`.
+
+**Chỉnh vị trí sân khấu / khu đứng / bãi giữ xe** — sửa `EVENT_AREAS` trong `src/components/campus/data.ts` (tâm và kích thước từng khu); cả sơ đồ 3D và sơ đồ khuôn viên tự cập nhật. Mật độ khu đứng để tính sức chứa: `STAND_DENSITY` trong `src/components/stage/data.ts`.
 
 **Thêm một trang** — tạo file trong `src/pages/`, khai báo route trong `App.tsx`, thêm link vào `NAV_LINKS` trong `Navbar.tsx`.
 

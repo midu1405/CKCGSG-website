@@ -44,7 +44,7 @@ export const BUILDINGS: Building[] = (OSM.b as [string, XY[]][]).map(([osmName, 
 export const CAMPUS_AREA = Math.round(area(CAMPUS));
 
 /* ---------- Điểm đánh dấu (sửa / thêm tại đây) ---------- */
-export type MarkerKind = 'gate' | 'yard' | 'parking' | 'stage' | 'service';
+export type MarkerKind = 'gate' | 'yard' | 'parking' | 'stage' | 'standing' | 'service';
 export type Marker = { id: string; kind: MarkerKind; label: string; desc: string; pos: XY; size?: [number, number]; estimate?: boolean };
 
 export const KIND_STYLE: Record<MarkerKind, { color: string; name: string }> = {
@@ -52,11 +52,43 @@ export const KIND_STYLE: Record<MarkerKind, { color: string; name: string }> = {
   yard: { color: '#5E9C76', name: 'Sân trống' },
   parking: { color: '#5C7FA3', name: 'Bãi giữ xe' },
   stage: { color: '#C2553F', name: 'Sân khấu' },
+  standing: { color: '#9B6FB0', name: 'Khu khán giả đứng' },
   service: { color: '#B9874A', name: 'Tiện ích' },
 };
 
 /** Góc xoay của khuôn viên so với hướng Bắc (cạnh dọc đường Tôn Đức Thắng) */
 export const CAMPUS_ANGLE = -42.6;
+const CA = (CAMPUS_ANGLE * Math.PI) / 180;
+/** Hai trục của khuôn viên: u dọc đường Tôn Đức Thắng (về phía Đông Nam), v vuông góc hướng vào trong (Đông Bắc) */
+export const AXIS_U: XY = [Math.cos(CA), Math.sin(CA)];
+export const AXIS_V: XY = [-Math.sin(CA), Math.cos(CA)];
+export const uv2xy = ([u, v]: XY): XY => [u * AXIS_U[0] + v * AXIS_V[0], u * AXIS_U[1] + v * AXIS_V[1]];
+export const xy2uv = ([x, y]: XY): XY => [x * AXIS_U[0] + y * AXIS_U[1], x * AXIS_V[0] + y * AXIS_V[1]];
+
+/** Khu chữ nhật thẳng hàng với khuôn viên: tâm (x, y) + kích thước dọc u × v (mét) */
+export type Area = { c: XY; s: [number, number] };
+const areaUV = (u: number, v: number, w: number, h: number): Area => {
+  const [x, y] = uv2xy([u, v]); return { c: [Math.round(x * 10) / 10, Math.round(y * 10) / 10], s: [w, h] };
+};
+export const areaPts = ({ c, s: [w, h] }: Area): XY[] => {
+  const [cu, cv] = xy2uv(c);
+  return ([[-w / 2, -h / 2], [w / 2, -h / 2], [w / 2, h / 2], [-w / 2, h / 2]] as XY[]).map(([du, dv]) => uv2xy([cu + du, cv + dv]));
+};
+
+/**
+ * Bố trí đêm diễn Đắc Lộ — theo ảnh anh Midu khoanh trên sơ đồ (10.2026):
+ * sân khấu giữa toà nhà bên trái và Nhà nguyện cổ, 2 khu trống cho khán giả đứng, sân lớn và sân trước làm bãi giữ xe.
+ * Kích thước khoanh theo ảnh nên chỉ gần đúng — chỉnh số ở đây nếu Ban tổ chức đo lại.
+ */
+export const EVENT_AREAS = {
+  stage: areaUV(-30, -5.5, 40, 43),   // sân khấu + khán đài ghế ngồi
+  standA: areaUV(13, -19, 44, 12.5),  // khu đứng giữa Nhà nguyện cổ và Trung tâm Mục vụ
+  standB: areaUV(-43.5, -49, 35, 10), // khu đứng giữa Học viện Mục vụ và Trung tâm Mục vụ
+  parkA: areaUV(60, -62, 64, 60),     // sân lớn
+  parkB: areaUV(2, -80, 52, 20),      // sân trước, cạnh lối vào
+};
+export const WC_POS: XY = [-29, 50.5];
+const m2 = (a: Area) => (a.s[0] * a.s[1]).toLocaleString('vi-VN');
 
 export const MARKERS: Marker[] = [
   {
@@ -64,13 +96,27 @@ export const MARKERS: Marker[] = [
     desc: 'Cổng phía đường Tôn Đức Thắng. Vị trí ước lượng theo ảnh vệ tinh — cần Ban tổ chức xác nhận.',
   },
   {
-    id: 'san-lon', kind: 'yard', label: 'Sân lớn (~3.800 m²)', pos: [2, -86], size: [64, 60],
-    desc: 'Khoảng 64 × 60 m (~3.800 m²) — khoảng trống liền khối lớn nhất trong khuôn viên theo dữ liệu bản đồ. Ứng viên để dựng sân khấu ngoài trời. Thực tế có cây xanh nên cần khảo sát lại.',
+    id: 'san-khau', kind: 'stage', label: 'Sân khấu Đắc Lộ', pos: EVENT_AREAS.stage.c, size: EVENT_AREAS.stage.s,
+    desc: 'Vị trí dựng sân khấu thực tế: khoảng sân giữa toà nhà bên trái và Nhà nguyện cổ, phía trên Trung tâm Mục vụ. Sân khấu quay lưng về bờ tường phía Bắc, khán đài ghế ngồi ở phía trước.',
   },
   {
-    id: 'dai-tien-san', kind: 'yard', label: 'Dải sân trước', pos: [-41, -65], size: [154, 30],
-    desc: 'Dải trống dài ~154 m, rộng ~30 m giữa hàng rào và các toà nhà mặt tiền — có thể dùng làm lối vào, khu đón khách hoặc giữ xe.',
+    id: 'dung-a', kind: 'standing', label: 'Khu đứng A', pos: EVENT_AREAS.standA.c, size: EVENT_AREAS.standA.s,
+    desc: `Khoảng trống giữa Nhà nguyện cổ và Trung tâm Mục vụ (~${m2(EVENT_AREAS.standA)} m²) — dành cho khán giả đứng, nhìn chéo về sân khấu.`,
   },
-  // Ví dụ thêm bãi xe sau này:
-  // { id: 'bai-xe-1', kind: 'parking', label: 'Bãi xe máy 1', pos: [-60, -80], desc: 'Sức chứa ~… xe' },
+  {
+    id: 'dung-b', kind: 'standing', label: 'Khu đứng B', pos: EVENT_AREAS.standB.c, size: EVENT_AREAS.standB.s,
+    desc: `Khoảng trống giữa Học viện Mục vụ và Trung tâm Mục vụ (~${m2(EVENT_AREAS.standB)} m²) — dành cho khán giả đứng, nhìn thẳng về sân khấu từ phía sau.`,
+  },
+  {
+    id: 'xe-a', kind: 'parking', label: 'Bãi giữ xe · Sân lớn', pos: EVENT_AREAS.parkA.c, size: EVENT_AREAS.parkA.s,
+    desc: `Sân trống lớn nhất khuôn viên (~${m2(EVENT_AREAS.parkA)} m²), dùng làm bãi giữ xe trong đêm diễn.`,
+  },
+  {
+    id: 'xe-b', kind: 'parking', label: 'Bãi giữ xe · Sân trước', pos: EVENT_AREAS.parkB.c, size: EVENT_AREAS.parkB.s,
+    desc: `Dải sân trước Trung tâm Mục vụ, gần lối vào từ đường Tôn Đức Thắng (~${m2(EVENT_AREAS.parkB)} m²).`,
+  },
+  {
+    id: 'wc', kind: 'service', label: 'Nhà vệ sinh', pos: WC_POS,
+    desc: 'Nhà vệ sinh trong toà nhà bên trái, cạnh sân khấu.',
+  },
 ];
