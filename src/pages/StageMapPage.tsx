@@ -1,10 +1,13 @@
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Handshake, Eye, Maximize2, ArrowUpFromLine, Theater, Mail, X, Info, Sun, Moon } from 'lucide-react';
+import { Users, Handshake, Eye, Maximize2, ArrowUpFromLine, Theater, Mail, X, Info, Sun, Moon, Footprints } from 'lucide-react';
 import StageScene, { type Mode, type SceneHandle } from '../components/stage/StageScene';
 import { ZONES, SPONSOR, TOTAL_SEATS, TOTAL_STANDING, STAND_DENSITY, zoneCount, type Zone } from '../components/stage/data';
 import STAGE_DESIGN from '../assets/photos/stage-design.jpg';
 import MapTabs from '../components/MapTabs';
+import { usePresence } from '../components/walk/presence';
+import { JoinDialog, WalkHud, TouchControls } from '../components/walk/WalkUI';
+import type { Me, TouchInput } from '../components/walk/Walker';
 
 const fmt = (n: number) => n.toLocaleString('vi-VN');
 
@@ -12,6 +15,11 @@ export default function StageMapPage() {
   const scene = useRef<SceneHandle>(null);
   const [mode, setMode] = useState<Mode>('audience');
   const [night, setNight] = useState(false);
+  const [joining, setJoining] = useState(false);
+  const [walkMe, setWalkMe] = useState<Me | null>(null);
+  const touch = useRef<TouchInput>({ x: 0, y: 0, jump: false });
+  const { net, ids, count, status } = usePresence(!!walkMe);
+  const walk = useMemo(() => (walkMe ? { me: walkMe, net, ids, touch } : null), [walkMe, net, ids]);
   const [zone, setZone] = useState<Zone | null>(null);
   const [item, setItem] = useState<string | null>(null);
   const [panelOpen, setPanelOpen] = useState(() => typeof window === 'undefined' || window.innerWidth >= 768);
@@ -29,12 +37,15 @@ export default function StageMapPage() {
       {/* Cảnh 3D */}
       <div className="absolute inset-0 top-[72px]">
         <Suspense fallback={<div className="h-full flex items-center justify-center text-white/50">Đang dựng sân khấu…</div>}>
-          <StageScene ref={scene} mode={mode} night={night} selZone={zone} selItem={item} onPickZone={pickZone} onPickItem={pickItem} />
+          <StageScene ref={scene} mode={mode} night={night} walk={walk} selZone={zone} selItem={item} onPickZone={pickZone} onPickItem={pickItem} />
         </Suspense>
       </div>
 
+      {walkMe && <><WalkHud count={count} status={status} onExit={() => setWalkMe(null)} /><TouchControls touch={touch} /></>}
+      {joining && <JoinDialog onClose={() => setJoining(false)} onJoin={m => { setJoining(false); setPanelOpen(false); setWalkMe(m); }} />}
+
       {/* Tiêu đề + điều khiển */}
-      <div className="absolute z-20 top-[88px] left-4 right-4 md:right-auto md:max-w-[560px] pointer-events-none">
+      {!walkMe && <div className="absolute z-20 top-[88px] left-4 right-4 md:right-auto md:max-w-[560px] pointer-events-none">
         <div className="pointer-events-auto">
           <div className="mb-2"><MapTabs active="stage" /></div>
           <div className="flex items-center gap-2 mb-1">
@@ -57,25 +68,29 @@ export default function StageMapPage() {
                 <Icon size={14} className="text-gold" /> {label}
               </button>
             ))}
+            <button onClick={() => setJoining(true)}
+              className="flex items-center gap-1.5 bg-gold text-black px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+              <Footprints size={14} /> Dạo khuôn viên
+            </button>
             <button onClick={() => setNight(n => !n)}
               className="flex items-center gap-1.5 bg-black/70 backdrop-blur border border-white/10 hover:border-gold/60 px-3 py-1.5 rounded-full text-xs font-bold">
               {night ? <Sun size={14} className="text-gold" /> : <Moon size={14} className="text-gold" />} {night ? 'Ban ngày' : 'Đêm diễn'}
             </button>
           </div>
         </div>
-      </div>
+      </div>}
 
-      <div className="hidden md:block absolute bottom-4 left-4 text-white/40 text-xs pointer-events-none">
+      {!walkMe && <div className="hidden md:block absolute bottom-4 left-4 text-white/40 text-xs pointer-events-none">
         Kéo để xoay · cuộn để phóng to · chuột phải để di chuyển · bấm vào khu để xem
-      </div>
+      </div>}
 
       {/* Bảng thông tin */}
-      {!panelOpen && (
+      {!walkMe && !panelOpen && (
         <button onClick={() => setPanelOpen(true)} className="absolute z-30 bottom-4 right-4 md:top-[88px] md:bottom-auto bg-gold text-black rounded-full px-4 py-2 font-bold text-sm flex items-center gap-2">
           <Info size={16} /> {mode === 'audience' ? 'Các khu' : 'Hạng mục'}
         </button>
       )}
-      {panelOpen && (
+      {!walkMe && panelOpen && (
         <aside className="absolute z-30 left-0 right-0 bottom-0 max-h-[46svh] md:max-h-none md:left-auto md:right-4 md:top-[88px] md:bottom-4 md:w-[360px] bg-black/85 backdrop-blur-md border border-white/10 rounded-t-3xl md:rounded-3xl overflow-y-auto">
           <div className="sticky top-0 bg-black/90 backdrop-blur px-5 pt-4 pb-3 border-b border-white/10 flex items-center justify-between">
             <div className="text-gold uppercase tracking-[0.2em] text-[11px] font-bold">

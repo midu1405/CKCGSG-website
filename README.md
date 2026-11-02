@@ -112,6 +112,8 @@ vercel.json                 # cho phép mở thẳng /vo-dien, /dac-lo... không
 
 **Chỉnh vị trí sân khấu / khu đứng / bãi giữ xe** — sửa `EVENT_AREAS` trong `src/components/campus/data.ts` (tâm và kích thước từng khu); cả sơ đồ 3D và sơ đồ khuôn viên tự cập nhật. Mật độ khu đứng để tính sức chứa: `STAND_DENSITY` trong `src/components/stage/data.ts`.
 
+**Dạo khuôn viên (nhiều người cùng lúc)** — nút *Dạo khuôn viên* trên `/dac-lo/so-do`. Mã nằm trong `src/components/walk/`: `presence.ts` đồng bộ vị trí bằng [Trystero](https://github.com/dmotz/trystero) (WebRTC ngang hàng qua relay Nostr công cộng, không cần máy chủ); `Walker.tsx` điều khiển nhân vật (W A S D, Space nhảy, Shift chạy) và va chạm. Khi cần ổn định cho đông người hơn, đổi `import('trystero')` sang `trystero/supabase` hoặc `trystero/firebase`.
+
 **Thêm một trang** — tạo file trong `src/pages/`, khai báo route trong `App.tsx`, thêm link vào `NAV_LINKS` trong `Navbar.tsx`.
 
 ## Triển khai

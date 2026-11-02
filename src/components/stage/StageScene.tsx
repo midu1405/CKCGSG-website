@@ -8,6 +8,10 @@ import { BUILDINGS, ROADS, EVENT_AREAS, areaPts, xy2uv, uv2xy, type Area, type X
 import { STAGE_POS, STAGE_ROT_Y, toWorld } from './frame';
 import { RealCampus, WorldLights, w3, shapeOf } from '../world/RealCampus';
 import { asphaltTex, pavingTex, tiled } from '../world/textures';
+import { Walker, RemoteAvatars, type Me, type TouchInput } from '../walk/Walker';
+import type { Net } from '../walk/presence';
+
+export type WalkProps = { me: Me; net: Net; ids: string[]; touch: React.MutableRefObject<TouchInput> };
 const rand = (a: number, b: number) => { const t = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return t - Math.floor(t); };
 
 export type Mode = 'audience' | 'sponsor';
@@ -308,9 +312,9 @@ function StageLights({ night }: { night: boolean }) {
 }
 
 /* ---------- Cảnh tổng ---------- */
-type Props = { mode: Mode; night: boolean; selZone: Zone | null; selItem: string | null; onPickZone: (z: Zone) => void; onPickItem: (id: string) => void };
+type Props = { mode: Mode; night: boolean; walk?: WalkProps | null; selZone: Zone | null; selItem: string | null; onPickZone: (z: Zone) => void; onPickItem: (id: string) => void };
 
-const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, selZone, selItem, onPickZone, onPickItem }, ref) {
+const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk = null, selZone, selItem, onPickZone, onPickItem }, ref) {
   const cc = useRef<CameraControls>(null);
   const { size } = useThree();
   // Màn hình dọc (điện thoại): lùi camera xa hơn để thấy trọn sân khấu và khán đài
@@ -326,10 +330,10 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, selZo
     flyTo: (pos, look) => cc.current?.setLookAt(...toWorld(pos), ...toWorld(look), true),
     seatView: z => cc.current?.setLookAt(...toWorld([z.seat[0], z.kind === 'stand' ? 2.6 : 1.25, z.seat[1]]), ...toWorld(STAGE_FOCUS), true),
   }), [far]);
-  useEffect(() => { const c = presetPos('overview'); cc.current?.setLookAt(...c.pos, ...c.look, false); }, [far]);
+  useEffect(() => { const c = presetPos('overview'); cc.current?.setLookAt(...c.pos, ...c.look, false); }, [far, !!walk]);
   const item = mode === 'sponsor' ? selItem : null;
   const plaza = useMemo(() => tiled(pavingTex('warm'), 42 / 4, 50 / 4), []);
-  const showLabels = mode === 'audience';
+  const showLabels = mode === 'audience' && !walk;
 
   return (
     <>
@@ -359,7 +363,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, selZo
       {ZONES.filter(z => z.kind === 'seat').map(z => <ZoneSeats key={z.id} zone={z} dim={mode === 'sponsor' || (!!selZone && selZone.id !== z.id)} onPick={onPickZone} />)}
       </ShadowAll>
 
-      {mode === 'audience' && <>
+      {showLabels && <>
         <Tag pos={[0, 15.5, -1]} tone="gold">Sân khấu</Tag>
         {ZONES.filter(z => z.kind === 'seat').map(z => {
           const r = z.rects![0];
@@ -377,11 +381,14 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, selZo
       {ZONES.filter(z => z.kind === 'stand').map(z => (
         <StandZone key={z.id} zone={z} active={selZone?.id === z.id} dim={mode === 'sponsor' || (!!selZone && selZone.id !== z.id)} onPick={onPickZone} />
       ))}
-      {mode === 'audience' && ZONES.filter(z => z.kind === 'stand').map(z => (
+      {showLabels && ZONES.filter(z => z.kind === 'stand').map(z => (
         <Tag key={z.id} pos={w3(z.area!.c, 3.5).toArray() as [number, number, number]} tone={selZone?.id === z.id ? 'gold' : 'dark'} onClick={() => onPickZone(z)}>{z.short}</Tag>
       ))}
 
-      <CameraControls ref={cc} minDistance={4} maxDistance={420} maxPolarAngle={Math.PI / 2.05} smoothTime={0.6} />
+      {walk ? <>
+        <Walker me={walk.me} net={walk.net} touch={walk.touch} />
+        <RemoteAvatars ids={walk.ids} net={walk.net} />
+      </> : <CameraControls ref={cc} minDistance={4} maxDistance={420} maxPolarAngle={Math.PI / 2.05} smoothTime={0.6} />}
     </>
   );
 });
