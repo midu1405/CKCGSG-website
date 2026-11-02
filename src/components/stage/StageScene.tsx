@@ -4,8 +4,11 @@ import { CameraControls, Html, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import { ZONES, FACILITIES, PARKING, SPONSOR, CAMERAS, STAGE_FOCUS, seatsIn, type Zone } from './data';
 import BACKDROP_IMG from '../../assets/photos/stage-backdrop.jpg';
-import { BUILDINGS, CAMPUS, ROADS, EVENT_AREAS, areaPts, xy2uv, uv2xy, type Area, type XY } from '../campus/data';
-import { STAGE_POS, STAGE_ROT_Y, U, V, toWorld } from './frame';
+import { BUILDINGS, ROADS, EVENT_AREAS, areaPts, xy2uv, uv2xy, type Area, type XY } from '../campus/data';
+import { STAGE_POS, STAGE_ROT_Y, toWorld } from './frame';
+import { RealCampus, WorldLights, w3, shapeOf } from '../world/RealCampus';
+import { asphaltTex, pavingTex, tiled } from '../world/textures';
+const rand = (a: number, b: number) => { const t = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return t - Math.floor(t); };
 
 export type Mode = 'audience' | 'sponsor';
 export type SceneHandle = {
@@ -202,123 +205,112 @@ function Cameras({ sel }: { sel: string | null }) {
   );
 }
 
-/* ---------- Bối cảnh khuôn viên thật (OpenStreetMap) ---------- */
-const w3 = ([x, y]: XY, h = 0) => new THREE.Vector3(x, h, -y);
-const shapeOf = (pts: XY[]) => new THREE.Shape(pts.map(([x, y]) => new THREE.Vector2(x, y)));
-const inPoly = ([x, y]: XY, poly: XY[]) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c; } return c; };
-const inArea = (p: XY, a: Area, pad = 0) => { const [u, v] = xy2uv(p), [cu, cv] = xy2uv(a.c); return Math.abs(u - cu) < a.s[0] / 2 + pad && Math.abs(v - cv) < a.s[1] / 2 + pad; };
-const rand = (a: number, b: number) => { const t = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return t - Math.floor(t); };
+/* ---------- Bối cảnh khuôn viên dựng như thật (world/RealCampus) ---------- */
+const CLOTHES = ['#f2f2f0', '#22252b', '#3d5a80', '#9b2c2c', '#e0c48a', '#5b7d5a', '#7a5c8e', '#c96f3b', '#2f4858', '#d9d2c5'];
 
-/* ---------- Khu đứng (vẽ theo toạ độ khuôn viên) ---------- */
+/* ---------- Khu đứng: nền màu nhạt + đám đông ---------- */
 function StandZone({ zone, dim, active, onPick }: { zone: Zone; dim: boolean; active: boolean; onPick: (z: Zone) => void }) {
   const a = zone.area!;
   const geo = useMemo(() => new THREE.ShapeGeometry(shapeOf(areaPts(a))), [a]);
   const outline = useMemo(() => { const p = areaPts(a); return [...p, p[0]].map(q => w3(q, 0.08)); }, [a]);
   const people = useMemo(() => {
-    const [cu, cv] = xy2uv(a.c), [w, h] = a.s, out: XY[] = [];
-    for (let i = 0.7; i < w - 0.5; i += 1.25) for (let j = 0.7; j < h - 0.5; j += 1.25)
-      out.push(uv2xy([cu - w / 2 + i + (rand(i, j) - 0.5) * 0.7, cv - h / 2 + j + (rand(j, i) - 0.5) * 0.7]));
+    const [cu, cv] = xy2uv(a.c), [w, h] = a.s, out: { p: XY; k: number; c: number }[] = [];
+    for (let i = 0.7; i < w - 0.5; i += 1.15) for (let j = 0.7; j < h - 0.5; j += 1.15) {
+      if (rand(i * 5, j * 3) < 0.12) continue;
+      out.push({ p: uv2xy([cu - w / 2 + i + (rand(i, j) - 0.5) * 0.7, cv - h / 2 + j + (rand(j, i) - 0.5) * 0.7]), k: 0.92 + rand(j, i * 2) * 0.16, c: rand(i * 7, j) });
+    }
     return out;
   }, [a]);
-  const ref = useRef<THREE.InstancedMesh>(null);
+  const body = useRef<THREE.InstancedMesh>(null), head = useRef<THREE.InstancedMesh>(null);
   useLayoutEffect(() => {
-    const m = new THREE.Matrix4();
-    people.forEach(([x, y], i) => { m.makeTranslation(x, 0.8, -y); ref.current!.setMatrixAt(i, m); });
-    ref.current!.instanceMatrix.needsUpdate = true;
-  }, [people]);
+    const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), v = new THREE.Vector3(), col = new THREE.Color();
+    people.forEach(({ p: [x, y], k, c }, i) => {
+      body.current!.setMatrixAt(i, m.compose(v.set(x, 0.72 * k, -y), q, s.set(1, k, 1)));
+      head.current!.setMatrixAt(i, m.compose(v.set(x, 1.58 * k, -y), q, s.set(1, 1, 1)));
+      body.current!.setColorAt(i, col.set(dim ? '#555' : CLOTHES[Math.floor(c * CLOTHES.length)]));
+      head.current!.setColorAt(i, col.set(dim ? '#666' : c > 0.5 ? '#c99a74' : '#b07f5a'));
+    });
+    [body, head].forEach(r => { r.current!.instanceMatrix.needsUpdate = true; if (r.current!.instanceColor) r.current!.instanceColor.needsUpdate = true; });
+  }, [people, dim]);
   return (
     <group>
-      <mesh geometry={geo} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}
+      <mesh geometry={geo} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}
         onClick={e => { e.stopPropagation(); onPick(zone); }}
         onPointerOver={() => (document.body.style.cursor = 'pointer')} onPointerOut={() => (document.body.style.cursor = '')}>
-        <meshBasicMaterial color={dim ? '#3a3a3a' : zone.color} transparent opacity={active ? 0.55 : 0.3} depthWrite={false} />
+        <meshBasicMaterial color={dim ? '#3a3a3a' : zone.color} transparent opacity={active ? 0.45 : 0.22} depthWrite={false} />
       </mesh>
-      <Line points={outline} color={dim ? '#555' : zone.color} lineWidth={1.5} dashed dashSize={2} gapSize={1.2} />
-      <instancedMesh ref={ref} args={[undefined, undefined, people.length]}>
-        <cylinderGeometry args={[0.2, 0.26, 1.6, 6]} />
-        <meshStandardMaterial color={dim ? '#3a3a3a' : zone.color} roughness={0.8} transparent opacity={dim ? 0.5 : 1} />
+      <Line points={outline} color={dim ? '#666' : zone.color} lineWidth={1.5} dashed dashSize={2} gapSize={1.2} />
+      <instancedMesh ref={body} args={[undefined, undefined, people.length]} castShadow>
+        <capsuleGeometry args={[0.22, 1, 3, 8]} /><meshStandardMaterial roughness={0.85} />
+      </instancedMesh>
+      <instancedMesh ref={head} args={[undefined, undefined, people.length]}>
+        <sphereGeometry args={[0.13, 10, 8]} /><meshStandardMaterial roughness={0.7} />
       </instancedMesh>
     </group>
   );
 }
 
-/* ---------- Bãi giữ xe ---------- */
+/* ---------- Bãi giữ xe: nhựa đường, vạch kẻ, xe máy ---------- */
 function ParkingArea({ area }: { area: Area }) {
   const geo = useMemo(() => new THREE.ShapeGeometry(shapeOf(areaPts(area))), [area]);
-  const stalls = useMemo(() => {
-    const [cu, cv] = xy2uv(area.c), [w, h] = area.s, arr: number[] = [];
-    const seg = (a: XY, b: XY) => arr.push(a[0], 0.07, -a[1], b[0], 0.07, -b[1]);
+  const asphalt = useMemo(() => tiled(asphaltTex(), 1 / 8, 1 / 8), []);
+  const { stalls, bikes } = useMemo(() => {
+    const [cu, cv] = xy2uv(area.c), [w, h] = area.s, arr: number[] = [], bikes: { p: XY; c: number }[] = [];
+    const seg = (a: XY, b: XY) => arr.push(a[0], 0.09, -a[1], b[0], 0.09, -b[1]);
     for (let v = -h / 2 + 3; v <= h / 2 - 3; v += 6) {
       seg(uv2xy([cu - w / 2 + 2, cv + v]), uv2xy([cu + w / 2 - 2, cv + v]));
       for (let u = -w / 2 + 2; u <= w / 2 - 2; u += 2.5) seg(uv2xy([cu + u, cv + v - 1.6]), uv2xy([cu + u, cv + v + 1.6]));
+      // xe máy đậu thành hàng (khoảng 60% chỗ)
+      for (let u = -w / 2 + 2.4; u <= w / 2 - 2.4; u += 0.85) for (const side of [-0.95, 0.95])
+        if (rand(u * 3 + v, side * 5) < 0.6) bikes.push({ p: uv2xy([cu + u, cv + v + side]), c: rand(u, v + side) });
     }
-    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3)); return g;
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3)); return { stalls: g, bikes };
   }, [area]);
-  const outline = useMemo(() => { const p = areaPts(area); return [...p, p[0]].map(q => w3(q, 0.1)); }, [area]);
+  const ref = useRef<THREE.InstancedMesh>(null);
+  useLayoutEffect(() => {
+    const m = new THREE.Matrix4(), q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, STAGE_ROT_Y + Math.PI / 2, 0)), s = new THREE.Vector3(1, 1, 1), v = new THREE.Vector3(), col = new THREE.Color();
+    const paint = ['#b3261e', '#1f3b73', '#e8e8e8', '#1c1c1c', '#8a8f96', '#2e6b3a'];
+    bikes.forEach(({ p: [x, y], c }, i) => { ref.current!.setMatrixAt(i, m.compose(v.set(x, 0.55, -y), q, s)); ref.current!.setColorAt(i, col.set(paint[Math.floor(c * paint.length)])); });
+    ref.current!.instanceMatrix.needsUpdate = true; if (ref.current!.instanceColor) ref.current!.instanceColor.needsUpdate = true;
+  }, [bikes]);
   return (
     <group>
-      <mesh geometry={geo} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]}><meshStandardMaterial color="#26303b" roughness={1} /></mesh>
-      <lineSegments geometry={stalls}><lineBasicMaterial color="#6f8197" /></lineSegments>
-      <Line points={outline} color="#5C7FA3" lineWidth={1.5} />
+      <mesh geometry={geo} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]} receiveShadow><meshStandardMaterial map={asphalt} color="#9aa0a6" roughness={1} /></mesh>
+      <lineSegments geometry={stalls}><lineBasicMaterial color="#e8e4d8" /></lineSegments>
+      <instancedMesh ref={ref} args={[undefined, undefined, bikes.length]} castShadow>
+        <boxGeometry args={[0.35, 0.9, 1.75]} /><meshStandardMaterial roughness={0.5} metalness={0.3} />
+      </instancedMesh>
     </group>
   );
 }
-const inFrontStrip = ([x, y]: XY) => { const d: XY = [x + 41, y + 65]; const u = d[0] * U[0] + d[1] * U[1], v = d[0] * V[0] + d[1] * V[1]; return Math.abs(u) < 77 && Math.abs(v) < 15; };
 
-function CampusContext({ showLabels }: { showLabels: boolean }) {
-  const campusGeo = useMemo(() => new THREE.ShapeGeometry(shapeOf(CAMPUS)), []);
-  const blds = useMemo(() => BUILDINGS.map(b => ({ b, geo: new THREE.ExtrudeGeometry(shapeOf(b.pts), { depth: b.h, bevelEnabled: false }) })), []);
-  const trunks = useRef<THREE.InstancedMesh>(null), crowns = useRef<THREE.InstancedMesh>(null);
-  const trees = useMemo(() => {
-    const out: [number, number, number][] = [];
-    for (let x = -130; x <= 130; x += 11) for (let y = -150; y <= 70; y += 11) {
-      const p: XY = [x + ((y * 7) % 5), y + ((x * 3) % 5)];
-      if (!inPoly(p, CAMPUS) || Object.values(EVENT_AREAS).some(a => inArea(p, a, 3)) || inFrontStrip(p) || BUILDINGS.some(b => inPoly(p, b.pts))) continue;
-      out.push([p[0], p[1], 0.8 + (((x + y) * 13) % 5) * 0.08]);
-    }
-    return out;
-  }, []);
-  useLayoutEffect(() => {
-    const m = new THREE.Matrix4(), sc = new THREE.Vector3(), q = new THREE.Quaternion(), p = new THREE.Vector3();
-    trees.forEach(([x, y, k], i) => {
-      trunks.current!.setMatrixAt(i, m.compose(p.set(x, 1.6, -y), q, sc.set(1, 1, 1)));
-      crowns.current!.setMatrixAt(i, m.compose(p.set(x, 5.2 * k, -y), q, sc.set(k, k, k)));
-    });
-    trunks.current!.instanceMatrix.needsUpdate = true; crowns.current!.instanceMatrix.needsUpdate = true;
-  }, [trees]);
+/** Bật bóng đổ cho mọi khối trong nhóm (sân khấu, ghế, FOH…) */
+function ShadowAll({ children }: { children: ReactNode }) {
+  const g = useRef<THREE.Group>(null);
+  useLayoutEffect(() => { g.current?.traverse(o => { if ((o as THREE.Mesh).isMesh) { o.castShadow = true; o.receiveShadow = true; } }); });
+  return <group ref={g}>{children}</group>;
+}
 
+/** Đèn sân khấu ban đêm: các luồng đèn màu chiếu xuống sàn diễn */
+function StageLights({ night }: { night: boolean }) {
+  const targets = useMemo(() => [-8, -3, 3, 8].map(x => { const o = new THREE.Object3D(); o.position.set(x, 1, -6); return o; }), []);
+  if (!night) return null;
+  const cols = ['#ffb347', '#ff6fa8', '#7fb2ff', '#ffd27a'];
   return (
     <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}><planeGeometry args={[1000, 1000]} /><meshStandardMaterial color="#141210" /></mesh>
-      <mesh geometry={campusGeo} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]}><meshStandardMaterial color="#232a24" roughness={1} /></mesh>
-      {PARKING.map(p => <ParkingArea key={p.id} area={p.area} />)}
-      <Line points={CAMPUS.map(p => w3(p, 0.3))} color="#D4AF37" lineWidth={1.5} transparent opacity={0.6} />
-      {ROADS.map(([name, lines]) => lines.map((l, i) => (
-        <Line key={name + i} points={l.map(p => w3(p, 0.01))} color="#4f4a43" lineWidth={name === 'Lý Tự Trọng' || name === 'Nguyễn Du' ? 9 : 14} worldUnits />
-      )))}
-      {blds.map(({ b, geo }) => (
-        <mesh key={b.i} geometry={geo} rotation={[-Math.PI / 2, 0, 0]}>
-          <meshStandardMaterial color={b.name === 'Nhà nguyện cổ' ? '#d8b48a' : b.name ? '#b07a52' : '#8d6248'} roughness={0.9} />
-        </mesh>
+      {targets.map((t, i) => <primitive key={'t' + i} object={t} />)}
+      {targets.map((t, i) => (
+        <spotLight key={i} position={[-10 + i * 6.6, 12, -3.5]} target={t} angle={0.45} penumbra={0.6} intensity={900} distance={40} decay={1.6} color={cols[i]} />
       ))}
-      <instancedMesh ref={trunks} args={[undefined, undefined, trees.length]}><cylinderGeometry args={[0.3, 0.45, 3.2, 6]} /><meshStandardMaterial color="#3b2a1d" /></instancedMesh>
-      <instancedMesh ref={crowns} args={[undefined, undefined, trees.length]}><icosahedronGeometry args={[3.4, 0]} /><meshStandardMaterial color="#21402c" flatShading /></instancedMesh>
-      {showLabels && <>
-        {PARKING.map(p => <Tag key={p.id} pos={w3(p.area.c, 2).toArray() as [number, number, number]} tone="light">🅿 {p.label}</Tag>)}
-        {BUILDINGS.filter(b => b.name).map(b => <Tag key={b.i} pos={w3(b.center, b.h + 4).toArray() as [number, number, number]} tone={b.name === 'Nhà nguyện cổ' ? 'light' : 'dark'}>{b.name}</Tag>)}
-        {ROADS.filter(([n]) => n === 'Tôn Đức Thắng' || n === 'Nguyễn Bỉnh Khiêm').map(([name, lines]) => {
-          const l = lines.reduce((a, b) => (b.length > a.length ? b : a)); const mid = l[Math.floor(l.length / 2)];
-          return <Html key={name} position={w3(mid, 1)} center><div className="pointer-events-none whitespace-nowrap text-[11px] italic text-white/70">{name}</div></Html>;
-        })}
-      </>}
+      <spotLight position={[0, 9, 31]} target={targets[1]} angle={0.16} penumbra={0.4} intensity={2500} distance={60} decay={1.4} color="#fff6e0" />
     </group>
   );
 }
 
 /* ---------- Cảnh tổng ---------- */
-type Props = { mode: Mode; selZone: Zone | null; selItem: string | null; onPickZone: (z: Zone) => void; onPickItem: (id: string) => void };
+type Props = { mode: Mode; night: boolean; selZone: Zone | null; selItem: string | null; onPickZone: (z: Zone) => void; onPickItem: (id: string) => void };
 
-const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, selZone, selItem, onPickZone, onPickItem }, ref) {
+const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, selZone, selItem, onPickZone, onPickItem }, ref) {
   const cc = useRef<CameraControls>(null);
   const { size } = useThree();
   // Màn hình dọc (điện thoại): lùi camera xa hơn để thấy trọn sân khấu và khán đài
@@ -336,26 +328,36 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, selZone, sel
   }), [far]);
   useEffect(() => { const c = presetPos('overview'); cc.current?.setLookAt(...c.pos, ...c.look, false); }, [far]);
   const item = mode === 'sponsor' ? selItem : null;
+  const plaza = useMemo(() => tiled(pavingTex('warm'), 42 / 4, 50 / 4), []);
+  const showLabels = mode === 'audience';
 
   return (
     <>
-      <color attach="background" args={['#0a0a0a']} />
-      <fog attach="fog" args={['#0a0a0a', 260, 700]} />
-      <ambientLight intensity={0.55} />
-      <hemisphereLight args={['#fff1d6', '#1a1410', 0.6]} />
-      <directionalLight position={[30, 50, 40]} intensity={1.1} color="#ffe2b0" />
+      <WorldLights night={night} />
+      <RealCampus night={night} clear={Object.values(EVENT_AREAS)} />
+      {PARKING.map(p => <ParkingArea key={p.id} area={p.area} />)}
+      {showLabels && <>
+        {PARKING.map(p => <Tag key={p.id} pos={w3(p.area.c, 2).toArray() as [number, number, number]} tone="light">🅿 {p.label}</Tag>)}
+        {BUILDINGS.filter(b => b.name).map(b => <Tag key={b.i} pos={w3(b.center, b.h + 7).toArray() as [number, number, number]} tone={b.name === 'Nhà nguyện cổ' ? 'light' : 'dark'}>{b.name}</Tag>)}
+        {ROADS.filter(([n]) => n === 'Tôn Đức Thắng' || n === 'Nguyễn Bỉnh Khiêm').map(([name, lines]) => {
+          const l = lines.reduce((a, b) => (b.length > a.length ? b : a)); const mid = l[Math.floor(l.length / 2)];
+          return <Html key={name} position={w3(mid, 1)} center><div className="pointer-events-none whitespace-nowrap rounded-full bg-black/55 px-2 text-[11px] italic text-white/85">{name}</div></Html>;
+        })}
+      </>}
 
-      <CampusContext showLabels={mode === 'audience'} />
       <group position={STAGE_POS} rotation={[0, STAGE_ROT_Y, 0]}>
-      <pointLight position={[0, 16, 14]} intensity={2200} distance={70} decay={2} color="#ffd9a0" />
-      {/* lối đi giữa và hai lối ngang */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 10]}><planeGeometry args={[42, 50]} /><meshStandardMaterial color="#3a352e" roughness={1} /></mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 15.9]}><planeGeometry args={[2, 23.8]} /><meshStandardMaterial color="#4a4239" /></mesh>
-      {[9.95, 16.45].map(z => <mesh key={z} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, z]}><planeGeometry args={[40, 1.1]} /><meshStandardMaterial color="#4a4239" /></mesh>)}
+      <pointLight position={[0, 16, 14]} intensity={night ? 2600 : 500} distance={70} decay={2} color="#ffd9a0" />
+      <StageLights night={night} />
+      <ShadowAll>
+      {/* sân lát gạch, lối đi giữa và hai lối ngang */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 10]}><planeGeometry args={[42, 50]} /><meshStandardMaterial map={plaza} roughness={0.95} /></mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 15.9]}><planeGeometry args={[2, 23.8]} /><meshStandardMaterial color="#8a2f2a" roughness={0.9} /></mesh>
+      {[9.95, 16.45].map(z => <mesh key={z} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, z]}><planeGeometry args={[40, 1.1]} /><meshStandardMaterial color="#8a7a66" /></mesh>)}
       <Stage sel={item} />
       <FOH sel={item} />
       <Cameras sel={item} />
       {ZONES.filter(z => z.kind === 'seat').map(z => <ZoneSeats key={z.id} zone={z} dim={mode === 'sponsor' || (!!selZone && selZone.id !== z.id)} onPick={onPickZone} />)}
+      </ShadowAll>
 
       {mode === 'audience' && <>
         <Tag pos={[0, 15.5, -1]} tone="gold">Sân khấu</Tag>
@@ -386,7 +388,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, selZone, sel
 
 const StageScene = forwardRef<SceneHandle, Props>(function StageScene(props, ref) {
   return (
-    <Canvas dpr={[1, 1.75]} camera={{ fov: 45, near: 0.5, far: 1500, position: toWorld(CAMERAS.overview.pos) }} gl={{ antialias: true }}
+    <Canvas shadows dpr={[1, 1.75]} camera={{ fov: 45, near: 0.5, far: 3000, position: toWorld(CAMERAS.overview.pos) }} gl={{ antialias: true }}
       onPointerMissed={() => (document.body.style.cursor = '')}>
       <Scene ref={ref} {...props} />
     </Canvas>

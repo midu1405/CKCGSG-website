@@ -1,6 +1,6 @@
 import { Suspense, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Handshake, Eye, Maximize2, ArrowUpFromLine, Theater, Mail, X, Info } from 'lucide-react';
+import { Users, Handshake, Eye, Maximize2, ArrowUpFromLine, Theater, Mail, X, Info, Sun, Moon } from 'lucide-react';
 import StageScene, { type Mode, type SceneHandle } from '../components/stage/StageScene';
 import { ZONES, SPONSOR, TOTAL_SEATS, TOTAL_STANDING, STAND_DENSITY, zoneCount, type Zone } from '../components/stage/data';
 import STAGE_DESIGN from '../assets/photos/stage-design.jpg';
@@ -11,6 +11,7 @@ const fmt = (n: number) => n.toLocaleString('vi-VN');
 export default function StageMapPage() {
   const scene = useRef<SceneHandle>(null);
   const [mode, setMode] = useState<Mode>('audience');
+  const [night, setNight] = useState(false);
   const [zone, setZone] = useState<Zone | null>(null);
   const [item, setItem] = useState<string | null>(null);
   const [panelOpen, setPanelOpen] = useState(() => typeof window === 'undefined' || window.innerWidth >= 768);
@@ -28,7 +29,7 @@ export default function StageMapPage() {
       {/* Cảnh 3D */}
       <div className="absolute inset-0 top-[72px]">
         <Suspense fallback={<div className="h-full flex items-center justify-center text-white/50">Đang dựng sân khấu…</div>}>
-          <StageScene ref={scene} mode={mode} selZone={zone} selItem={item} onPickZone={pickZone} onPickItem={pickItem} />
+          <StageScene ref={scene} mode={mode} night={night} selZone={zone} selItem={item} onPickZone={pickZone} onPickItem={pickItem} />
         </Suspense>
       </div>
 
@@ -56,6 +57,10 @@ export default function StageMapPage() {
                 <Icon size={14} className="text-gold" /> {label}
               </button>
             ))}
+            <button onClick={() => setNight(n => !n)}
+              className="flex items-center gap-1.5 bg-black/70 backdrop-blur border border-white/10 hover:border-gold/60 px-3 py-1.5 rounded-full text-xs font-bold">
+              {night ? <Sun size={14} className="text-gold" /> : <Moon size={14} className="text-gold" />} {night ? 'Ban ngày' : 'Đêm diễn'}
+            </button>
           </div>
         </div>
       </div>
@@ -141,8 +146,8 @@ export default function StageMapPage() {
 
             <p className="text-[11px] leading-relaxed text-white/40 border-t border-white/10 pt-3">
               Sơ đồ minh hoạ, chưa phải mặt bằng chính thức. Sân khấu dựng theo phối cảnh thiết kế của ekip, đặt ở khoảng sân giữa toà nhà
-              bên trái và Nhà nguyện cổ; khu đứng, nhà vệ sinh và bãi giữ xe (sân lớn, sân trước) theo vị trí Ban tổ chức khoanh. Toà nhà và
-              đường lấy từ OpenStreetMap (© OpenStreetMap contributors). Sức chứa khu đứng tính theo {STAND_DENSITY} người/m² — tổng khoảng{' '}
+              bên trái và Nhà nguyện cổ; khu đứng, nhà vệ sinh và bãi giữ xe (sân lớn, sân trước) theo vị trí Ban tổ chức khoanh. Vị trí, hình khối toà nhà và
+              đường lấy từ OpenStreetMap (© OpenStreetMap contributors); màu tường, mái, cửa sổ, cây xanh và phố xung quanh là minh hoạ. Sức chứa khu đứng tính theo {STAND_DENSITY} người/m² — tổng khoảng{' '}
               {fmt(TOTAL_SEATS + TOTAL_STANDING)} khán giả tại chỗ; số chỗ sẽ cập nhật khi có sơ đồ chính thức.
             </p>
           </div>

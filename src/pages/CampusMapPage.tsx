@@ -137,8 +137,8 @@ export default function CampusMapPage() {
             </div>
 
             <p className="text-[11px] leading-relaxed text-white/40 border-t border-white/10 pt-3">
-              Hình dạng khuôn viên, toà nhà và đường lấy từ OpenStreetMap; tên một số toà đối chiếu với ảnh vệ tinh. Bản đồ không có cây xanh và
-              đường nội bộ nên diện tích sân là ước tính — cần Ban tổ chức khảo sát và xác nhận trước khi bố trí sân khấu, bãi xe.
+              Hình dạng khuôn viên, toà nhà và đường lấy từ OpenStreetMap; tên một số toà đối chiếu với ảnh vệ tinh. Màu tường, mái ngói, cửa sổ, cây xanh và
+              các khối nhà phố xung quanh là minh hoạ; diện tích sân là ước tính — cần Ban tổ chức khảo sát và xác nhận trước khi bố trí sân khấu, bãi xe.
             </p>
           </div>
         </aside>
