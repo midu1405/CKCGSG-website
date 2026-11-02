@@ -8,10 +8,10 @@ import { BUILDINGS, ROADS, EVENT_AREAS, areaPts, xy2uv, uv2xy, type Area, type X
 import { STAGE_POS, STAGE_ROT_Y, toWorld } from './frame';
 import { RealCampus, WorldLights, w3, shapeOf } from '../world/RealCampus';
 import { asphaltTex, pavingTex, tiled } from '../world/textures';
-import { Walker, RemoteAvatars, type Me, type TouchInput } from '../walk/Walker';
+import { Walker, RemoteAvatars, type Me, type TouchInput, type EmoteState } from '../walk/Walker';
 import type { Net } from '../walk/presence';
 
-export type WalkProps = { me: Me; net: Net; ids: string[]; touch: React.MutableRefObject<TouchInput> };
+export type WalkProps = { me: Me; net: Net; ids: string[]; touch: React.MutableRefObject<TouchInput>; emote: React.MutableRefObject<EmoteState> };
 const rand = (a: number, b: number) => { const t = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return t - Math.floor(t); };
 
 export type Mode = 'audience' | 'sponsor';
@@ -386,7 +386,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk 
       ))}
 
       {walk ? <>
-        <Walker me={walk.me} net={walk.net} touch={walk.touch} />
+        <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} />
         <RemoteAvatars ids={walk.ids} net={walk.net} />
       </> : <CameraControls ref={cc} minDistance={4} maxDistance={420} maxPolarAngle={Math.PI / 2.05} smoothTime={0.6} />}
     </>

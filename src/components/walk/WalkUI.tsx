@@ -1,20 +1,18 @@
-/** Giao diện chế độ Dạo khuôn viên: bảng chọn tên & màu áo, thanh trạng thái, cần điều khiển trên điện thoại */
+/** Giao diện chế độ Dạo khuôn viên: bảng nhập tên, thanh trạng thái, động tác, khung chat, cần điều khiển trên điện thoại */
 import { useEffect, useRef, useState } from 'react';
-import { Footprints, LogOut, Users, X } from 'lucide-react';
-import type { Me, TouchInput } from './Walker';
-import type { NetStatus } from './presence';
-
-export const ROBES = ['#D4AF37', '#f4f1ea', '#9b2c2c', '#3d5a80', '#5b7d5a', '#7a5c8e', '#c96f3b', '#22252b'];
+import { Footprints, LogOut, MessageCircle, Send, Users, X } from 'lucide-react';
+import { EMOTES, type EmoteId, type EmoteState, type Me, type TouchInput } from './Walker';
+import { MAX_CHAT, type ChatLine, type NetStatus } from './presence';
 
 const load = (): Me => {
-  try { const s = JSON.parse(localStorage.getItem('ckcgsg-walker') || 'null'); if (s?.name && s?.color) return s; } catch { /* bỏ qua */ }
-  return { name: `Khách ${Math.floor(100 + Math.random() * 900)}`, color: ROBES[Math.floor(Math.random() * ROBES.length)] };
+  try { const s = JSON.parse(localStorage.getItem('ckcgsg-walker') || 'null'); if (s?.name) return { name: s.name }; } catch { /* bỏ qua */ }
+  return { name: `Khách ${Math.floor(100 + Math.random() * 900)}` };
 };
 
 export function JoinDialog({ onJoin, onClose }: { onJoin: (m: Me) => void; onClose: () => void }) {
-  const [me, setMe] = useState<Me>(load);
+  const [name, setName] = useState(() => load().name);
   const go = () => {
-    const m = { name: me.name.trim().slice(0, 24) || 'Khách', color: me.color };
+    const m = { name: name.replace(/\s+/g, ' ').trim().slice(0, 24) || 'Khách' };
     try { localStorage.setItem('ckcgsg-walker', JSON.stringify(m)); } catch { /* bỏ qua */ }
     onJoin(m);
   };
@@ -25,21 +23,14 @@ export function JoinDialog({ onJoin, onClose }: { onJoin: (m: Me) => void; onClo
           <h2 className="serif text-2xl font-bold">Dạo khuôn viên</h2>
           <button onClick={onClose} aria-label="Đóng" className="text-white/50 hover:text-white"><X size={20} /></button>
         </div>
-        <p className="text-white/55 text-sm mb-5">Đi dạo quanh sân khấu Đắc Lộ cùng những người đang xem trang lúc này.</p>
+        <p className="text-white/55 text-sm mb-5">Hoá thân thành chú Chiên Con, đi dạo quanh sân khấu Đắc Lộ, chào hỏi và trò chuyện với những người đang xem trang lúc này.</p>
         <label className="block text-[11px] uppercase tracking-widest font-bold text-white/45 mb-1.5">Tên hiển thị</label>
-        <input value={me.name} maxLength={24} onChange={e => setMe({ ...me, name: e.target.value })} onKeyDown={e => e.key === 'Enter' && go()}
-          className="w-full rounded-xl bg-black/50 border border-white/15 focus:border-gold outline-none px-3 py-2.5 mb-4" />
-        <div className="text-[11px] uppercase tracking-widest font-bold text-white/45 mb-2">Màu áo</div>
-        <div className="flex flex-wrap gap-2 mb-6">
-          {ROBES.map(c => (
-            <button key={c} onClick={() => setMe({ ...me, color: c })} aria-label={`Màu ${c}`}
-              className={`w-9 h-9 rounded-full border-2 transition-transform ${me.color === c ? 'border-white scale-110' : 'border-white/10'}`} style={{ background: c }} />
-          ))}
-        </div>
+        <input value={name} maxLength={24} autoFocus onChange={e => setName(e.target.value)} onKeyDown={e => e.key === 'Enter' && go()}
+          className="w-full rounded-xl bg-black/50 border border-white/15 focus:border-gold outline-none px-3 py-2.5 mb-6" />
         <button onClick={go} className="w-full flex items-center justify-center gap-2 bg-gold text-black rounded-full py-3 font-bold">
           <Footprints size={18} /> Vào khuôn viên
         </button>
-        <p className="text-[11px] text-white/35 mt-3 leading-relaxed">Tên và vị trí của bạn hiển thị cho người khác đang dạo cùng. Không lưu lại sau khi rời trang.</p>
+        <p className="text-[11px] text-white/35 mt-3 leading-relaxed">Tên, vị trí và tin nhắn của bạn hiển thị cho người đang dạo cùng; không lưu lại sau khi rời trang. Xin giữ lời lẽ hoà nhã.</p>
       </div>
     </div>
   );
@@ -58,12 +49,74 @@ export function WalkHud({ count, status, onExit }: { count: number; status: NetS
         <div className="text-[11px] text-white/45 mt-0.5">{STATUS[status]}</div>
         <div className="hidden md:block text-[11px] text-white/55 mt-2 leading-relaxed">
           <b className="text-white/80">W A S D</b> di chuyển · <b className="text-white/80">Space</b> nhảy · <b className="text-white/80">Shift</b> chạy<br />
-          Kéo chuột để xoay · lăn chuột để phóng to
+          <b className="text-white/80">1–5</b> động tác · <b className="text-white/80">Enter</b> để chat · kéo chuột để xoay
         </div>
       </div>
       <button onClick={onExit} className="pointer-events-auto flex items-center gap-2 bg-gold text-black rounded-full px-4 py-2 font-bold text-sm">
         <LogOut size={16} /> Thoát
       </button>
+    </div>
+  );
+}
+
+/** Thanh động tác: vẫy tay, cúi chào, vỗ tay, nhảy múa, thả tim */
+export function EmoteBar({ emote }: { emote: React.MutableRefObject<EmoteState> }) {
+  const play = (id: EmoteId) => { emote.current = { id, k: emote.current.k + 1, t0: -1 }; (document.activeElement as HTMLElement | null)?.blur?.(); };
+  return (
+    <div className="absolute z-30 left-1/2 -translate-x-1/2 bottom-[150px] md:bottom-6 flex gap-1.5 rounded-full bg-black/70 backdrop-blur border border-white/10 p-1.5">
+      {EMOTES.map((e, i) => (
+        <button key={e.id} onClick={() => play(e.id)} title={`${e.label} (phím ${i + 1})`}
+          className="group flex items-center gap-1.5 rounded-full px-2.5 md:px-3 py-1.5 hover:bg-white/10 active:scale-95 transition">
+          <span className="text-lg leading-none">{e.icon}</span>
+          <span className="hidden md:inline text-xs font-bold text-white/80">{e.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** Khung chat: Enter để mở / gửi, Esc để quay lại điều khiển nhân vật */
+export function ChatPanel({ lines, onSend }: { lines: ChatLine[]; onSend: (t: string) => boolean }) {
+  const [open, setOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);
+  const [text, setText] = useState('');
+  const input = useRef<HTMLInputElement>(null), list = useRef<HTMLDivElement>(null);
+  const [unread, setUnread] = useState(0);
+  const seen = useRef(0);
+  useEffect(() => { if (list.current) list.current.scrollTop = list.current.scrollHeight; }, [lines, open]);
+  useEffect(() => { if (open) { seen.current = lines.length; setUnread(0); } else setUnread(lines.length - seen.current); }, [lines, open]);
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => {
+      const typing = document.activeElement === input.current;
+      if (e.key === 'Enter' && !typing) { e.preventDefault(); if (input.current) input.current.focus(); else { setOpen(true); setTimeout(() => input.current?.focus(), 0); } }
+      if (e.key === 'Escape' && typing) input.current?.blur();
+    };
+    window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k);
+  }, []);
+  const submit = () => { if (onSend(text)) setText(''); };
+
+  if (!open) return (
+    <button onClick={() => { setOpen(true); setTimeout(() => input.current?.focus(), 0); }}
+      className="absolute z-30 right-4 top-[150px] md:top-auto md:right-auto md:left-4 md:bottom-6 flex items-center gap-2 rounded-full bg-black/70 backdrop-blur border border-white/10 px-4 py-2 text-sm font-bold">
+      <MessageCircle size={16} className="text-gold" /> Chat{unread > 0 && <span className="rounded-full bg-gold text-black text-[11px] px-1.5">{unread}</span>}
+    </button>
+  );
+  return (
+    <div className="absolute z-30 left-4 right-4 top-[150px] md:top-auto md:right-auto md:bottom-6 md:w-[340px] rounded-2xl bg-black/75 backdrop-blur border border-white/10 flex flex-col">
+      <div className="flex items-center justify-between px-3 pt-2.5 pb-1.5">
+        <span className="text-[11px] uppercase tracking-widest font-bold text-gold">Trò chuyện</span>
+        <button onClick={() => setOpen(false)} aria-label="Thu gọn chat" className="text-white/50 hover:text-white"><X size={16} /></button>
+      </div>
+      <div ref={list} className="max-h-[22svh] md:max-h-[200px] overflow-y-auto px-3 space-y-1 text-[13px] leading-snug">
+        {lines.length === 0 && <div className="text-white/35 text-xs py-1">Chưa có tin nhắn. Chào mọi người một câu nhé!</div>}
+        {lines.map((l, i) => (
+          <div key={i} className="break-words"><b className={l.mine ? 'text-gold' : 'text-white/90'}>{l.name}:</b> <span className="text-white/80">{l.text}</span></div>
+        ))}
+      </div>
+      <form className="flex gap-2 p-2.5" onSubmit={e => { e.preventDefault(); submit(); }}>
+        <input ref={input} value={text} maxLength={MAX_CHAT} onChange={e => setText(e.target.value)} placeholder="Nhập tin nhắn…"
+          className="flex-1 min-w-0 rounded-full bg-white/10 border border-white/10 focus:border-gold outline-none px-3 py-2 text-sm" />
+        <button type="submit" aria-label="Gửi" className="shrink-0 w-9 h-9 rounded-full bg-gold text-black flex items-center justify-center"><Send size={15} /></button>
+      </form>
     </div>
   );
 }
@@ -85,10 +138,10 @@ export function TouchControls({ touch }: { touch: React.MutableRefObject<TouchIn
   const end = () => { active.current = null; setKnob([0, 0]); touch.current.x = 0; touch.current.y = 0; };
   return (
     <>
-      <div ref={base} className="absolute z-30 left-6 bottom-8 w-32 h-32 rounded-full bg-white/10 border border-white/20 backdrop-blur touch-none"
+      <div ref={base} className="absolute z-30 left-6 bottom-8 w-28 h-28 rounded-full bg-white/10 border border-white/20 backdrop-blur touch-none"
         onPointerDown={e => { e.stopPropagation(); active.current = e.pointerId; (e.target as HTMLElement).setPointerCapture(e.pointerId); move(e); }}
         onPointerMove={move} onPointerUp={end} onPointerCancel={end}>
-        <div className="absolute left-1/2 top-1/2 w-14 h-14 -ml-7 -mt-7 rounded-full bg-gold/80" style={{ transform: `translate(${knob[0]}px, ${knob[1]}px)` }} />
+        <div className="absolute left-1/2 top-1/2 w-12 h-12 -ml-6 -mt-6 rounded-full bg-gold/80" style={{ transform: `translate(${knob[0]}px, ${knob[1]}px)` }} />
       </div>
       <button className="absolute z-30 right-6 bottom-10 w-20 h-20 rounded-full bg-gold text-black font-bold touch-none select-none"
         onPointerDown={e => { e.stopPropagation(); touch.current.jump = true; }} onPointerUp={() => (touch.current.jump = false)} onPointerCancel={() => (touch.current.jump = false)}>

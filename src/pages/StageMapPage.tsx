@@ -6,8 +6,8 @@ import { ZONES, SPONSOR, TOTAL_SEATS, TOTAL_STANDING, STAND_DENSITY, zoneCount, 
 import STAGE_DESIGN from '../assets/photos/stage-design.jpg';
 import MapTabs from '../components/MapTabs';
 import { usePresence } from '../components/walk/presence';
-import { JoinDialog, WalkHud, TouchControls } from '../components/walk/WalkUI';
-import type { Me, TouchInput } from '../components/walk/Walker';
+import { JoinDialog, WalkHud, TouchControls, EmoteBar, ChatPanel } from '../components/walk/WalkUI';
+import type { Me, TouchInput, EmoteState } from '../components/walk/Walker';
 
 const fmt = (n: number) => n.toLocaleString('vi-VN');
 
@@ -18,8 +18,9 @@ export default function StageMapPage() {
   const [joining, setJoining] = useState(false);
   const [walkMe, setWalkMe] = useState<Me | null>(null);
   const touch = useRef<TouchInput>({ x: 0, y: 0, jump: false });
-  const { net, ids, count, status } = usePresence(!!walkMe);
-  const walk = useMemo(() => (walkMe ? { me: walkMe, net, ids, touch } : null), [walkMe, net, ids]);
+  const emote = useRef<EmoteState>({ id: '', k: 0, t0: 0 });
+  const { net, ids, count, status, chat, sendChat } = usePresence(!!walkMe, walkMe?.name ?? '');
+  const walk = useMemo(() => (walkMe ? { me: walkMe, net, ids, touch, emote } : null), [walkMe, net, ids]);
   const [zone, setZone] = useState<Zone | null>(null);
   const [item, setItem] = useState<string | null>(null);
   const [panelOpen, setPanelOpen] = useState(() => typeof window === 'undefined' || window.innerWidth >= 768);
@@ -41,7 +42,7 @@ export default function StageMapPage() {
         </Suspense>
       </div>
 
-      {walkMe && <><WalkHud count={count} status={status} onExit={() => setWalkMe(null)} /><TouchControls touch={touch} /></>}
+      {walkMe && <><WalkHud count={count} status={status} onExit={() => setWalkMe(null)} /><EmoteBar emote={emote} /><ChatPanel lines={chat} onSend={sendChat} /><TouchControls touch={touch} /></>}
       {joining && <JoinDialog onClose={() => setJoining(false)} onJoin={m => { setJoining(false); setPanelOpen(false); setWalkMe(m); }} />}
 
       {/* Tiêu đề + điều khiển */}
