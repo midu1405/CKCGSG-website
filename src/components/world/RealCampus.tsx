@@ -9,6 +9,7 @@ import { Line, Sky } from '@react-three/drei';
 import type { ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import { BUILDINGS, CAMPUS, ROADS, xy2uv, uv2xy, type Area, type Building, type XY } from '../campus/data';
+import { ChapelExterior } from '../chapel/ChapelExterior';
 import { concreteTex, facadeTex, grassTex, pavingTex, roofTileTex, stuccoTex, tiled, type FacadeStyle } from './textures';
 
 /* ---------- tiện ích hình học ---------- */
@@ -274,6 +275,8 @@ type CampusProps = {
   onPickBuilding?: (b: Building) => void;
   pickMode?: boolean;
   onGround?: (e: ThreeEvent<MouseEvent>) => void;
+  /** bấm vào Nhà nguyện cổ */
+  onChapel?: () => void;
 };
 
 const GATE: XY = [-92, -62];
@@ -284,7 +287,7 @@ function areaShape(a: Area) {
   return shapeOf(([[-w / 2, -h / 2], [w / 2, -h / 2], [w / 2, h / 2], [-w / 2, h / 2]] as XY[]).map(([du, dv]) => uv2xy([cu + du, cv + dv])));
 }
 
-export function RealCampus({ night, clear = [], paved = [], selected = null, onPickBuilding, pickMode, onGround }: CampusProps) {
+export function RealCampus({ night, clear = [], paved = [], selected = null, onPickBuilding, pickMode, onGround, onChapel }: CampusProps) {
   const ground = useMemo(() => {
     const g = new THREE.ShapeGeometry(shapeOf(open(CAMPUS))); return g;
   }, []);
@@ -375,7 +378,10 @@ export function RealCampus({ night, clear = [], paved = [], selected = null, onP
       </mesh>
 
       {/* toà nhà */}
-      {BUILDINGS.map(b => <RealBuilding key={b.i} b={b} night={night} active={selected === b.i} onPick={onPickBuilding} pickMode={pickMode} />)}
+      {BUILDINGS.map(b => b.name === 'Nhà nguyện cổ'
+        ? <ChapelExterior key={b.i} night={night} active={selected === b.i}
+            onEnter={onChapel ?? (onPickBuilding && !pickMode ? () => onPickBuilding(b) : undefined)} />
+        : <RealBuilding key={b.i} b={b} night={night} active={selected === b.i} onPick={onPickBuilding} pickMode={pickMode} />)}
 
       {/* tường rào */}
       {fence.segs.map((s, i) => (

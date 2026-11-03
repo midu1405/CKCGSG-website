@@ -114,6 +114,8 @@ vercel.json                 # cho phép mở thẳng /vo-dien, /dac-lo... không
 
 **Dạo khuôn viên (nhiều người cùng lúc)** — nút *Dạo khuôn viên* trên `/dac-lo/so-do`. Mã nằm trong `src/components/walk/`: `presence.ts` đồng bộ vị trí bằng [Trystero](https://github.com/dmotz/trystero) (WebRTC ngang hàng qua relay Nostr công cộng, không cần máy chủ); `Walker.tsx` điều khiển nhân vật (W A S D, Space nhảy, Shift chạy) và va chạm. Khi cần ổn định cho đông người hơn, đổi `import('trystero')` sang `trystero/supabase` hoặc `trystero/firebase`.
 
+**Nhà nguyện cổ (cầu nguyện)** — trong chế độ Dạo khuôn viên, đi tới cửa Nhà nguyện (hoặc bấm vào Nhà nguyện) để vào bên trong: thắp nến, quỳ cầu nguyện, gửi ý cầu nguyện, nhạc organ nền. Mã trong `src/components/chapel/`. Dữ liệu ở Supabase (dự án `ckcgsg-dao-khuon-vien`): bảng `candles`, `intentions`. **Duyệt ý cầu nguyện**: Supabase → Table Editor → `intentions` → tích cột `approved` (chỉ ý đã duyệt mới hiện công khai).
+
 **Thêm một trang** — tạo file trong `src/pages/`, khai báo route trong `App.tsx`, thêm link vào `NAV_LINKS` trong `Navbar.tsx`.
 
 ## Triển khai

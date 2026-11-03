@@ -38,13 +38,13 @@ export function JoinDialog({ onJoin, onClose }: { onJoin: (m: Me) => void; onClo
 
 const STATUS: Record<NetStatus, string> = { off: '', connecting: 'Đang kết nối…', online: 'Trực tuyến', local: 'Chỉ thấy các tab trên máy này' };
 
-export function WalkHud({ count, status, onExit }: { count: number; status: NetStatus; onExit: () => void }) {
+export function WalkHud({ count, status, onExit, where = 'đang dạo' }: { count: number; status: NetStatus; onExit: () => void; where?: string }) {
   return (
     <div className="absolute z-30 top-[88px] left-4 right-4 flex items-start justify-between gap-3 pointer-events-none">
       <div className="pointer-events-auto rounded-2xl bg-black/70 backdrop-blur border border-white/10 px-4 py-3">
         <div className="flex items-center gap-2 font-bold">
           <span className={`w-2 h-2 rounded-full ${status === 'online' ? 'bg-emerald-400' : status === 'local' ? 'bg-amber-400' : 'bg-white/40 animate-pulse'}`} />
-          <Users size={16} className="text-gold" /> {count} người đang dạo
+          <Users size={16} className="text-gold" /> {count} người {where}
         </div>
         <div className="text-[11px] text-white/45 mt-0.5">{STATUS[status]}</div>
         <div className="hidden md:block text-[11px] text-white/55 mt-2 leading-relaxed">

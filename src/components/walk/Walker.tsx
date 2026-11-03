@@ -14,7 +14,7 @@ import type { Bubble, Net, PlayerState } from './presence';
 
 export type TouchInput = { x: number; y: number; jump: boolean };
 export type Me = { name: string };
-export type EmoteId = 'wave' | 'bow' | 'clap' | 'dance' | 'heart';
+export type EmoteId = 'wave' | 'bow' | 'clap' | 'dance' | 'heart' | 'pray';
 export type EmoteState = { id: EmoteId | ''; k: number; t0: number };
 export const EMOTES: { id: EmoteId; icon: string; label: string; dur: number }[] = [
   { id: 'wave', icon: '👋', label: 'Vẫy tay', dur: 2.4 },
@@ -22,6 +22,7 @@ export const EMOTES: { id: EmoteId; icon: string; label: string; dur: number }[]
   { id: 'clap', icon: '👏', label: 'Vỗ tay', dur: 2.4 },
   { id: 'dance', icon: '💃', label: 'Nhảy múa', dur: 4 },
   { id: 'heart', icon: '❤️', label: 'Thả tim', dur: 2.6 },
+  { id: 'pray', icon: '🙏', label: 'Cầu nguyện', dur: 8 },
 ];
 const DUR = Object.fromEntries(EMOTES.map(e => [e.id, e.dur])) as Record<EmoteId, number>;
 
@@ -39,6 +40,22 @@ function floorAt(p: XY) {
 function free(p: XY) {
   return OFFS.every(([dx, dy]) => { const q: XY = [p[0] + dx, p[1] + dy]; return inPoly(q, CAMPUS) && !BUILDINGS.some(b => inPoly(q, b.pts)); });
 }
+
+/** Một "không gian" để đi dạo: khuôn viên hoặc bên trong Nhà nguyện. Toạ độ XY = (x, -z) của three.js */
+export type World = {
+  spawn: { p: [number, number, number]; yaw: number };
+  free: (p: XY) => boolean;
+  floorAt: (p: XY) => number;
+  /** camera có bị chắn tại điểm này không (để kéo camera lại gần) */
+  camBlocked: (q: THREE.Vector3) => boolean;
+  camDist?: number;
+  camPitch?: number;
+};
+const campusSpawn = () => { const p = toWorld([9, 0, 30]), s = toWorld([0, 0, 0]); return { p, yaw: Math.atan2(s[0] - p[0], s[2] - p[2]) }; };
+export const CAMPUS_WORLD: World = {
+  spawn: campusSpawn(), free, floorAt,
+  camBlocked: q => BUILDINGS.some(b => q.y < b.h + 3 && OFFS.some(([dx, dy]) => inPoly([q.x + dx * 3, -q.z + dy * 3], b.pts))),
+};
 
 /* ---------- Nhân vật "Chiên Con" (thiết kế riêng cho web) ---------- */
 const WOOL = '#fbf8f1', FACE = '#f1d9bd', EAR = '#e9c9a6', DARK = '#3a2c25', GOLD = '#D4AF37';
@@ -59,7 +76,7 @@ export function Lamb({ name, me = false, look }: { name: string; me?: boolean; l
   useFrame(({ clock }) => {
     const t = clock.elapsedTime, mv = look.moving.current, em = look.emote();
     const walk = mv ? Math.sin(t * 11) : 0;
-    let aL = { x: walk * 0.5, z: 0.15 }, aR = { x: -walk * 0.5, z: -0.15 }, lean = 0, spin = 0, bob = mv ? Math.abs(walk) * 0.06 : Math.sin(t * 2) * 0.01;
+    let aL = { x: walk * 0.5, z: 0.15 }, aR = { x: -walk * 0.5, z: -0.15 }, lean = 0, spin = 0, kneel = 0, bob = mv ? Math.abs(walk) * 0.06 : Math.sin(t * 2) * 0.01;
     if (em) {
       const s = em.since, env = Math.min(1, s * 4, Math.max(0, (DUR[em.id as EmoteId] - s) * 4));
       if (em.id === 'wave') aR = { x: -0.2, z: -2.5 * env + Math.sin(s * 14) * 0.35 * env };
@@ -67,14 +84,15 @@ export function Lamb({ name, me = false, look }: { name: string; me?: boolean; l
       if (em.id === 'clap') { const c = Math.abs(Math.sin(s * 12)) * 0.35; aL = { x: -1.3 * env, z: -0.5 * env + c }; aR = { x: -1.3 * env, z: 0.5 * env - c }; }
       if (em.id === 'dance') { spin = s * 4; bob = Math.abs(Math.sin(s * 8)) * 0.25; aL = { x: 0, z: 2.4 + Math.sin(s * 8) * 0.4 }; aR = { x: 0, z: -2.4 - Math.sin(s * 8 + 1) * 0.4 }; }
       if (em.id === 'heart') { aL = { x: -1.1, z: -0.6 }; aR = { x: -1.1, z: 0.6 }; bob = Math.abs(Math.sin(s * 5)) * 0.08; }
+      if (em.id === 'pray') { kneel = env; aL = { x: -1.5 * env, z: -0.45 * env }; aR = { x: -1.5 * env, z: 0.45 * env }; lean = 0.12 * env; bob = 0; }
     }
     // tay trái của khung (x âm) / phải (x dương): đổi dấu z để số dương = giơ ra ngoài
     if (armL.current) { armL.current.rotation.x = aL.x; armL.current.rotation.z = -aL.z; }
     if (armR.current) { armR.current.rotation.x = aR.x; armR.current.rotation.z = -aR.z; }
-    if (legL.current) legL.current.rotation.x = walk * 0.7;
-    if (legR.current) legR.current.rotation.x = -walk * 0.7;
+    if (legL.current) legL.current.rotation.x = walk * 0.7 - kneel * 1.4;
+    if (legR.current) legR.current.rotation.x = -walk * 0.7 - kneel * 1.4;
     if (upper.current) upper.current.rotation.x = lean;
-    if (root.current) { root.current.position.y = bob; root.current.rotation.y = spin; }
+    if (root.current) { root.current.position.y = bob - kneel * 0.28; root.current.rotation.y = spin; }
     // trái tim bay lên
     if (em?.id === 'heart' && heartEl.current) {
       const k = Math.floor(clock.elapsedTime - em.since);
@@ -173,16 +191,13 @@ export function RemoteAvatars({ ids, net }: { ids: string[]; net: Net }) {
 }
 
 /* ---------- Bản thân + camera theo sau ---------- */
-export function Walker({ me, net, touch, emote }: { me: Me; net: Net; touch: React.MutableRefObject<TouchInput>; emote: React.MutableRefObject<EmoteState> }) {
+export function Walker({ me, net, touch, emote, world = CAMPUS_WORLD, onMove }: { me: Me; net: Net; touch: React.MutableRefObject<TouchInput>; emote: React.MutableRefObject<EmoteState>; world?: World; onMove?: (p: THREE.Vector3) => void }) {
   const { camera, gl, clock } = useThree();
   const g = useRef<THREE.Group>(null);
   const moving = useRef(false);
   const keys = useRef(new Set<string>());
   const st = useRef({ vy: 0, onGround: true, face: 0, camYaw: 0, camPitch: 0.32, camDist: 7, lastSend: 0, jumpHeld: false, wasBusy: false });
-  const spawn = useMemo(() => {
-    const p = toWorld([9, 0, 30]), s = toWorld([0, 0, 0]);
-    return { p, yaw: Math.atan2(s[0] - p[0], s[2] - p[2]) };
-  }, []);
+  const spawn = world.spawn;
   const activeEmote = () => {
     const e = emote.current; if (!e.id) return null;
     const since = clock.elapsedTime - e.t0;
@@ -192,7 +207,8 @@ export function Walker({ me, net, touch, emote }: { me: Me; net: Net; touch: Rea
 
   useEffect(() => {
     st.current.face = st.current.camYaw = spawn.yaw;
-    g.current?.position.set(spawn.p[0], 0, spawn.p[2]);
+    g.current?.position.set(spawn.p[0], spawn.p[1], spawn.p[2]);
+    st.current.camDist = world.camDist ?? 7; st.current.camPitch = world.camPitch ?? 0.32; st.current.vy = 0;
     const isTyping = (e: KeyboardEvent) => { const t = e.target as HTMLElement | null; return !!t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); };
     const down = (e: KeyboardEvent) => {
       if (isTyping(e)) return;
@@ -220,7 +236,7 @@ export function Walker({ me, net, touch, emote }: { me: Me; net: Net; touch: Rea
       el.removeEventListener('pointerdown', pd); window.removeEventListener('pointermove', pm); window.removeEventListener('pointerup', pu);
       el.removeEventListener('wheel', wh);
     };
-  }, [gl, spawn, clock, emote]);
+  }, [gl, spawn, clock, emote, world]);
 
   useFrame((state, rawDt) => {
     const o = g.current; if (!o) return;
@@ -241,8 +257,8 @@ export function Walker({ me, net, touch, emote }: { me: Me; net: Net; touch: Rea
       s.face += d * Math.min(1, dt * 12);
       const tryMove = (nx: number, nz: number) => {
         const p: XY = [nx, -nz];
-        if (!free(p)) return false;
-        if (floorAt(p) > o.position.y + 0.45) return false; // bậc quá cao → phải nhảy
+        if (!world.free(p)) return false;
+        if (world.floorAt(p) > o.position.y + 0.45) return false; // bậc quá cao → phải nhảy
         o.position.x = nx; o.position.z = nz; return true;
       };
       const nx = o.position.x + dir.x * speed * dt, nz = o.position.z + dir.z * speed * dt;
@@ -250,7 +266,7 @@ export function Walker({ me, net, touch, emote }: { me: Me; net: Net; touch: Rea
     }
     o.rotation.y = s.face;
     const wantJump = k.has(' ') || t.jump;
-    const floor = floorAt([o.position.x, -o.position.z]);
+    const floor = world.floorAt([o.position.x, -o.position.z]);
     if (wantJump && s.onGround && !s.jumpHeld) { s.vy = 7.2; s.onGround = false; }
     s.jumpHeld = wantJump;
     s.vy -= 20 * dt; o.position.y += s.vy * dt;
@@ -261,12 +277,12 @@ export function Walker({ me, net, touch, emote }: { me: Me; net: Net; touch: Rea
     let dist = s.camDist;
     for (let d = 0.6; d <= s.camDist; d += 0.5) {
       const q = tgt.clone().addScaledVector(unit, d);
-      const hit = BUILDINGS.find(b => q.y < b.h + 3 && OFFS.some(([dx, dy]) => inPoly([q.x + dx * 3, -q.z + dy * 3], b.pts)));
-      if (hit) { dist = Math.max(1.2, d - 0.8); break; }
+      if (world.camBlocked(q)) { dist = Math.max(1.2, d - 0.8); break; }
     }
     const want = tgt.clone().add(unit.multiplyScalar(dist)); want.y = Math.max(want.y, 0.6);
     camera.position.lerp(want, 1 - Math.exp(-dt * 10));
     camera.lookAt(tgt);
+    onMove?.(o.position);
     // gửi trạng thái ~12 lần/giây
     const now = state.clock.elapsedTime;
     const a = activeEmote(), busy = moving.current || !s.onGround || !!a;

@@ -7,6 +7,7 @@
  * Ngoài ra còn kênh BroadcastChannel để các tab trên cùng một máy thấy nhau (tiện thử nghiệm).
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { getSupabase, SB_KEY, SB_URL } from '../../lib/supabase';
 
 /** n tên · x y z vị trí · r hướng · m đang đi · e động tác · k số lần làm động tác (để biết khi nào bắt đầu lại) */
 export type PlayerState = { [k: string]: string | number; n: string; x: number; y: number; z: number; r: number; m: number; e: string; k: number };
@@ -24,13 +25,9 @@ export type NetStatus = 'off' | 'connecting' | 'online' | 'local';
 
 const APP_ID = 'ckcgsg-website-dac-lo-2027';
 const ROOM = 'khuon-vien-ttmv-v1';
-// Dự án Supabase "ckcgsg-dao-khuon-vien" (Singapore). Khoá publishable được thiết kế để nằm công khai trong web;
-// có thể ghi đè bằng biến môi trường VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY.
-const SB_URL = (import.meta.env.VITE_SUPABASE_URL as string | undefined) || 'https://ichrodujamooijcyftji.supabase.co';
-const SB_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) || 'sb_publishable_EhWG02gAMOkIv6vEWHZwJw_-yhvRzmh';
 export const MAX_CHAT = 140;
 
-export function usePresence(active: boolean, myName: string) {
+export function usePresence(active: boolean, myName: string, room = ROOM) {
   const peers = useRef(new Map<string, Remote>());
   const bubbles = useRef(new Map<string, Bubble>());
   const send = useRef<(s: PlayerState) => void>(() => {});
@@ -56,7 +53,7 @@ export function usePresence(active: boolean, myName: string) {
     let bc: BroadcastChannel | null = null;
     try {
       // ?nobc trên URL: tắt kênh cùng-máy để kiểm tra đường truyền qua máy chủ
-      if (!location.search.includes('nobc')) bc = new BroadcastChannel('ckcgsg-dao-khuon-vien');
+      if (!location.search.includes('nobc')) bc = new BroadcastChannel('ckcgsg-' + room);
       bc.onmessage = e => {
         const d = e.data; if (!d || d.id === myId) return;
         const id = 'bc-' + d.id;
@@ -66,10 +63,9 @@ export function usePresence(active: boolean, myName: string) {
 
     setStatus('connecting');
     if (SB_URL && SB_KEY) {
-      import('@supabase/supabase-js').then(({ createClient }) => {
+      getSupabase().then(sb => {
         if (!alive) return;
-        const sb = createClient(SB_URL, SB_KEY, { auth: { persistSession: false }, realtime: { params: { eventsPerSecond: 20 } } });
-        const ch = sb.channel(ROOM, { config: { broadcast: { self: false }, presence: { key: myId } } });
+        const ch = sb.channel(room, { config: { broadcast: { self: false }, presence: { key: myId } } });
         ch.on('broadcast', { event: 'st' }, ({ payload }) => { if (payload?.id) put(payload.id, payload.s); })
           .on('broadcast', { event: 'chat' }, ({ payload }) => { if (payload?.id) got(payload.id, payload.m); })
           .on('presence', { event: 'leave' }, ({ key }) => { peers.current.delete(key); bubbles.current.delete(key); })
@@ -84,16 +80,16 @@ export function usePresence(active: boolean, myName: string) {
       }).catch(() => alive && setStatus('local'));
     } else import('trystero').then(({ joinRoom }) => {
       if (!alive) return;
-      const room = joinRoom({ appId: APP_ID }, ROOM, { onJoinError: () => setStatus('local') });
-      const act = room.makeAction<PlayerState>('st');
-      const say = room.makeAction<ChatMsg>('chat');
+      const tr = joinRoom({ appId: APP_ID }, room, { onJoinError: () => setStatus('local') });
+      const act = tr.makeAction<PlayerState>('st');
+      const say = tr.makeAction<ChatMsg>('chat');
       act.onMessage = (d, ctx) => { put(ctx.peerId, d); setStatus('online'); };
       say.onMessage = (d, ctx) => got(ctx.peerId, d);
-      room.onPeerJoin = () => { setStatus('online'); if (last) act.send(last).catch(() => {}); };
-      room.onPeerLeave = id => { peers.current.delete(id); bubbles.current.delete(id); };
+      tr.onPeerJoin = () => { setStatus('online'); if (last) act.send(last).catch(() => {}); };
+      tr.onPeerLeave = id => { peers.current.delete(id); bubbles.current.delete(id); };
       netSend = s => { act.send(s).catch(() => {}); };
       netChat = m => { say.send(m).catch(() => {}); };
-      leave = () => { room.leave(); };
+      leave = () => { tr.leave(); };
       setTimeout(() => alive && setStatus(s => (s === 'connecting' ? 'online' : s)), 4000);
     }).catch(() => alive && setStatus('local'));
 
@@ -114,7 +110,7 @@ export function usePresence(active: boolean, myName: string) {
       send.current = () => {}; chatOut.current = () => {};
       setIds([]); setCount(1); setStatus('off'); setChat([]);
     };
-  }, [active]);
+  }, [active, room]);
 
   /** Gửi tin nhắn (tối đa 1 tin / giây) */
   const sendChat = useCallback((raw: string) => {

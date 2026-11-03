@@ -8,10 +8,19 @@ import { BUILDINGS, ROADS, EVENT_AREAS, areaPts, xy2uv, uv2xy, type Area, type X
 import { STAGE_POS, STAGE_ROT_Y, toWorld } from './frame';
 import { RealCampus, WorldLights, w3, shapeOf } from '../world/RealCampus';
 import { asphaltTex, pavingTex, tiled } from '../world/textures';
-import { Walker, RemoteAvatars, type Me, type TouchInput, type EmoteState } from '../walk/Walker';
+import { Walker, RemoteAvatars, type Me, type TouchInput, type EmoteState, type World } from '../walk/Walker';
+import { ChapelInterior, CHAPEL_WORLD } from '../chapel/ChapelInterior';
 import type { Net } from '../walk/presence';
 
-export type WalkProps = { me: Me; net: Net; ids: string[]; touch: React.MutableRefObject<TouchInput>; emote: React.MutableRefObject<EmoteState> };
+export type WalkProps = {
+  me: Me; net: Net; ids: string[]; touch: React.MutableRefObject<TouchInput>; emote: React.MutableRefObject<EmoteState>;
+  /** đang ở đâu: khuôn viên hay bên trong Nhà nguyện */
+  place: 'campus' | 'chapel';
+  /** không gian khuôn viên (điểm xuất hiện thay đổi khi vừa từ Nhà nguyện bước ra) */
+  world?: World;
+  onMove?: (p: THREE.Vector3) => void;
+  chapel?: { candles: number; notes: number; onCandle: () => void; onBoard: () => void };
+};
 const rand = (a: number, b: number) => { const t = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return t - Math.floor(t); };
 
 export type Mode = 'audience' | 'sponsor';
@@ -312,9 +321,9 @@ function StageLights({ night }: { night: boolean }) {
 }
 
 /* ---------- Cảnh tổng ---------- */
-type Props = { mode: Mode; night: boolean; walk?: WalkProps | null; selZone: Zone | null; selItem: string | null; onPickZone: (z: Zone) => void; onPickItem: (id: string) => void };
+type Props = { mode: Mode; night: boolean; walk?: WalkProps | null; selZone: Zone | null; selItem: string | null; onPickZone: (z: Zone) => void; onPickItem: (id: string) => void; onChapel?: () => void };
 
-const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk = null, selZone, selItem, onPickZone, onPickItem }, ref) {
+const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk = null, selZone, selItem, onPickZone, onPickItem, onChapel }, ref) {
   const cc = useRef<CameraControls>(null);
   const { size } = useThree();
   // Màn hình dọc (điện thoại): lùi camera xa hơn để thấy trọn sân khấu và khán đài
@@ -335,10 +344,18 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk 
   const plaza = useMemo(() => tiled(pavingTex('warm'), 42 / 4, 50 / 4), []);
   const showLabels = mode === 'audience' && !walk;
 
+  if (walk?.place === 'chapel') return (
+    <>
+      <ChapelInterior candles={walk.chapel?.candles ?? 0} notes={walk.chapel?.notes ?? 0} onCandle={walk.chapel?.onCandle} onBoard={walk.chapel?.onBoard} />
+      <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} world={CHAPEL_WORLD} onMove={walk.onMove} />
+      <RemoteAvatars ids={walk.ids} net={walk.net} />
+    </>
+  );
+
   return (
     <>
       <WorldLights night={night} />
-      <RealCampus night={night} clear={Object.values(EVENT_AREAS)} />
+      <RealCampus night={night} clear={Object.values(EVENT_AREAS)} onChapel={onChapel} />
       {PARKING.map(p => <ParkingArea key={p.id} area={p.area} />)}
       {showLabels && <>
         {PARKING.map(p => <Tag key={p.id} pos={w3(p.area.c, 2).toArray() as [number, number, number]} tone="light">🅿 {p.label}</Tag>)}
@@ -386,7 +403,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk 
       ))}
 
       {walk ? <>
-        <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} />
+        <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} world={walk.world} onMove={walk.onMove} />
         <RemoteAvatars ids={walk.ids} net={walk.net} />
       </> : <CameraControls ref={cc} minDistance={4} maxDistance={420} maxPolarAngle={Math.PI / 2.05} smoothTime={0.6} />}
     </>

@@ -1,4 +1,5 @@
-import { Suspense, useMemo, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type * as THREE from 'three';
 import { Link } from 'react-router-dom';
 import { Users, Handshake, Eye, Maximize2, ArrowUpFromLine, Theater, Mail, X, Info, Sun, Moon, Footprints } from 'lucide-react';
 import StageScene, { type Mode, type SceneHandle } from '../components/stage/StageScene';
@@ -7,7 +8,18 @@ import STAGE_DESIGN from '../assets/photos/stage-design.jpg';
 import MapTabs from '../components/MapTabs';
 import { usePresence } from '../components/walk/presence';
 import { JoinDialog, WalkHud, TouchControls, EmoteBar, ChatPanel } from '../components/walk/WalkUI';
-import type { Me, TouchInput, EmoteState } from '../components/walk/Walker';
+import { CAMPUS_WORLD, type Me, type TouchInput, type EmoteState, type World } from '../components/walk/Walker';
+import { CHAPEL } from '../components/chapel/ChapelExterior';
+import { nearExit } from '../components/chapel/ChapelInterior';
+import { usePrayer } from '../components/chapel/prayer';
+import { Organ } from '../components/chapel/organ';
+import { ChapelBar, DoorPrompt, IntentionDialog, BoardDialog, Toast } from '../components/chapel/ChapelUI';
+
+/** chỗ đứng khi vừa bước ra khỏi Nhà nguyện, quay lưng lại cửa */
+const OUTSIDE_WORLD: World = (() => {
+  const [ox, oy] = CHAPEL.outside, [dx, dy] = CHAPEL.door;
+  return { ...CAMPUS_WORLD, spawn: { p: [ox, 0, -oy], yaw: Math.atan2(ox - dx, -(oy - dy)) } };
+})();
 
 const fmt = (n: number) => n.toLocaleString('vi-VN');
 
@@ -19,8 +31,58 @@ export default function StageMapPage() {
   const [walkMe, setWalkMe] = useState<Me | null>(null);
   const touch = useRef<TouchInput>({ x: 0, y: 0, jump: false });
   const emote = useRef<EmoteState>({ id: '', k: 0, t0: 0 });
-  const { net, ids, count, status, chat, sendChat } = usePresence(!!walkMe, walkMe?.name ?? '');
-  const walk = useMemo(() => (walkMe ? { me: walkMe, net, ids, touch, emote } : null), [walkMe, net, ids]);
+  const [place, setPlace] = useState<'campus' | 'chapel'>('campus');
+  const [campusWorld, setCampusWorld] = useState<World>(CAMPUS_WORLD);
+  const [near, setNear] = useState(false);
+  const nearRef = useRef(false);
+  const [music, setMusic] = useState(true);
+  const organ = useRef<Organ | null>(null);
+  const [dialog, setDialog] = useState<'write' | 'board' | null>(null);
+  const [toast, setToast] = useState('');
+  const wantChapel = useRef(false);
+  const inChapel = !!walkMe && place === 'chapel';
+  const { net, ids, count, status, chat, sendChat } = usePresence(!!walkMe, walkMe?.name ?? '', inChapel ? 'nha-nguyen-v1' : undefined);
+  const prayer = usePrayer(inChapel);
+
+  const say = (t: string) => { setToast(t); window.setTimeout(() => setToast(x => (x === t ? '' : x)), 3200); };
+  const enterChapel = useCallback(() => {
+    nearRef.current = false; setNear(false); setPlace('chapel');
+    if (music) { organ.current ??= new Organ(); organ.current.start(); }
+  }, [music]);
+  const exitChapel = useCallback(() => {
+    nearRef.current = false; setNear(false); setPlace('campus'); setCampusWorld(OUTSIDE_WORLD); setDialog(null);
+    organ.current?.stop();
+  }, []);
+  const leaveWalk = () => { organ.current?.stop(); setPlace('campus'); setCampusWorld(CAMPUS_WORLD); setDialog(null); setNear(false); nearRef.current = false; setWalkMe(null); };
+  const onChapel = () => { if (walkMe) enterChapel(); else { wantChapel.current = true; setJoining(true); } };
+  const onMove = useCallback((p: THREE.Vector3) => {
+    const n = place === 'chapel' ? nearExit(p) : Math.hypot(p.x - CHAPEL.door[0], -p.z - CHAPEL.door[1]) < 4.5;
+    if (n !== nearRef.current) { nearRef.current = n; setNear(n); }
+  }, [place]);
+  const doCandle = useCallback(async () => {
+    const ok = await prayer.lightCandle();
+    say(ok ? 'Bạn đã thắp một ngọn nến 🕯 Xin Chúa nhậm lời.' : (prayer.error || 'Chưa thắp được nến, xin thử lại.'));
+  }, [prayer]);
+  const toggleMusic = () => setMusic(m => {
+    const next = !m; organ.current ??= new Organ();
+    if (next && place === 'chapel') organ.current.start(); else organ.current.stop();
+    return next;
+  });
+  useEffect(() => () => organ.current?.stop(), []);
+  // phím E: vào / ra Nhà nguyện khi đứng gần cửa
+  useEffect(() => {
+    if (!walkMe) return;
+    const k = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+      if (e.key.toLowerCase() === 'e' && nearRef.current) (place === 'chapel' ? exitChapel : enterChapel)();
+    };
+    window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k);
+  }, [walkMe, place, enterChapel, exitChapel]);
+
+  const walk = useMemo(() => (walkMe ? {
+    me: walkMe, net, ids, touch, emote, place, world: campusWorld, onMove,
+    chapel: { candles: prayer.stats.candlesToday, notes: prayer.stats.notes, onCandle: doCandle, onBoard: () => setDialog('board') },
+  } : null), [walkMe, net, ids, place, campusWorld, onMove, prayer.stats, doCandle]);
   const [zone, setZone] = useState<Zone | null>(null);
   const [item, setItem] = useState<string | null>(null);
   const [panelOpen, setPanelOpen] = useState(() => typeof window === 'undefined' || window.innerWidth >= 768);
@@ -38,12 +100,27 @@ export default function StageMapPage() {
       {/* Cảnh 3D */}
       <div className="absolute inset-0 top-[72px]">
         <Suspense fallback={<div className="h-full flex items-center justify-center text-white/50">Đang dựng sân khấu…</div>}>
-          <StageScene ref={scene} mode={mode} night={night} walk={walk} selZone={zone} selItem={item} onPickZone={pickZone} onPickItem={pickItem} />
+          <StageScene ref={scene} mode={mode} night={night} walk={walk} onChapel={onChapel} selZone={zone} selItem={item} onPickZone={pickZone} onPickItem={pickItem} />
         </Suspense>
       </div>
 
-      {walkMe && <><WalkHud count={count} status={status} onExit={() => setWalkMe(null)} /><EmoteBar emote={emote} /><ChatPanel lines={chat} onSend={sendChat} /><TouchControls touch={touch} /></>}
-      {joining && <JoinDialog onClose={() => setJoining(false)} onJoin={m => { setJoining(false); setPanelOpen(false); setWalkMe(m); }} />}
+      {walkMe && <>
+        <WalkHud count={count} status={status} onExit={leaveWalk} where={inChapel ? 'trong Nhà nguyện' : 'đang dạo'} />
+        {inChapel
+          ? <ChapelBar stats={prayer.stats} music={music} onMusic={toggleMusic} onCandle={doCandle}
+              onPray={() => { emote.current = { id: 'pray', k: emote.current.k + 1, t0: -1 }; }}
+              onWrite={() => { prayer.setError(''); setDialog('write'); }} onBoard={() => setDialog('board')} onExit={exitChapel} />
+          : <EmoteBar emote={emote} />}
+        {near && <DoorPrompt label={inChapel ? 'Ra ngoài' : 'Vào Nhà nguyện'} onGo={inChapel ? exitChapel : enterChapel} />}
+        <ChatPanel lines={chat} onSend={sendChat} /><TouchControls touch={touch} />
+        {toast && <Toast text={toast} />}
+        {dialog === 'write' && <IntentionDialog defaultName={walkMe.name} error={prayer.error} onSubmit={prayer.submit} onClose={() => setDialog(null)} />}
+        {dialog === 'board' && <BoardDialog list={prayer.list} pending={prayer.pending} onClose={() => setDialog(null)} onWrite={() => { prayer.setError(''); setDialog('write'); }} />}
+      </>}
+      {joining && <JoinDialog onClose={() => { setJoining(false); wantChapel.current = false; }} onJoin={m => {
+        setJoining(false); setPanelOpen(false); setWalkMe(m);
+        if (wantChapel.current) { wantChapel.current = false; enterChapel(); }
+      }} />}
 
       {/* Tiêu đề + điều khiển */}
       {!walkMe && <div className="absolute z-20 top-[88px] left-4 right-4 md:right-auto md:max-w-[560px] pointer-events-none">

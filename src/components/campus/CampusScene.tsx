@@ -65,7 +65,14 @@ const Scene = forwardRef<CampusHandle, Props>(function Scene({ sel, onPickBuildi
     top, perspective,
     focus: (p, dist = 110) => { const t = v3(p); cc.current?.setLookAt(t.x - dist * 0.55, dist * 0.8, t.z + dist * 0.75, t.x, 0, t.z, true); },
   }), []);
-  useEffect(() => { cc.current?.setLookAt(0, 360, 0.01, 0, 0, 0, false); }, []);
+  useEffect(() => {
+    cc.current?.setLookAt(0, 360, 0.01, 0, 0, 0, false);
+    // ?cam=x,y,z,tx,ty,tz: mở sẵn một góc nhìn (để chia sẻ hoặc chụp ảnh)
+    try {
+      const c = new URLSearchParams(location.search).get('cam')?.split(',').map(Number);
+      if (c && c.length === 6 && c.every(Number.isFinite)) cc.current?.setLookAt(c[0], c[1], c[2], c[3], c[4], c[5], false);
+    } catch { /* bỏ qua */ }
+  }, []);
 
   const onGround = (e: ThreeEvent<MouseEvent>) => {
     if (!pickMode) return;
