@@ -178,7 +178,7 @@ export function Walker({ me, net, touch, emote }: { me: Me; net: Net; touch: Rea
   const g = useRef<THREE.Group>(null);
   const moving = useRef(false);
   const keys = useRef(new Set<string>());
-  const st = useRef({ vy: 0, onGround: true, face: 0, camYaw: 0, camPitch: 0.32, camDist: 7, lastSend: 0, jumpHeld: false });
+  const st = useRef({ vy: 0, onGround: true, face: 0, camYaw: 0, camPitch: 0.32, camDist: 7, lastSend: 0, jumpHeld: false, wasBusy: false });
   const spawn = useMemo(() => {
     const p = toWorld([9, 0, 30]), s = toWorld([0, 0, 0]);
     return { p, yaw: Math.atan2(s[0] - p[0], s[2] - p[2]) };
@@ -269,9 +269,9 @@ export function Walker({ me, net, touch, emote }: { me: Me; net: Net; touch: Rea
     camera.lookAt(tgt);
     // gửi trạng thái ~12 lần/giây
     const now = state.clock.elapsedTime;
-    if (now - s.lastSend > 0.08) {
-      s.lastSend = now;
-      const a = activeEmote();
+    const a = activeEmote(), busy = moving.current || !s.onGround || !!a;
+    if (now - s.lastSend > (busy ? 0.2 : 2.5) || busy !== s.wasBusy) {
+      s.lastSend = now; s.wasBusy = busy;
       const msg: PlayerState = { n: me.name, x: +o.position.x.toFixed(2), y: +o.position.y.toFixed(2), z: +o.position.z.toFixed(2), r: +s.face.toFixed(2), m: moving.current ? 1 : 0, e: a ? a.id : '', k: emote.current.k };
       net.send.current(msg);
     }

@@ -1,9 +1,9 @@
 /**
  * Nhiều người cùng dạo khuôn viên — đồng bộ vị trí, động tác và tin nhắn theo thời gian thực.
  *
- * Bản thử dùng Trystero (WebRTC ngang hàng, tìm nhau qua các relay Nostr công cộng): không cần máy chủ hay tài khoản.
- * Phù hợp vài chục người cùng lúc. Khi cần đông hơn / ổn định hơn, chỉ cần đổi `import('trystero')`
- * sang `import('trystero/supabase')` hoặc `'trystero/firebase'` kèm cấu hình của dịch vụ đó.
+ * Ưu tiên Supabase Realtime (máy chủ chuyển tin qua WebSocket — chạy được trên mọi mạng) khi có
+ * VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY (khai báo trong Vercel → Settings → Environment Variables).
+ * Không có thì dùng Trystero (WebRTC ngang hàng qua relay Nostr) — hay bị mạng di động / wifi công ty chặn.
  * Ngoài ra còn kênh BroadcastChannel để các tab trên cùng một máy thấy nhau (tiện thử nghiệm).
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -24,6 +24,8 @@ export type NetStatus = 'off' | 'connecting' | 'online' | 'local';
 
 const APP_ID = 'ckcgsg-website-dac-lo-2027';
 const ROOM = 'khuon-vien-ttmv-v1';
+const SB_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const SB_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 export const MAX_CHAT = 140;
 
 export function usePresence(active: boolean, myName: string) {
@@ -60,7 +62,24 @@ export function usePresence(active: boolean, myName: string) {
     } catch { /* trình duyệt cũ */ }
 
     setStatus('connecting');
-    import('trystero').then(({ joinRoom }) => {
+    if (SB_URL && SB_KEY) {
+      import('@supabase/supabase-js').then(({ createClient }) => {
+        if (!alive) return;
+        const sb = createClient(SB_URL, SB_KEY, { auth: { persistSession: false }, realtime: { params: { eventsPerSecond: 20 } } });
+        const ch = sb.channel(ROOM, { config: { broadcast: { self: false }, presence: { key: myId } } });
+        ch.on('broadcast', { event: 'st' }, ({ payload }) => { if (payload?.id) put(payload.id, payload.s); })
+          .on('broadcast', { event: 'chat' }, ({ payload }) => { if (payload?.id) got(payload.id, payload.m); })
+          .on('presence', { event: 'leave' }, ({ key }) => { peers.current.delete(key); bubbles.current.delete(key); })
+          .on('presence', { event: 'join' }, () => { if (last) ch.send({ type: 'broadcast', event: 'st', payload: { id: myId, s: last } }); })
+          .subscribe(st => {
+            if (st === 'SUBSCRIBED') { setStatus('online'); ch.track({ at: Date.now() }); }
+            else if (st === 'CHANNEL_ERROR' || st === 'TIMED_OUT') setStatus('local');
+          });
+        netSend = s => { ch.send({ type: 'broadcast', event: 'st', payload: { id: myId, s } }); };
+        netChat = m => { ch.send({ type: 'broadcast', event: 'chat', payload: { id: myId, m } }); };
+        leave = () => { sb.removeChannel(ch); };
+      }).catch(() => alive && setStatus('local'));
+    } else import('trystero').then(({ joinRoom }) => {
       if (!alive) return;
       const room = joinRoom({ appId: APP_ID }, ROOM, { onJoinError: () => setStatus('local') });
       const act = room.makeAction<PlayerState>('st');
