@@ -35,7 +35,7 @@ function solid(x: number, z: number) {
 }
 const R = 0.32;
 export const CHAPEL_WORLD: World = {
-  spawn: { p: [0, 0, 15.2], yaw: Math.PI },
+  spawn: { p: [0, 0, 11.5], yaw: Math.PI },
   free: ([x, y]: XY) => [[0, 0], [R, 0], [-R, 0], [0, R], [0, -R]].every(([dx, dz]) => !solid(x + dx, -y + dz)),
   floorAt: ([x, y]: XY) => { const z = -y; if (Math.abs(x) > 8) return 0; return z < -12.5 ? 0.6 : z < -12 ? 0.4 : z < -11.5 ? 0.2 : 0; },
   camBlocked: q => Math.abs(q.x) > HW - 0.3 || q.z > ZF - 0.3 || q.z < ZB + 0.3 || q.y > H_AISLE + 3.5,
