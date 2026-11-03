@@ -10,6 +10,7 @@ import type { ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import { BUILDINGS, CAMPUS_ANGLE, uv2xy, xy2uv, type XY } from '../campus/data';
 import { roofTileTex, pavingTex, tiled } from '../world/textures';
+import { Statue } from './Statue';
 import { aisleBayTex, clerestoryBayTex, facadeCenterTex, gableTex, wingTex, IVORY } from './textures';
 
 /* ---------- khung toạ độ ---------- */
@@ -23,6 +24,8 @@ const FRONT_UV: XY = [(U0 + U1) / 2, V0 + 0.2];
 const FRONT = uv2xy(FRONT_UV);
 /** local (x ngang, z: 0 = mặt tiền, âm = vào trong) → toạ độ khuôn viên */
 export const chapelToCampus = (x: number, z: number): XY => uv2xy([FRONT_UV[0] + x, FRONT_UV[1] - z]);
+/** điểm (toạ độ khuôn viên) có nằm trong sân trước Nhà nguyện không — để không trồng cây đè lên tượng, lối vào */
+export const inChapelYard = (p: XY) => { const [u, v] = xy2uv(p); const x = u - FRONT_UV[0], z = FRONT_UV[1] - v; return Math.abs(x) < 15 && z > -1 && z < 16; };
 export const CHAPEL = {
   pos: [FRONT[0], 0, -FRONT[1]] as [number, number, number],
   rotY: A,
@@ -72,24 +75,6 @@ function Topiary({ x, z }: { x: number; z: number }) {
     </group>
   );
 }
-/** Tượng thánh với hai em nhỏ (giản lược, đá trắng) */
-function Statue({ x, z }: { x: number; z: number }) {
-  const m = <meshStandardMaterial color="#f1efe9" roughness={0.6} />;
-  return (
-    <group position={[x, 0, z]} rotation={[0, 0.35, 0]}>
-      <mesh position={[0, 0.25, 0]} receiveShadow><cylinderGeometry args={[2.2, 2.3, 0.5, 24]} /><meshStandardMaterial color="#6f6a62" /></mesh>
-      <mesh position={[0, 1.1, 0]} castShadow><boxGeometry args={[1.6, 1.2, 1.4]} />{m}</mesh>
-      <mesh position={[0.1, 2.9, 0]} castShadow><capsuleGeometry args={[0.38, 1.9, 4, 12]} />{m}</mesh>
-      <mesh position={[0.1, 4.25, 0]} castShadow><sphereGeometry args={[0.27, 14, 12]} />{m}</mesh>
-      <mesh position={[-0.35, 4.1, 0.1]} rotation={[0, 0, 0.9]}><capsuleGeometry args={[0.1, 0.8, 4, 8]} />{m}</mesh>
-      <mesh position={[-0.65, 2.3, 0.35]} castShadow><capsuleGeometry args={[0.22, 0.75, 4, 10]} />{m}</mesh>
-      <mesh position={[-0.65, 3.0, 0.35]}><sphereGeometry args={[0.18, 12, 10]} />{m}</mesh>
-      <mesh position={[0.65, 2.15, 0.3]} castShadow><capsuleGeometry args={[0.2, 0.6, 4, 10]} />{m}</mesh>
-      <mesh position={[0.65, 2.75, 0.3]}><sphereGeometry args={[0.17, 12, 10]} />{m}</mesh>
-    </group>
-  );
-}
-
 export function ChapelExterior({ onEnter, night = false, active = false }: { onEnter?: () => void; night?: boolean; active?: boolean }) {
   const [hover, setHover] = useState(false);
   const W = CH_W, L = CH_L, hw = W / 2, NX = 6.2;
@@ -172,7 +157,7 @@ export function ChapelExterior({ onEnter, night = false, active = false }: { onE
         {night && <pointLight position={[0, 4.5, 3]} intensity={60} distance={18} color="#ffcf8a" />}
       </group>
       {/* tượng & cây cảnh */}
-      <Statue x={-9.5} z={9} />
+      <Statue x={-9.5} z={9.5} rot={0.45} />
       {[-9.8, -3.6, 3.6, 9.8].map(x => <Topiary key={x} x={x} z={1.6} />)}
     </group>
   );

@@ -8,7 +8,7 @@ import { BUILDINGS, ROADS, EVENT_AREAS, areaPts, xy2uv, uv2xy, type Area, type X
 import { STAGE_POS, STAGE_ROT_Y, toWorld } from './frame';
 import { RealCampus, WorldLights, w3, shapeOf } from '../world/RealCampus';
 import { asphaltTex, pavingTex, tiled } from '../world/textures';
-import { Walker, RemoteAvatars, type Me, type TouchInput, type EmoteState, type World } from '../walk/Walker';
+import { Walker, RemoteAvatars, type Me, type TouchInput, type EmoteState, type World, type SeatCmd } from '../walk/Walker';
 import { ChapelInterior, CHAPEL_WORLD } from '../chapel/ChapelInterior';
 import type { Net } from '../walk/presence';
 
@@ -19,6 +19,7 @@ export type WalkProps = {
   /** không gian khuôn viên (điểm xuất hiện thay đổi khi vừa từ Nhà nguyện bước ra) */
   world?: World;
   onMove?: (p: THREE.Vector3) => void;
+  seat?: React.MutableRefObject<SeatCmd>;
   chapel?: { candles: number; notes: number; onCandle: () => void; onBoard: () => void };
 };
 const rand = (a: number, b: number) => { const t = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return t - Math.floor(t); };
@@ -347,7 +348,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk 
   if (walk?.place === 'chapel') return (
     <>
       <ChapelInterior candles={walk.chapel?.candles ?? 0} notes={walk.chapel?.notes ?? 0} onCandle={walk.chapel?.onCandle} onBoard={walk.chapel?.onBoard} />
-      <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} world={CHAPEL_WORLD} onMove={walk.onMove} />
+      <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} world={CHAPEL_WORLD} onMove={walk.onMove} seat={walk.seat} />
       <RemoteAvatars ids={walk.ids} net={walk.net} />
     </>
   );

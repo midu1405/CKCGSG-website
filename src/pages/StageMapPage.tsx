@@ -8,12 +8,12 @@ import STAGE_DESIGN from '../assets/photos/stage-design.jpg';
 import MapTabs from '../components/MapTabs';
 import { usePresence } from '../components/walk/presence';
 import { JoinDialog, WalkHud, TouchControls, EmoteBar, ChatPanel } from '../components/walk/WalkUI';
-import { CAMPUS_WORLD, type Me, type TouchInput, type EmoteState, type World } from '../components/walk/Walker';
+import { CAMPUS_WORLD, type Me, type TouchInput, type EmoteState, type World, type SeatCmd } from '../components/walk/Walker';
 import { CHAPEL } from '../components/chapel/ChapelExterior';
-import { nearExit } from '../components/chapel/ChapelInterior';
+import { nearExit, nearestSeat } from '../components/chapel/ChapelInterior';
 import { usePrayer } from '../components/chapel/prayer';
 import { Organ } from '../components/chapel/organ';
-import { ChapelBar, DoorPrompt, IntentionDialog, BoardDialog, Toast } from '../components/chapel/ChapelUI';
+import { ChapelBar, DoorPrompt, SeatPrompt, IntentionDialog, BoardDialog, Toast } from '../components/chapel/ChapelUI';
 
 /** chỗ đứng khi vừa bước ra khỏi Nhà nguyện, quay lưng lại cửa */
 const OUTSIDE_WORLD: World = (() => {
@@ -40,6 +40,9 @@ export default function StageMapPage() {
   const [dialog, setDialog] = useState<'write' | 'board' | null>(null);
   const [toast, setToast] = useState('');
   const wantChapel = useRef(false);
+  const seat = useRef<SeatCmd>({ want: null, stand: false, sitting: false, back: null });
+  const seatSpot = useRef<ReturnType<typeof nearestSeat>>(null);
+  const [seatUi, setSeatUi] = useState<'none' | 'sit' | 'stand'>('none');
   const inChapel = !!walkMe && place === 'chapel';
   const { net, ids, count, status, chat, sendChat } = usePresence(!!walkMe, walkMe?.name ?? '', inChapel ? 'nha-nguyen-v1' : undefined);
   const prayer = usePrayer(inChapel);
@@ -58,7 +61,21 @@ export default function StageMapPage() {
   const onMove = useCallback((p: THREE.Vector3) => {
     const n = place === 'chapel' ? nearExit(p) : Math.hypot(p.x - CHAPEL.door[0], -p.z - CHAPEL.door[1]) < 4.5;
     if (n !== nearRef.current) { nearRef.current = n; setNear(n); }
-  }, [place]);
+    // ghế trống gần nhất (bỏ qua chỗ người khác đang ngồi)
+    let ui: 'none' | 'sit' | 'stand' = 'none';
+    if (place === 'chapel') {
+      if (seat.current.sitting) ui = 'stand';
+      else {
+        const taken = [...net.peers.current.values()].filter(q => q.s === 1).map(q => ({ x: q.x, z: q.z }));
+        seatSpot.current = nearestSeat(p, taken); if (seatSpot.current) ui = 'sit';
+      }
+    }
+    setSeatUi(u => (u === ui ? u : ui));
+  }, [place, net]);
+  const sitOrStand = useCallback(() => {
+    if (seat.current.sitting) seat.current.stand = true;
+    else if (seatSpot.current) seat.current.want = seatSpot.current;
+  }, []);
   const doCandle = useCallback(async () => {
     const ok = await prayer.lightCandle();
     say(ok ? 'Bạn đã thắp một ngọn nến 🕯 Xin Chúa nhậm lời.' : (prayer.error || 'Chưa thắp được nến, xin thử lại.'));
@@ -75,12 +92,13 @@ export default function StageMapPage() {
     const k = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
       if (e.key.toLowerCase() === 'e' && nearRef.current) (place === 'chapel' ? exitChapel : enterChapel)();
+      if (e.key.toLowerCase() === 'f' && place === 'chapel') sitOrStand();
     };
     window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k);
-  }, [walkMe, place, enterChapel, exitChapel]);
+  }, [walkMe, place, enterChapel, exitChapel, sitOrStand]);
 
   const walk = useMemo(() => (walkMe ? {
-    me: walkMe, net, ids, touch, emote, place, world: campusWorld, onMove,
+    me: walkMe, net, ids, touch, emote, place, world: campusWorld, onMove, seat,
     chapel: { candles: prayer.stats.candlesToday, notes: prayer.stats.notes, onCandle: doCandle, onBoard: () => setDialog('board') },
   } : null), [walkMe, net, ids, place, campusWorld, onMove, prayer.stats, doCandle]);
   const [zone, setZone] = useState<Zone | null>(null);
@@ -111,6 +129,7 @@ export default function StageMapPage() {
               onPray={() => { emote.current = { id: 'pray', k: emote.current.k + 1, t0: -1 }; }}
               onWrite={() => { prayer.setError(''); setDialog('write'); }} onBoard={() => setDialog('board')} onExit={exitChapel} />
           : <EmoteBar emote={emote} />}
+        {inChapel && seatUi !== 'none' && !near && <SeatPrompt sitting={seatUi === 'stand'} onGo={sitOrStand} />}
         {near && <DoorPrompt label={inChapel ? 'Ra ngoài' : 'Vào Nhà nguyện'} onGo={inChapel ? exitChapel : enterChapel} />}
         <ChatPanel lines={chat} onSend={sendChat} /><TouchControls touch={touch} />
         {toast && <Toast text={toast} />}

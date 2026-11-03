@@ -14,6 +14,15 @@ export function DoorPrompt({ label, onGo }: { label: string; onGo: () => void })
   );
 }
 
+export function SeatPrompt({ sitting, onGo }: { sitting: boolean; onGo: () => void }) {
+  return (
+    <button onClick={onGo}
+      className={`absolute z-30 left-1/2 -translate-x-1/2 bottom-[210px] md:bottom-24 flex items-center gap-2 rounded-full px-5 py-2.5 font-bold shadow-xl ${sitting ? 'bg-black/75 border border-gold/50 text-gold' : 'bg-gold text-black'}`}>
+      <span className="text-lg leading-none">🪑</span> {sitting ? 'Đứng dậy' : 'Ngồi xuống ghế'} <span className="hidden md:inline text-xs font-semibold opacity-70">(phím F)</span>
+    </button>
+  );
+}
+
 export function ChapelBar({ stats, music, onMusic, onCandle, onPray, onWrite, onBoard, onExit }: {
   stats: Stats; music: boolean; onMusic: () => void; onCandle: () => void; onPray: () => void; onWrite: () => void; onBoard: () => void; onExit: () => void;
 }) {

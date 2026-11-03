@@ -42,6 +42,24 @@ export const CHAPEL_WORLD: World = {
   camDist: 5,
   camPitch: 0.1,
 };
+/** Chỗ ngồi trên các hàng ghế (toạ độ three.js); ngồi quay mặt về cung thánh */
+export const SEATS: { x: number; z: number }[] = (() => {
+  const out: { x: number; z: number }[] = [];
+  for (let r = 0; r < PEW_ROWS; r++) {
+    const z = PEW_Z0 - r * PEW_STEP;
+    for (const sgn of [-1, 1]) for (const [a, b] of [NAVE_PEW, AISLE_PEW]) for (let x = a + 0.4; x <= b - 0.35; x += 0.75) out.push({ x: sgn * x, z: z - 0.14 });
+  }
+  return out;
+})();
+/** chỗ ngồi trống gần nhất (trong tầm 2,6 m); `taken` = vị trí những người đang ngồi */
+export function nearestSeat(p: THREE.Vector3, taken: { x: number; z: number }[]) {
+  let best: { x: number; z: number } | null = null, bd = 2.6;
+  for (const s of SEATS) {
+    const d = Math.hypot(s.x - p.x, s.z - p.z);
+    if (d < bd && !taken.some(t => Math.hypot(t.x - s.x, t.z - s.z) < 0.4)) { bd = d; best = s; }
+  }
+  return best ? { x: best.x, y: 0.16, z: best.z, face: Math.PI } : null;
+}
 /** đứng gần cửa ra (để hiện nút "Ra ngoài") */
 export const nearExit = (p: THREE.Vector3) => p.z > 15.9 && Math.abs(p.x) < 2.2;
 

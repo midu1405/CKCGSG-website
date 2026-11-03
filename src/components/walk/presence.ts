@@ -9,8 +9,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getSupabase, SB_KEY, SB_URL } from '../../lib/supabase';
 
-/** n tên · x y z vị trí · r hướng · m đang đi · e động tác · k số lần làm động tác (để biết khi nào bắt đầu lại) */
-export type PlayerState = { [k: string]: string | number; n: string; x: number; y: number; z: number; r: number; m: number; e: string; k: number };
+/** n tên · x y z vị trí · r hướng · m đang đi · e động tác · k số lần làm động tác (để biết khi nào bắt đầu lại) · s đang ngồi */
+export type PlayerState = { [k: string]: string | number; n: string; x: number; y: number; z: number; r: number; m: number; e: string; k: number; s: number };
 export type Remote = PlayerState & { t: number };
 export type ChatMsg = { [k: string]: string; n: string; t: string };
 export type ChatLine = { id: string; name: string; text: string; mine: boolean; ts: number };

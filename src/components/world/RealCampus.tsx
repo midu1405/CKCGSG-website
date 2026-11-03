@@ -9,7 +9,7 @@ import { Line, Sky } from '@react-three/drei';
 import type { ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import { BUILDINGS, CAMPUS, ROADS, xy2uv, uv2xy, type Area, type Building, type XY } from '../campus/data';
-import { ChapelExterior } from '../chapel/ChapelExterior';
+import { ChapelExterior, inChapelYard } from '../chapel/ChapelExterior';
 import { concreteTex, facadeTex, grassTex, pavingTex, roofTileTex, stuccoTex, tiled, type FacadeStyle } from './textures';
 
 /* ---------- tiện ích hình học ---------- */
@@ -308,6 +308,7 @@ export function RealCampus({ night, clear = [], paved = [], selected = null, onP
       const p: XY = [x + (rand(x, y) - 0.5) * 6, y + (rand(y, x) - 0.5) * 6];
       if (!inPoly(p, camp) || [...clear, FRONT_STRIP].some(a => inArea(p, a, 3)) || BUILDINGS.some(b => { const o = obb(b.pts), [u, v] = xy2uv(p); return u > o.u0 - 4.5 && u < o.u1 + 4.5 && v > o.v0 - 4.5 && v < o.v1 + 4.5; })) continue;
       if (rand(x * 3, y * 7) < 0.18) continue;
+      if (inChapelYard(p)) continue;
       out.push({ p, k: 0.75 + rand(x + 1, y) * 0.6, c: rand(x, y + 3) });
     }
     // hàng cây dọc tường rào phía đường Tôn Đức Thắng
