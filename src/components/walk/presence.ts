@@ -24,8 +24,10 @@ export type NetStatus = 'off' | 'connecting' | 'online' | 'local';
 
 const APP_ID = 'ckcgsg-website-dac-lo-2027';
 const ROOM = 'khuon-vien-ttmv-v1';
-const SB_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const SB_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+// Dự án Supabase "ckcgsg-dao-khuon-vien" (Singapore). Khoá publishable được thiết kế để nằm công khai trong web;
+// có thể ghi đè bằng biến môi trường VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY.
+const SB_URL = (import.meta.env.VITE_SUPABASE_URL as string | undefined) || 'https://ichrodujamooijcyftji.supabase.co';
+const SB_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) || 'sb_publishable_EhWG02gAMOkIv6vEWHZwJw_-yhvRzmh';
 export const MAX_CHAT = 140;
 
 export function usePresence(active: boolean, myName: string) {
@@ -53,7 +55,8 @@ export function usePresence(active: boolean, myName: string) {
 
     let bc: BroadcastChannel | null = null;
     try {
-      bc = new BroadcastChannel('ckcgsg-dao-khuon-vien');
+      // ?nobc trên URL: tắt kênh cùng-máy để kiểm tra đường truyền qua máy chủ
+      if (!location.search.includes('nobc')) bc = new BroadcastChannel('ckcgsg-dao-khuon-vien');
       bc.onmessage = e => {
         const d = e.data; if (!d || d.id === myId) return;
         const id = 'bc-' + d.id;
