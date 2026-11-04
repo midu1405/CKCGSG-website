@@ -7,6 +7,7 @@ import BACKDROP_IMG from '../../assets/photos/stage-backdrop.jpg';
 import { BUILDINGS, ROADS, EVENT_AREAS, areaPts, xy2uv, uv2xy, type Area, type XY } from '../campus/data';
 import { STAGE_POS, STAGE_ROT_Y, toWorld } from './frame';
 import { RealCampus, WorldLights, w3, shapeOf } from '../world/RealCampus';
+import { LedVideo } from './LedVideo';
 import { asphaltTex, pavingTex, tiled } from '../world/textures';
 import { Walker, RemoteAvatars, type Me, type TouchInput, type EmoteState, type World, type SeatCmd } from '../walk/Walker';
 import { ChapelInterior, CHAPEL_WORLD } from '../chapel/ChapelInterior';
@@ -80,7 +81,7 @@ function StoneStair({ x, y, z, dir }: { x: number; y: number; z: number; dir: 1 
   );
 }
 
-function Stage({ sel }: { sel: string | null }) {
+function Stage({ sel, video = true }: { sel: string | null; video?: boolean }) {
   const grid = useGridTexture();
   const lowerTex = useMemo(() => { const t = grid.clone(); t.needsUpdate = true; t.repeat.set(13, 3.5); return t; }, [grid]);
   const upperTex = useMemo(() => { const t = grid.clone(); t.needsUpdate = true; t.repeat.set(10, 2.5); return t; }, [grid]);
@@ -115,6 +116,7 @@ function Stage({ sel }: { sel: string | null }) {
       {/* Màn LED nền */}
       <Box p={[0, 6.2, -12.5]} s={[23, 8.8, 0.4]} c="#151515" on={led} />
       <mesh position={[0, 6.2, -12.28]}><planeGeometry args={[22, 8]} /><meshBasicMaterial map={backdrop} toneMapped={false} /></mesh>
+      {video && <LedVideo position={[0, 6.2, -12.26]} />}
       {/* Khung sân khấu (proscenium) */}
       <Box p={[-13.6, 6.5, -0.6]} s={[0.9, 13, 0.9]} c="#cfc6b6" />
       <Box p={[13.6, 6.5, -0.6]} s={[0.9, 13, 0.9]} c="#cfc6b6" />

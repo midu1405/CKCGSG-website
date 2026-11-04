@@ -6,6 +6,7 @@ import StageScene, { type Mode, type SceneHandle } from '../components/stage/Sta
 import { ZONES, SPONSOR, TOTAL_SEATS, TOTAL_STANDING, STAND_DENSITY, zoneCount, type Zone } from '../components/stage/data';
 import STAGE_DESIGN from '../assets/photos/stage-design.jpg';
 import MapTabs from '../components/MapTabs';
+import LedControls from '../components/stage/LedControls';
 import { usePresence } from '../components/walk/presence';
 import { JoinDialog, WalkHud, TouchControls, EmoteBar, ChatPanel } from '../components/walk/WalkUI';
 import { CAMPUS_WORLD, type Me, type TouchInput, type EmoteState, type World, type SeatCmd } from '../components/walk/Walker';
@@ -124,6 +125,7 @@ export default function StageMapPage() {
 
       {walkMe && <>
         <WalkHud count={count} status={status} onExit={leaveWalk} where={inChapel ? 'trong Nhà nguyện' : 'đang dạo'} />
+        {!inChapel && <LedControls className="absolute z-30 right-4 top-[200px] md:top-[140px]" />}
         {inChapel
           ? <ChapelBar stats={prayer.stats} music={music} onMusic={toggleMusic} onCandle={doCandle}
               onPray={() => { emote.current = { id: 'pray', k: emote.current.k + 1, t0: -1 }; }}
@@ -169,6 +171,7 @@ export default function StageMapPage() {
               className="flex items-center gap-1.5 bg-gold text-black px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
               <Footprints size={14} /> Dạo khuôn viên
             </button>
+            <LedControls />
             <button onClick={() => setNight(n => !n)}
               className="flex items-center gap-1.5 bg-black/70 backdrop-blur border border-white/10 hover:border-gold/60 px-3 py-1.5 rounded-full text-xs font-bold">
               {night ? <Sun size={14} className="text-gold" /> : <Moon size={14} className="text-gold" />} {night ? 'Ban ngày' : 'Đêm diễn'}

@@ -116,6 +116,8 @@ vercel.json                 # cho phép mở thẳng /vo-dien, /dac-lo... không
 
 **Nhà nguyện cổ (cầu nguyện)** — trong chế độ Dạo khuôn viên, đi tới cửa Nhà nguyện (hoặc bấm vào Nhà nguyện) để vào bên trong: thắp nến, quỳ cầu nguyện, gửi ý cầu nguyện, nhạc organ nền. Mã trong `src/components/chapel/`. Dữ liệu ở Supabase (dự án `ckcgsg-dao-khuon-vien`): bảng `candles`, `intentions`. **Duyệt ý cầu nguyện**: Supabase → Table Editor → `intentions` → tích cột `approved` (chỉ ý đã duyệt mới hiện công khai).
 
+**Đổi clip trên màn LED sân khấu** — sửa danh sách `LED_CLIPS` trong `src/components/stage/LedVideo.tsx` (mã video YouTube là phần sau `watch?v=`). Clip phát liên tục, tự chuyển và lặp lại; mặc định tắt tiếng (trình duyệt chỉ cho tự phát khi tắt tiếng), người xem bấm *Bật tiếng* trên trang.
+
 **Thêm một trang** — tạo file trong `src/pages/`, khai báo route trong `App.tsx`, thêm link vào `NAV_LINKS` trong `Navbar.tsx`.
 
 ## Triển khai
