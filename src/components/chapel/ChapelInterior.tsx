@@ -59,7 +59,7 @@ export function nearestSeat(p: THREE.Vector3, taken: { x: number; z: number }[])
     const d = Math.hypot(s.x - p.x, s.z - p.z);
     if (d < bd && !taken.some(t => Math.hypot(t.x - s.x, t.z - s.z) < 0.4)) { bd = d; best = s; }
   }
-  return best ? { x: best.x, y: 0.16, z: best.z, face: Math.PI } : null;
+  return best ? { x: best.x, y: 0.24, z: best.z, face: Math.PI } : null;
 }
 /** đứng gần cửa ra (để hiện nút "Ra ngoài") */
 export const nearExit = (p: THREE.Vector3) => p.z > 15.9 && Math.abs(p.x) < 2.2;

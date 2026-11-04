@@ -120,7 +120,7 @@ const W0 = toWorld([0, 0, 0]), WF = toWorld([0, 0, -1]);
 export const FACE_STAGE = Math.atan2(WF[0] - W0[0], WF[2] - W0[2]);
 /** mọi ghế ngồi trên khán đài (toạ độ three.js), ngồi quay mặt lên sân khấu */
 export const CHAIRS: Spot[] = ZONES.filter(z => z.kind === 'seat').flatMap(z => (z.rects ?? []).flatMap(seatsIn).map(([x, zz]) => {
-  const [wx, , wz] = toWorld([x, 0, zz]); return { x: wx, y: 0.47, z: wz, face: FACE_STAGE, zone: z.id };
+  const [wx, , wz] = toWorld([x, 0, zz]); return { x: wx, y: 0.55, z: wz, face: FACE_STAGE, zone: z.id };
 }));
 /** ghế trống gần nhất trong tầm `max` mét (có thể giới hạn trong một khu) */
 export function nearestChair(p: { x: number; z: number }, taken: { x: number; z: number }[], max = 1.4, zone?: string) {

@@ -102,6 +102,14 @@ export default function StageMapPage() {
     return next;
   });
   useEffect(() => () => organ.current?.stop(), []);
+  // trang sơ đồ chiếm trọn màn hình: khoá cuộn trang để kéo xoay góc nhìn trên điện thoại không làm trang trôi
+  useEffect(() => {
+    const h = document.documentElement, b = document.body;
+    const prev = [h.style.overflow, b.style.overflow, h.style.overscrollBehavior, b.style.overscrollBehavior];
+    h.style.overflow = b.style.overflow = 'hidden'; h.style.overscrollBehavior = b.style.overscrollBehavior = 'none';
+    window.scrollTo(0, 0);
+    return () => { [h.style.overflow, b.style.overflow, h.style.overscrollBehavior, b.style.overscrollBehavior] = prev; };
+  }, []);
   // phím E: vào / ra Nhà nguyện khi đứng gần cửa
   useEffect(() => {
     if (!walkMe) return;
@@ -133,7 +141,7 @@ export default function StageMapPage() {
   return (
     <div className="relative h-[100svh] pt-[72px] overflow-hidden bg-dark">
       {/* Cảnh 3D */}
-      <div className="absolute inset-0 top-[72px] isolate">
+      <div className="absolute inset-0 top-[72px] isolate touch-none select-none">
         <Suspense fallback={<div className="h-full flex items-center justify-center text-white/50">Đang dựng sân khấu…</div>}>
           <StageScene ref={scene} mode={mode} night={night} walk={walk} onChapel={onChapel} selZone={zone} selItem={item} onPickZone={pickZone} onPickItem={pickItem} />
         </Suspense>

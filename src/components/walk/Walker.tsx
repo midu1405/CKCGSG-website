@@ -66,6 +66,8 @@ export const CAMPUS_WORLD: World = {
 };
 
 /* ---------- Nhân vật "Chiên Con" (thiết kế riêng cho web) ---------- */
+/** tỉ lệ nhân vật (1 = cao ~2 m); thu nhỏ cho vừa ghế và cảnh */
+export const LAMB_SCALE = 0.75;
 const WOOL = '#fbf8f1', FACE = '#f1d9bd', EAR = '#e9c9a6', DARK = '#3a2c25', GOLD = '#D4AF37';
 const PUFFS: [number, number, number, number][] = [
   [0.28, 0.82, 0.12, 0.2], [-0.28, 0.82, 0.12, 0.2], [0.24, 0.6, -0.18, 0.2], [-0.24, 0.6, -0.18, 0.2],
@@ -129,7 +131,7 @@ export function Lamb({ name, me = false, look }: { name: string; me?: boolean; l
 
   return (
     <group>
-      <group ref={outer}><group ref={root}>
+      <group ref={outer} scale={LAMB_SCALE}><group ref={root}>
         <group ref={upper} position={[0, 0.45, 0]}>
           <group position={[0, -0.45, 0]}>
             {/* thân bông xù */}
@@ -161,7 +163,7 @@ export function Lamb({ name, me = false, look }: { name: string; me?: boolean; l
         <group ref={legL} position={[-0.14, 0.36, 0]}><mesh position={[0, -0.18, 0]}><cylinderGeometry args={[0.08, 0.07, 0.36, 10]} /><meshStandardMaterial color={DARK} /></mesh></group>
         <group ref={legR} position={[0.14, 0.36, 0]}><mesh position={[0, -0.18, 0]}><cylinderGeometry args={[0.08, 0.07, 0.36, 10]} /><meshStandardMaterial color={DARK} /></mesh></group>
       </group></group>
-      <Html position={[0, 2.25, 0]} center zIndexRange={OVER_Z}>
+      <Html position={[0, 2.25 * LAMB_SCALE, 0]} center zIndexRange={OVER_Z}>
         <div ref={tagEl} className="pointer-events-none select-none flex flex-col items-center gap-1">
           <div ref={bubbleEl} style={{ display: 'none' }}
             className="max-w-[200px] w-max rounded-2xl rounded-bl-sm bg-white text-black text-[12px] leading-snug px-2.5 py-1.5 shadow-lg break-words" />
@@ -306,13 +308,13 @@ export function Walker({ me, net, touch, emote, world = CAMPUS_WORLD, onMove, se
     if (firstPerson?.current) {
       if (!seated) s.face = s.camYaw;
       o.rotation.y = s.face;
-      const lp = s.camPitch - 0.32, eye = new THREE.Vector3(o.position.x, o.position.y + 1.45, o.position.z);
+      const lp = s.camPitch - 0.32, eye = new THREE.Vector3(o.position.x, o.position.y + 1.45 * LAMB_SCALE, o.position.z);
       const look = new THREE.Vector3(Math.sin(s.camYaw) * Math.cos(lp), -Math.sin(lp), Math.cos(s.camYaw) * Math.cos(lp));
       camera.position.lerp(eye, 1 - Math.exp(-dt * 25));
       camera.lookAt(camera.position.clone().add(look));
     } else {
     // camera theo sau, không chui vào toà nhà
-    const tgt = new THREE.Vector3(o.position.x, o.position.y + 1.3, o.position.z);
+    const tgt = new THREE.Vector3(o.position.x, o.position.y + 1.3 * LAMB_SCALE, o.position.z);
     const cp = Math.cos(s.camPitch), unit = new THREE.Vector3(-Math.sin(s.camYaw) * cp, Math.sin(s.camPitch), -Math.cos(s.camYaw) * cp);
     let dist = s.camDist;
     for (let d = 0.6; d <= s.camDist; d += 0.5) {
