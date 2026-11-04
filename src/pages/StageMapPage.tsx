@@ -141,7 +141,7 @@ export default function StageMapPage() {
   return (
     <div className="relative h-[100svh] pt-[72px] overflow-hidden bg-dark">
       {/* Cảnh 3D */}
-      <div className="absolute inset-0 top-[72px] isolate touch-none select-none">
+      <div className="absolute inset-0 top-[72px] isolate touch-none select-none" style={{ transform: 'translateZ(0)' }}>
         <Suspense fallback={<div className="h-full flex items-center justify-center text-white/50">Đang dựng sân khấu…</div>}>
           <StageScene ref={scene} mode={mode} night={night} walk={walk} onChapel={onChapel} selZone={zone} selItem={item} onPickZone={pickZone} onPickItem={pickItem} />
         </Suspense>

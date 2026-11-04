@@ -51,24 +51,32 @@ const STATUS: Record<NetStatus, string> = { off: '', connecting: 'Đang kết n�
 
 export function WalkHud({ count, status, onExit, where = 'đang dạo', firstPerson, onView }: { count: number; status: NetStatus; onExit: () => void; where?: string; firstPerson?: boolean; onView?: () => void }) {
   return (
-    <div className="absolute z-30 top-[88px] left-4 right-4 flex items-start justify-between gap-3 pointer-events-none">
-      <div className="pointer-events-auto rounded-2xl bg-black/70 backdrop-blur border border-white/10 px-4 py-3">
-        <div className="flex items-center gap-2 font-bold">
+    <div className="absolute z-40 top-[88px] left-4 right-4 flex items-start justify-between gap-3 pointer-events-none" style={{ transform: 'translateZ(0)' }}>
+      <div className="pointer-events-auto rounded-2xl bg-black/70 backdrop-blur border border-white/10 px-3 py-2 md:px-4 md:py-3">
+        <div className="flex items-center gap-2 font-bold text-sm md:text-base whitespace-nowrap">
           <span className={`w-2 h-2 rounded-full ${status === 'online' ? 'bg-emerald-400' : status === 'local' ? 'bg-amber-400' : 'bg-white/40 animate-pulse'}`} />
-          <Users size={16} className="text-gold" /> {count} người {where}
+          <Users size={16} className="text-gold" /> {count} người<span className="hidden md:inline"> {where}</span>
         </div>
-        <div className="text-[11px] text-white/45 mt-0.5">{STATUS[status]}</div>
+        <div className="hidden md:block text-[11px] text-white/45 mt-0.5">{STATUS[status]}</div>
         <div className="hidden md:block text-[11px] text-white/55 mt-2 leading-relaxed">
           <b className="text-white/80">W A S D</b> di chuyển · <b className="text-white/80">Space</b> nhảy · <b className="text-white/80">Shift</b> chạy<br />
           <b className="text-white/80">1–6</b> động tác · <b className="text-white/80">Enter</b> để chat · <b className="text-white/80">V</b> đổi góc nhìn · kéo chuột để xoay
         </div>
       </div>
       <div className="pointer-events-auto flex items-center gap-2">
-        {onView && <button onClick={onView} className={`flex items-center gap-1.5 rounded-full px-3 py-2 font-bold text-xs border ${firstPerson ? 'bg-white text-black border-white' : 'bg-black/70 backdrop-blur border-white/15 text-white'}`}>
-          <Eye size={15} /> {firstPerson ? 'Góc thứ 1' : 'Góc thứ 3'}
-        </button>}
-        <button onClick={onExit} className="flex items-center gap-2 bg-gold text-black rounded-full px-4 py-2 font-bold text-sm">
-          <LogOut size={16} /> Thoát
+        {onView && (
+          <div className="flex items-center rounded-full bg-black/70 backdrop-blur border border-white/15 p-0.5" role="group" aria-label="Góc nhìn">
+            <Eye size={14} className="mx-1.5 text-gold shrink-0" />
+            {([[false, 'Thứ 3'], [true, 'Thứ 1']] as const).map(([fp, label]) => (
+              <button key={label} type="button" onClick={() => { if (fp !== !!firstPerson) onView(); }} aria-pressed={fp === !!firstPerson}
+                className={`touch-manipulation rounded-full px-3 py-2 text-xs font-bold whitespace-nowrap ${fp === !!firstPerson ? 'bg-gold text-black' : 'text-white/75'}`}>
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+        <button onClick={onExit} aria-label="Thoát" className="flex items-center gap-2 bg-gold text-black rounded-full px-3 md:px-4 py-2 font-bold text-sm">
+          <LogOut size={16} /> <span className="hidden sm:inline">Thoát</span>
         </button>
       </div>
     </div>
