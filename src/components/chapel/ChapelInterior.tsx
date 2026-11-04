@@ -7,6 +7,7 @@
 import { useLayoutEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
+import { OVER_Z } from '../stage/LedVideo';
 import * as THREE from 'three';
 import type { XY } from '../campus/data';
 import type { World } from '../walk/Walker';
@@ -127,7 +128,7 @@ function CandleRack({ lit, onClick }: { lit: number; onClick?: () => void }) {
       <instancedMesh ref={body} args={[undefined, undefined, slots.length]}><cylinderGeometry args={[0.035, 0.035, 0.14, 8]} /><meshStandardMaterial color="#f4efe2" /></instancedMesh>
       <instancedMesh ref={flame} args={[undefined, undefined, slots.length]}><coneGeometry args={[0.022, 0.08, 6]} /><meshBasicMaterial color="#ffc864" /></instancedMesh>
       <pointLight ref={light} position={[0, 1.6, 0.5]} distance={7} decay={2} color="#ffb85c" />
-      <Html position={[0, 2.1, 0]} center zIndexRange={[15, 0]}>
+      <Html position={[0, 2.1, 0]} center zIndexRange={OVER_Z}>
         <div onClick={onClick} className="cursor-pointer select-none whitespace-nowrap rounded-full bg-gold px-3 py-1 text-[12px] font-bold text-black shadow-lg">🕯 Thắp nến · {lit.toLocaleString('vi-VN')}</div>
       </Html>
     </group>
@@ -146,7 +147,7 @@ function PrayerBoard({ notes, onClick }: { notes: number; onClick?: () => void }
       {cards.slice(0, Math.min(30, notes)).map((c, i) => (
         <mesh key={i} position={[c.x, c.y, 0.04]} rotation={[0, 0, c.r]}><planeGeometry args={[0.3, 0.22]} /><meshStandardMaterial color={i % 3 ? '#fbf6e8' : '#f7e7b0'} /></mesh>
       ))}
-      <Html position={[0, 2.65, 0]} center zIndexRange={[15, 0]}>
+      <Html position={[0, 2.65, 0]} center zIndexRange={OVER_Z}>
         <div onClick={onClick} className="cursor-pointer select-none whitespace-nowrap rounded-full bg-white/90 px-3 py-1 text-[12px] font-bold text-black shadow-lg">✍️ Ý cầu nguyện · {notes.toLocaleString('vi-VN')}</div>
       </Html>
     </group>

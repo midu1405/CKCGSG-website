@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
+import { OVER_Z } from '../stage/LedVideo';
 import * as THREE from 'three';
 import { BUILDINGS, CAMPUS, type XY } from '../campus/data';
 import { campusToLocal, toWorld } from '../stage/frame';
@@ -14,7 +15,12 @@ import type { Bubble, Net, PlayerState } from './presence';
 
 export type TouchInput = { x: number; y: number; jump: boolean };
 /** Lệnh ngồi ghế: trang đặt `want` (chỗ ngồi) hoặc `stand`; Walker báo lại `sitting` */
-export type SeatCmd = { want: { x: number; y: number; z: number; face: number } | null; stand: boolean; sitting: boolean; back: [number, number] | null };
+export type SeatCmd = {
+  want: { x: number; y: number; z: number; face: number; here?: boolean } | null;
+  /** dịch chuyển tới một điểm (khi chọn khu vực) */
+  goto?: { x: number; y: number; z: number; face: number } | null;
+  stand: boolean; sitting: boolean; back: [number, number] | null;
+};
 export type Me = { name: string };
 export type EmoteId = 'wave' | 'bow' | 'clap' | 'dance' | 'heart' | 'pray';
 export type EmoteState = { id: EmoteId | ''; k: number; t0: number };
@@ -150,7 +156,7 @@ export function Lamb({ name, me = false, look }: { name: string; me?: boolean; l
         <group ref={legL} position={[-0.14, 0.36, 0]}><mesh position={[0, -0.18, 0]}><cylinderGeometry args={[0.08, 0.07, 0.36, 10]} /><meshStandardMaterial color={DARK} /></mesh></group>
         <group ref={legR} position={[0.14, 0.36, 0]}><mesh position={[0, -0.18, 0]}><cylinderGeometry args={[0.08, 0.07, 0.36, 10]} /><meshStandardMaterial color={DARK} /></mesh></group>
       </group>
-      <Html position={[0, 2.25, 0]} center zIndexRange={[20, 0]}>
+      <Html position={[0, 2.25, 0]} center zIndexRange={OVER_Z}>
         <div className="pointer-events-none select-none flex flex-col items-center gap-1">
           <div ref={bubbleEl} style={{ display: 'none' }}
             className="max-w-[200px] w-max rounded-2xl rounded-bl-sm bg-white text-black text-[12px] leading-snug px-2.5 py-1.5 shadow-lg break-words" />
@@ -214,7 +220,7 @@ export function Walker({ me, net, touch, emote, world = CAMPUS_WORLD, onMove, se
     st.current.face = st.current.camYaw = spawn.yaw;
     g.current?.position.set(spawn.p[0], spawn.p[1], spawn.p[2]);
     st.current.camDist = world.camDist ?? 7; st.current.camPitch = world.camPitch ?? 0.32; st.current.vy = 0;
-    if (seat) seat.current = { want: null, stand: false, sitting: false, back: null };
+    if (seat) seat.current = { ...seat.current, stand: false, sitting: false, back: null };
     const isTyping = (e: KeyboardEvent) => { const t = e.target as HTMLElement | null; return !!t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); };
     const down = (e: KeyboardEvent) => {
       if (isTyping(e)) return;
@@ -224,7 +230,7 @@ export function Walker({ me, net, touch, emote, world = CAMPUS_WORLD, onMove, se
     };
     const up = (e: KeyboardEvent) => keys.current.delete(e.key.toLowerCase());
     const blur = () => keys.current.clear();
-    const el = gl.domElement; let drag: { x: number; y: number; id: number } | null = null;
+    const el = (gl.domElement.parentElement ?? gl.domElement) as HTMLElement; let drag: { x: number; y: number; id: number } | null = null;
     const pd = (e: PointerEvent) => { drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; };
     const pm = (e: PointerEvent) => {
       if (!drag || drag.id !== e.pointerId) return;
@@ -257,9 +263,13 @@ export function Walker({ me, net, touch, emote, world = CAMPUS_WORLD, onMove, se
     const speed = k.has('shift') ? 8 : 4.6;
     // ngồi xuống / đứng dậy
     const sc = seat?.current;
-    if (sc?.want) { sc.back = [o.position.x, o.position.z]; o.position.set(sc.want.x, sc.want.y, sc.want.z); s.face = sc.want.face; s.vy = 0; sc.want = null; sc.sitting = true; sc.stand = false; s.camYaw = s.face; s.camPitch = Math.max(s.camPitch, 0.62); s.camDist = Math.min(s.camDist, 4); }
+    if (sc?.goto) {
+      if (sc.sitting) { sc.sitting = false; sc.back = null; }
+      o.position.set(sc.goto.x, sc.goto.y, sc.goto.z); s.face = s.camYaw = sc.goto.face; s.vy = 0; sc.goto = null;
+    }
+    if (sc?.want) { sc.back = sc.want.here ? [sc.want.x, sc.want.z] : [o.position.x, o.position.z]; o.position.set(sc.want.x, sc.want.y, sc.want.z); s.face = sc.want.face; s.vy = 0; sc.want = null; sc.sitting = true; sc.stand = false; s.camYaw = s.face; s.camPitch = Math.max(s.camPitch, 0.62); s.camDist = Math.min(s.camDist, 4); }
     if (sc?.sitting && (sc.stand || dir.lengthSq() > 0.01 || k.has(' ') || t.jump)) {
-      if (sc.back) o.position.set(sc.back[0], 0, sc.back[1]);
+      if (sc.back) o.position.set(sc.back[0], world.floorAt([sc.back[0], -sc.back[1]]), sc.back[1]);
       sc.sitting = false; sc.stand = false; sc.back = null; s.jumpHeld = true;
     }
     const seated = !!sc?.sitting;

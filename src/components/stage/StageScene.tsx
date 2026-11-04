@@ -7,7 +7,7 @@ import BACKDROP_IMG from '../../assets/photos/stage-backdrop.jpg';
 import { BUILDINGS, ROADS, EVENT_AREAS, areaPts, xy2uv, uv2xy, type Area, type XY } from '../campus/data';
 import { STAGE_POS, STAGE_ROT_Y, toWorld } from './frame';
 import { RealCampus, WorldLights, w3, shapeOf } from '../world/RealCampus';
-import { LedVideo } from './LedVideo';
+import { LedVideo, OVER_Z } from './LedVideo';
 import { asphaltTex, pavingTex, tiled } from '../world/textures';
 import { Walker, RemoteAvatars, type Me, type TouchInput, type EmoteState, type World, type SeatCmd } from '../walk/Walker';
 import { ChapelInterior, CHAPEL_WORLD } from '../chapel/ChapelInterior';
@@ -60,7 +60,7 @@ function Box({ p, s, c, on = false, rough, metal }: { p: [number, number, number
 function Tag({ pos, children, tone = 'dark', onClick }: { pos: [number, number, number]; children: ReactNode; tone?: 'dark' | 'gold' | 'light'; onClick?: () => void }) {
   const cls = tone === 'gold' ? 'bg-gold text-black' : tone === 'light' ? 'bg-white/90 text-black' : 'bg-black/75 text-white border border-white/15';
   return (
-    <Html position={pos} center zIndexRange={[10, 0]}>
+    <Html position={pos} center zIndexRange={OVER_Z}>
       <div onClick={onClick}
         className={`${cls} ${onClick ? 'cursor-pointer' : 'pointer-events-none'} whitespace-nowrap rounded-full px-2.5 py-0.5 text-[12px] font-bold shadow-lg select-none`}>
         {children}
@@ -222,46 +222,20 @@ function Cameras({ sel }: { sel: string | null }) {
 }
 
 /* ---------- Bối cảnh khuôn viên dựng như thật (world/RealCampus) ---------- */
-const CLOTHES = ['#f2f2f0', '#22252b', '#3d5a80', '#9b2c2c', '#e0c48a', '#5b7d5a', '#7a5c8e', '#c96f3b', '#2f4858', '#d9d2c5'];
 
 /* ---------- Khu đứng: nền màu nhạt + đám đông ---------- */
 function StandZone({ zone, dim, active, onPick }: { zone: Zone; dim: boolean; active: boolean; onPick: (z: Zone) => void }) {
   const a = zone.area!;
   const geo = useMemo(() => new THREE.ShapeGeometry(shapeOf(areaPts(a))), [a]);
   const outline = useMemo(() => { const p = areaPts(a); return [...p, p[0]].map(q => w3(q, 0.08)); }, [a]);
-  const people = useMemo(() => {
-    const [cu, cv] = xy2uv(a.c), [w, h] = a.s, out: { p: XY; k: number; c: number }[] = [];
-    for (let i = 0.7; i < w - 0.5; i += 1.15) for (let j = 0.7; j < h - 0.5; j += 1.15) {
-      if (rand(i * 5, j * 3) < 0.12) continue;
-      out.push({ p: uv2xy([cu - w / 2 + i + (rand(i, j) - 0.5) * 0.7, cv - h / 2 + j + (rand(j, i) - 0.5) * 0.7]), k: 0.92 + rand(j, i * 2) * 0.16, c: rand(i * 7, j) });
-    }
-    return out;
-  }, [a]);
-  const body = useRef<THREE.InstancedMesh>(null), head = useRef<THREE.InstancedMesh>(null);
-  useLayoutEffect(() => {
-    const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), v = new THREE.Vector3(), col = new THREE.Color();
-    people.forEach(({ p: [x, y], k, c }, i) => {
-      body.current!.setMatrixAt(i, m.compose(v.set(x, 0.72 * k, -y), q, s.set(1, k, 1)));
-      head.current!.setMatrixAt(i, m.compose(v.set(x, 1.58 * k, -y), q, s.set(1, 1, 1)));
-      body.current!.setColorAt(i, col.set(dim ? '#555' : CLOTHES[Math.floor(c * CLOTHES.length)]));
-      head.current!.setColorAt(i, col.set(dim ? '#666' : c > 0.5 ? '#c99a74' : '#b07f5a'));
-    });
-    [body, head].forEach(r => { r.current!.instanceMatrix.needsUpdate = true; if (r.current!.instanceColor) r.current!.instanceColor.needsUpdate = true; });
-  }, [people, dim]);
   return (
     <group>
       <mesh geometry={geo} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}
         onClick={e => { e.stopPropagation(); onPick(zone); }}
         onPointerOver={() => (document.body.style.cursor = 'pointer')} onPointerOut={() => (document.body.style.cursor = '')}>
-        <meshBasicMaterial color={dim ? '#3a3a3a' : zone.color} transparent opacity={active ? 0.45 : 0.22} depthWrite={false} />
+        <meshBasicMaterial color={dim ? '#3a3a3a' : zone.color} transparent opacity={active ? 0.45 : 0.25} depthWrite={false} />
       </mesh>
       <Line points={outline} color={dim ? '#666' : zone.color} lineWidth={1.5} dashed dashSize={2} gapSize={1.2} />
-      <instancedMesh ref={body} args={[undefined, undefined, people.length]} castShadow>
-        <capsuleGeometry args={[0.22, 1, 3, 8]} /><meshStandardMaterial roughness={0.85} />
-      </instancedMesh>
-      <instancedMesh ref={head} args={[undefined, undefined, people.length]}>
-        <sphereGeometry args={[0.13, 10, 8]} /><meshStandardMaterial roughness={0.7} />
-      </instancedMesh>
     </group>
   );
 }
@@ -365,7 +339,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk 
         {BUILDINGS.filter(b => b.name).map(b => <Tag key={b.i} pos={w3(b.center, b.h + 7).toArray() as [number, number, number]} tone={b.name === 'Nhà nguyện cổ' ? 'light' : 'dark'}>{b.name}</Tag>)}
         {ROADS.filter(([n]) => n === 'Tôn Đức Thắng' || n === 'Nguyễn Bỉnh Khiêm').map(([name, lines]) => {
           const l = lines.reduce((a, b) => (b.length > a.length ? b : a)); const mid = l[Math.floor(l.length / 2)];
-          return <Html key={name} position={w3(mid, 1)} center><div className="pointer-events-none whitespace-nowrap rounded-full bg-black/55 px-2 text-[11px] italic text-white/85">{name}</div></Html>;
+          return <Html key={name} position={w3(mid, 1)} center zIndexRange={OVER_Z}><div className="pointer-events-none whitespace-nowrap rounded-full bg-black/55 px-2 text-[11px] italic text-white/85">{name}</div></Html>;
         })}
       </>}
 
@@ -406,7 +380,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk 
       ))}
 
       {walk ? <>
-        <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} world={walk.world} onMove={walk.onMove} />
+        <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} world={walk.world} onMove={walk.onMove} seat={walk.seat} />
         <RemoteAvatars ids={walk.ids} net={walk.net} />
       </> : <CameraControls ref={cc} minDistance={4} maxDistance={420} maxPolarAngle={Math.PI / 2.05} smoothTime={0.6} />}
     </>
@@ -415,7 +389,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk 
 
 const StageScene = forwardRef<SceneHandle, Props>(function StageScene(props, ref) {
   return (
-    <Canvas shadows dpr={[1, 1.75]} camera={{ fov: 45, near: 0.5, far: 3000, position: toWorld(CAMERAS.overview.pos) }} gl={{ antialias: true }}
+    <Canvas shadows dpr={[1, 1.75]} camera={{ fov: 45, near: 0.5, far: 3000, position: toWorld(CAMERAS.overview.pos) }} gl={{ antialias: true, alpha: true }}
       onPointerMissed={() => (document.body.style.cursor = '')}>
       <Scene ref={ref} {...props} />
     </Canvas>

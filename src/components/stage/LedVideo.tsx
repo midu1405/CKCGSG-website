@@ -1,6 +1,7 @@
 /**
  * Màn LED nền sân khấu phát liên tục các clip YouTube của nhóm (tự chuyển clip, hết danh sách thì lặp lại).
  * Trình duyệt chỉ cho tự phát khi tắt tiếng → mặc định tắt tiếng, có nút "Bật tiếng" trên trang.
+ * Dùng chế độ occlude="blending": video nằm sau lớp 3D và được "khoét" đúng chỗ màn LED, nên nhân vật, giàn đèn, toà nhà đứng trước sẽ che video như thật.
  * Điều khiển qua sự kiện window 'ckcgsg-led' với detail: 'unmute' | 'mute' | 'next' | 'prev'.
  * ➜ Đổi / thêm clip: sửa danh sách LED_CLIPS bên dưới (mã video là phần sau "watch?v=").
  */
@@ -14,6 +15,9 @@ export const LED_CLIPS = [
   { id: '6EUV2Vt3NpM', title: 'MV Kinh Dâng Hiến (Suscipe)' },
   { id: '6S4JXFAO2pA', title: 'Ơn Tuyệt Vời (Amazing Grace)' },
 ];
+/** Nhãn HTML trong cảnh phải nằm trên lớp canvas (canvas có z-index ~8,4 triệu khi màn LED dùng chế độ blending) */
+export const OVER_Z: [number, number] = [16777200, 16777000];
+
 export type LedCommand = 'unmute' | 'mute' | 'next' | 'prev';
 export const ledCommand = (c: LedCommand) => window.dispatchEvent(new CustomEvent<LedCommand>('ckcgsg-led', { detail: c }));
 
@@ -38,7 +42,7 @@ export function LedVideo({ position, w = 14.2, h = 8 }: { position: [number, num
   }, []);
   const px = 80;
   return (
-    <Html transform position={position} distanceFactor={400 / px} zIndexRange={[5, 0]} pointerEvents="none"
+    <Html transform occlude="blending" position={position} distanceFactor={400 / px} pointerEvents="none"
       style={{ width: w * px, height: h * px, backfaceVisibility: 'hidden', background: '#000' }}>
       <iframe ref={frame} src={SRC} title="Màn LED – clip của Nhóm Ca Kịch Công Giáo Sài Gòn" width={w * px} height={h * px}
         allow="autoplay; encrypted-media; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin"

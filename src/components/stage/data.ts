@@ -4,7 +4,7 @@
  * Chưa có sơ đồ chính thức từ Ban tổ chức.
  * Đơn vị: mét, hệ toạ độ sân khấu: mép trước sân khấu tại z = 0, khán giả trải về phía z dương.
  */
-import { campusToLocal } from './frame';
+import { campusToLocal, toWorld } from './frame';
 import { EVENT_AREAS, WC_POS, type Area, type XY } from '../campus/data';
 
 export type Rect = { x0: number; x1: number; z0: number; z1: number };
@@ -112,3 +112,29 @@ export const CAMERAS = {
   stage: { pos: [0, 5.5, -9.5] as [number, number, number], look: [0, 1, 40] as [number, number, number] },
 };
 export const STAGE_FOCUS: [number, number, number] = [0, 4, -6];
+
+/* ---------- Chỗ ngồi & điểm đến cho chế độ Dạo khuôn viên ---------- */
+export type Spot = { x: number; y: number; z: number; face: number; zone?: string };
+const W0 = toWorld([0, 0, 0]), WF = toWorld([0, 0, -1]);
+/** hướng nhìn về sân khấu (toạ độ three.js) */
+export const FACE_STAGE = Math.atan2(WF[0] - W0[0], WF[2] - W0[2]);
+/** mọi ghế ngồi trên khán đài (toạ độ three.js), ngồi quay mặt lên sân khấu */
+export const CHAIRS: Spot[] = ZONES.filter(z => z.kind === 'seat').flatMap(z => (z.rects ?? []).flatMap(seatsIn).map(([x, zz]) => {
+  const [wx, , wz] = toWorld([x, 0, zz]); return { x: wx, y: 0.47, z: wz, face: FACE_STAGE, zone: z.id };
+}));
+/** ghế trống gần nhất trong tầm `max` mét (có thể giới hạn trong một khu) */
+export function nearestChair(p: { x: number; z: number }, taken: { x: number; z: number }[], max = 1.4, zone?: string) {
+  let best: Spot | null = null, bd = max;
+  for (const c of CHAIRS) {
+    if (zone && c.zone !== zone) continue;
+    const d = Math.hypot(c.x - p.x, c.z - p.z);
+    if (d < bd && !taken.some(t => Math.hypot(t.x - c.x, t.z - c.z) < 0.3)) { bd = d; best = c; }
+  }
+  return best;
+}
+/** điểm đến khi chọn một khu: khu ghế → ghế trống gần tâm khu; khu đứng → giữa khu */
+export function zoneSpot(z: Zone, taken: { x: number; z: number }[]): { spot: Spot; sit: boolean } | null {
+  const [wx, , wz] = toWorld([z.seat[0], 0, z.seat[1]]);
+  if (z.kind === 'seat') { const c = nearestChair({ x: wx, z: wz }, taken, 60, z.id); return c ? { spot: c, sit: true } : null; }
+  return { spot: { x: wx, y: 0, z: wz, face: FACE_STAGE }, sit: false };
+}

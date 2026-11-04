@@ -1,6 +1,7 @@
 /** Giao diện chế độ Dạo khuôn viên: bảng nhập tên, thanh trạng thái, động tác, khung chat, cần điều khiển trên điện thoại */
 import { useEffect, useRef, useState } from 'react';
-import { Footprints, LogOut, MessageCircle, Send, Users, X } from 'lucide-react';
+import { Footprints, LogOut, MapPin, MessageCircle, Send, Users, X } from 'lucide-react';
+import { ZONES, type Zone } from '../stage/data';
 import { EMOTES, type EmoteId, type EmoteState, type Me, type TouchInput } from './Walker';
 import { MAX_CHAT, type ChatLine, type NetStatus } from './presence';
 
@@ -9,12 +10,13 @@ const load = (): Me => {
   return { name: `Khách ${Math.floor(100 + Math.random() * 900)}` };
 };
 
-export function JoinDialog({ onJoin, onClose }: { onJoin: (m: Me) => void; onClose: () => void }) {
+export function JoinDialog({ onJoin, onClose }: { onJoin: (m: Me, z?: Zone) => void; onClose: () => void }) {
   const [name, setName] = useState(() => load().name);
+  const [zone, setZone] = useState<string>('');
   const go = () => {
     const m = { name: name.replace(/\s+/g, ' ').trim().slice(0, 24) || 'Khách' };
     try { localStorage.setItem('ckcgsg-walker', JSON.stringify(m)); } catch { /* bỏ qua */ }
-    onJoin(m);
+    onJoin(m, ZONES.find(z => z.id === zone));
   };
   return (
     <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
@@ -26,7 +28,16 @@ export function JoinDialog({ onJoin, onClose }: { onJoin: (m: Me) => void; onClo
         <p className="text-white/55 text-sm mb-5">Hoá thân thành chú Chiên Con, đi dạo quanh sân khấu Đắc Lộ, chào hỏi và trò chuyện với những người đang xem trang lúc này.</p>
         <label className="block text-[11px] uppercase tracking-widest font-bold text-white/45 mb-1.5">Tên hiển thị</label>
         <input value={name} maxLength={24} autoFocus onChange={e => setName(e.target.value)} onKeyDown={e => e.key === 'Enter' && go()}
-          className="w-full rounded-xl bg-black/50 border border-white/15 focus:border-gold outline-none px-3 py-2.5 mb-6" />
+          className="w-full rounded-xl bg-black/50 border border-white/15 focus:border-gold outline-none px-3 py-2.5 mb-4" />
+        <div className="text-[11px] uppercase tracking-widest font-bold text-white/45 mb-1.5">Bắt đầu ở đâu</div>
+        <div className="flex flex-wrap gap-1.5 mb-6">
+          {[{ id: '', short: 'Lối vào', color: '#888' }, ...ZONES].map(z => (
+            <button key={z.id} onClick={() => setZone(z.id)}
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold border transition ${zone === z.id ? 'border-gold bg-gold/15 text-white' : 'border-white/10 text-white/60 hover:text-white'}`}>
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: z.color }} />{z.short}
+            </button>
+          ))}
+        </div>
         <button onClick={go} className="w-full flex items-center justify-center gap-2 bg-gold text-black rounded-full py-3 font-bold">
           <Footprints size={18} /> Vào khuôn viên
         </button>
@@ -68,7 +79,7 @@ export function EmoteBar({ emote }: { emote: React.MutableRefObject<EmoteState> 
         <button key={e.id} onClick={() => play(e.id)} title={`${e.label} (phím ${i + 1})`}
           className="group flex items-center gap-1.5 rounded-full px-2.5 md:px-3 py-1.5 hover:bg-white/10 active:scale-95 transition">
           <span className="text-lg leading-none">{e.icon}</span>
-          <span className="hidden md:inline text-xs font-bold text-white/80">{e.label}</span>
+          <span className="hidden md:inline text-xs font-bold text-white/80 whitespace-nowrap">{e.label}</span>
         </button>
       ))}
     </div>
@@ -148,5 +159,30 @@ export function TouchControls({ touch }: { touch: React.MutableRefObject<TouchIn
         Nhảy
       </button>
     </>
+  );
+}
+
+/** Chọn khu vực trên khán đài để đến (khu ghế thì ngồi luôn) */
+export function ZonePicker({ open, onToggle, onPick }: { open: boolean; onToggle: () => void; onPick: (z: Zone) => void }) {
+  return (
+    <div className="absolute z-30 right-4 top-[250px] md:top-[190px] flex flex-col items-end gap-2">
+      <button onClick={onToggle} className="flex items-center gap-1.5 bg-black/70 backdrop-blur border border-white/10 hover:border-gold/60 px-3 py-1.5 rounded-full text-xs font-bold">
+        <MapPin size={14} className="text-gold" /> Chọn khu vực
+      </button>
+      {open && (
+        <div className="w-[260px] rounded-2xl bg-black/85 backdrop-blur border border-white/10 p-2">
+          {(['seat', 'stand'] as const).map(k => (
+            <div key={k}>
+              <div className="text-white/40 uppercase tracking-widest text-[10px] font-bold px-2 pt-1.5 pb-1">{k === 'seat' ? 'Ghế ngồi (ngồi luôn)' : 'Khu đứng'}</div>
+              {ZONES.filter(z => z.kind === k).map(z => (
+                <button key={z.id} onClick={() => onPick(z)} className="w-full flex items-center gap-2.5 px-2 py-2 rounded-xl hover:bg-white/10 text-left text-sm">
+                  <span className={`w-3 h-3 shrink-0 ${k === 'stand' ? 'rounded-full' : 'rounded-sm'}`} style={{ background: z.color }} />{z.name}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
