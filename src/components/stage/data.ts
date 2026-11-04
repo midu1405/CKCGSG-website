@@ -101,7 +101,7 @@ export const SPONSOR: SponsorItem[] = [
   { id: 'anh-sang', name: 'Ánh sáng', desc: 'Giàn khung (truss) phía trên sân khấu với đèn di động, cùng đèn follow spot từ khu FOH.', focus: [0, 11, -6], cam: [20, 6, 22], label: [7, 14.6, -8] },
   { id: 'canh-tri', name: 'Cảnh trí & đạo cụ', desc: 'Sân khấu hai tầng, cầu thang giữa và các khối bậc đá — tái hiện bối cảnh thế kỷ XVII theo thiết kế của ekip.', focus: [0, 1.5, -6], cam: [9, 5, 13], label: [-9, 4.2, -1.5] },
   { id: 'phuc-trang', name: 'Phục trang & hậu đài', desc: 'Lều hậu đài phía sau bên trái sân khấu, sát toà nhà có nhà vệ sinh: thay phục trang, trang điểm, lưu trữ đạo cụ cho 130+ diễn viên.', focus: [-16, 0, -11], cam: [-4, 24, 16], label: [-16, 5.6, -11] },
-  { id: 'livestream', name: 'Livestream · Quay phim', desc: 'Bục máy quay trung tâm tại FOH, 2 tháp máy quay hai bên khán đài và máy quay cẩu trước sân khấu — phát trực tuyến cho hơn 10.000 người theo dõi.', focus: [0, 2, 24], cam: [-24, 22, 44], label: [20.5, 6, 18] },
+  { id: 'livestream', name: 'Livestream · Quay phim', desc: 'Bục máy quay trung tâm tại FOH, 2 tháp máy quay hai bên khán đài — phát trực tuyến cho hơn 10.000 người theo dõi.', focus: [0, 2, 24], cam: [-24, 22, 44], label: [20.5, 6, 18] },
   { id: 'hau-can', name: 'Suất ăn · Nước uống', desc: 'Khu hậu cần phía sau bên phải sân khấu, phục vụ diễn viên, tình nguyện viên trong các buổi tập và đêm diễn.', focus: [16, 0, -11], cam: [4, 24, 16], label: [16, 5.4, -11] },
 ];
 

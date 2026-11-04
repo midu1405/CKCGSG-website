@@ -212,12 +212,6 @@ function Cameras({ sel }: { sel: string | null }) {
           <Box p={[0, 3.35, 0]} s={[0.5, 0.5, 0.9]} c="#0d0d0d" on={on} />
         </group>
       ))}
-      {/* máy quay cẩu trước sân khấu */}
-      <group position={[11.5, 0, 2.8]}>
-        <mesh position={[0, 1.3, 0]}><cylinderGeometry args={[0.15, 0.25, 2.6, 8]} /><Hi on={on} color="#555" /></mesh>
-        <mesh position={[-1.6, 3.1, -0.6]} rotation={[0, 0.4, 0.5]}><boxGeometry args={[4.4, 0.16, 0.16]} /><Hi on={on} color="#777" /></mesh>
-        <Box p={[-3.5, 4.2, -1.4]} s={[0.4, 0.4, 0.7]} c="#0d0d0d" on={on} />
-      </group>
     </group>
   );
 }
