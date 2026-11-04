@@ -7,6 +7,7 @@
  */
 import { useEffect, useRef } from 'react';
 import { Html } from '@react-three/drei';
+import { useFrame, useThree } from '@react-three/fiber';
 
 export const LED_CLIPS = [
   { id: '3haB72E5u3M', title: 'Chim Bằng – This Is Me' },
@@ -40,6 +41,14 @@ export function LedVideo({ position, w = 14.2, h = 8 }: { position: [number, num
     window.addEventListener('ckcgsg-led', on);
     return () => window.removeEventListener('ckcgsg-led', on);
   }, []);
+  // drei chỉ đặt z-index cho canvas một lần và các nhãn HTML khác có thể xoá mất → giữ cố định mỗi khung hình:
+  // canvas nằm trên lớp video (video z ≤ 8.388.634), các nhãn (OVER_Z) nằm trên canvas.
+  const gl = useThree(s => s.gl);
+  useFrame(() => {
+    const st = gl.domElement.style;
+    if (st.zIndex !== '8388635') { st.zIndex = '8388635'; st.position = 'relative'; }
+  });
+  useEffect(() => () => { gl.domElement.style.zIndex = ''; }, [gl]);
   const px = 80;
   return (
     <Html transform occlude="blending" position={position} distanceFactor={400 / px} pointerEvents="none"
