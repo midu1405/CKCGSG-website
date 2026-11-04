@@ -24,16 +24,17 @@ export const ledCommand = (c: LedCommand) => window.dispatchEvent(new CustomEven
 
 const [first, ...rest] = LED_CLIPS.map(c => c.id);
 const SRC = `https://www.youtube-nocookie.com/embed/${first}?autoplay=1&mute=1&loop=1&playlist=${rest.join(',')},${first}`
-  + '&controls=0&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1';
+  + '&controls=0&playsinline=1&fs=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1';
 
 /** w × h (mét) — 16:9 đặt giữa màn LED 22 × 8 m; 80 px / mét */
 export function LedVideo({ position, w = 14.2, h = 8 }: { position: [number, number, number]; w?: number; h?: number }) {
   const frame = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
-    const call = (func: string) => frame.current?.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
+    const call = (func: string, args: unknown[] = []) => frame.current?.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args }), '*');
     const on = (e: Event) => {
       const c = (e as CustomEvent<LedCommand>).detail;
-      if (c === 'unmute') { call('unMute'); call('setVolume'); call('playVideo'); }
+      // không gọi playVideo: trên điện thoại (nhất là trình duyệt trong Facebook/Zalo) lệnh này có thể bật toàn màn hình
+      if (c === 'unmute') { call('unMute'); call('setVolume', [100]); }
       if (c === 'mute') call('mute');
       if (c === 'next') call('nextVideo');
       if (c === 'prev') call('previousVideo');
