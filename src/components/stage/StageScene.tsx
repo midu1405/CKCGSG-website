@@ -21,6 +21,7 @@ export type WalkProps = {
   world?: World;
   onMove?: (p: THREE.Vector3) => void;
   seat?: React.MutableRefObject<SeatCmd>;
+  firstPerson?: React.MutableRefObject<boolean>;
   chapel?: { candles: number; notes: number; onCandle: () => void; onBoard: () => void };
 };
 const rand = (a: number, b: number) => { const t = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return t - Math.floor(t); };
@@ -324,7 +325,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk 
   if (walk?.place === 'chapel') return (
     <>
       <ChapelInterior candles={walk.chapel?.candles ?? 0} notes={walk.chapel?.notes ?? 0} onCandle={walk.chapel?.onCandle} onBoard={walk.chapel?.onBoard} />
-      <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} world={CHAPEL_WORLD} onMove={walk.onMove} seat={walk.seat} />
+      <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} world={CHAPEL_WORLD} onMove={walk.onMove} seat={walk.seat} firstPerson={walk.firstPerson} />
       <RemoteAvatars ids={walk.ids} net={walk.net} />
     </>
   );
@@ -380,7 +381,7 @@ const Scene = forwardRef<SceneHandle, Props>(function Scene({ mode, night, walk 
       ))}
 
       {walk ? <>
-        <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} world={walk.world} onMove={walk.onMove} seat={walk.seat} />
+        <Walker me={walk.me} net={walk.net} touch={walk.touch} emote={walk.emote} world={walk.world} onMove={walk.onMove} seat={walk.seat} firstPerson={walk.firstPerson} />
         <RemoteAvatars ids={walk.ids} net={walk.net} />
       </> : <CameraControls ref={cc} minDistance={4} maxDistance={420} maxPolarAngle={Math.PI / 2.05} smoothTime={0.6} />}
     </>

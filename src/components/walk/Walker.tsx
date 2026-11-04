@@ -73,13 +73,14 @@ const PUFFS: [number, number, number, number][] = [
 ];
 const TUFT: [number, number, number, number][] = [[0, 1.86, 0.06, 0.13], [0.12, 1.82, -0.02, 0.11], [-0.12, 1.82, -0.02, 0.11], [0, 1.84, -0.14, 0.11]];
 
-type Look = { moving: React.MutableRefObject<boolean>; emote: () => { id: string; since: number } | null; bubble: () => Bubble | undefined; sitting?: () => boolean };
+type Look = { moving: React.MutableRefObject<boolean>; emote: () => { id: string; since: number } | null; bubble: () => Bubble | undefined; sitting?: () => boolean; hidden?: () => boolean };
 
 export function Lamb({ name, me = false, look }: { name: string; me?: boolean; look: Look }) {
   const root = useRef<THREE.Group>(null), upper = useRef<THREE.Group>(null);
   const armL = useRef<THREE.Group>(null), armR = useRef<THREE.Group>(null), legL = useRef<THREE.Group>(null), legR = useRef<THREE.Group>(null);
   const bubbleEl = useRef<HTMLDivElement>(null), heartEl = useRef<HTMLDivElement>(null);
   const shownBubble = useRef(''), heartK = useRef(-1);
+  const outer = useRef<THREE.Group>(null), tagEl = useRef<HTMLDivElement>(null);
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime, mv = look.moving.current, em = look.emote(), sit = look.sitting?.() ? 1 : 0;
@@ -117,6 +118,10 @@ export function Lamb({ name, me = false, look }: { name: string; me?: boolean; l
     }
     // bong bóng chat
     const b = look.bubble(), txt = b && performance.now() - b.t < 6000 ? b.text : '';
+    // góc nhìn thứ nhất: ẩn chính mình
+    const hid = !!look.hidden?.();
+    if (outer.current && outer.current.visible === hid) outer.current.visible = !hid;
+    if (tagEl.current) tagEl.current.style.visibility = hid ? 'hidden' : 'visible';
     if (bubbleEl.current && txt !== shownBubble.current) {
       shownBubble.current = txt; bubbleEl.current.textContent = txt; bubbleEl.current.style.display = txt ? 'block' : 'none';
     }
@@ -124,7 +129,7 @@ export function Lamb({ name, me = false, look }: { name: string; me?: boolean; l
 
   return (
     <group>
-      <group ref={root}>
+      <group ref={outer}><group ref={root}>
         <group ref={upper} position={[0, 0.45, 0]}>
           <group position={[0, -0.45, 0]}>
             {/* thân bông xù */}
@@ -155,9 +160,9 @@ export function Lamb({ name, me = false, look }: { name: string; me?: boolean; l
         {/* chân */}
         <group ref={legL} position={[-0.14, 0.36, 0]}><mesh position={[0, -0.18, 0]}><cylinderGeometry args={[0.08, 0.07, 0.36, 10]} /><meshStandardMaterial color={DARK} /></mesh></group>
         <group ref={legR} position={[0.14, 0.36, 0]}><mesh position={[0, -0.18, 0]}><cylinderGeometry args={[0.08, 0.07, 0.36, 10]} /><meshStandardMaterial color={DARK} /></mesh></group>
-      </group>
+      </group></group>
       <Html position={[0, 2.25, 0]} center zIndexRange={OVER_Z}>
-        <div className="pointer-events-none select-none flex flex-col items-center gap-1">
+        <div ref={tagEl} className="pointer-events-none select-none flex flex-col items-center gap-1">
           <div ref={bubbleEl} style={{ display: 'none' }}
             className="max-w-[200px] w-max rounded-2xl rounded-bl-sm bg-white text-black text-[12px] leading-snug px-2.5 py-1.5 shadow-lg break-words" />
           <div ref={heartEl} className="relative h-0 w-0" />
@@ -202,7 +207,7 @@ export function RemoteAvatars({ ids, net }: { ids: string[]; net: Net }) {
 }
 
 /* ---------- Bản thân + camera theo sau ---------- */
-export function Walker({ me, net, touch, emote, world = CAMPUS_WORLD, onMove, seat }: { me: Me; net: Net; touch: React.MutableRefObject<TouchInput>; emote: React.MutableRefObject<EmoteState>; world?: World; onMove?: (p: THREE.Vector3) => void; seat?: React.MutableRefObject<SeatCmd> }) {
+export function Walker({ me, net, touch, emote, world = CAMPUS_WORLD, onMove, seat, firstPerson }: { me: Me; net: Net; touch: React.MutableRefObject<TouchInput>; emote: React.MutableRefObject<EmoteState>; world?: World; onMove?: (p: THREE.Vector3) => void; seat?: React.MutableRefObject<SeatCmd>; firstPerson?: React.MutableRefObject<boolean> }) {
   const { camera, gl, clock } = useThree();
   const g = useRef<THREE.Group>(null);
   const moving = useRef(false);
@@ -214,7 +219,7 @@ export function Walker({ me, net, touch, emote, world = CAMPUS_WORLD, onMove, se
     const since = clock.elapsedTime - e.t0;
     return since < DUR[e.id] ? { id: e.id, since } : null;
   };
-  const look = useMemo<Look>(() => ({ moving, emote: activeEmote, bubble: () => net.bubbles.current.get('me'), sitting: () => !!seat?.current.sitting }), [net, seat]); // eslint-disable-line react-hooks/exhaustive-deps
+  const look = useMemo<Look>(() => ({ moving, emote: activeEmote, bubble: () => net.bubbles.current.get('me'), sitting: () => !!seat?.current.sitting, hidden: () => !!firstPerson?.current }), [net, seat, firstPerson]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     st.current.face = st.current.camYaw = spawn.yaw;
@@ -297,6 +302,15 @@ export function Walker({ me, net, touch, emote, world = CAMPUS_WORLD, onMove, se
       s.vy -= 20 * dt; o.position.y += s.vy * dt;
       if (o.position.y <= floor) { o.position.y = floor; s.vy = 0; s.onGround = true; }
     }
+    // góc nhìn thứ nhất: mắt ở đầu nhân vật, thân xoay theo hướng nhìn
+    if (firstPerson?.current) {
+      if (!seated) s.face = s.camYaw;
+      o.rotation.y = s.face;
+      const lp = s.camPitch - 0.32, eye = new THREE.Vector3(o.position.x, o.position.y + 1.45, o.position.z);
+      const look = new THREE.Vector3(Math.sin(s.camYaw) * Math.cos(lp), -Math.sin(lp), Math.cos(s.camYaw) * Math.cos(lp));
+      camera.position.lerp(eye, 1 - Math.exp(-dt * 25));
+      camera.lookAt(camera.position.clone().add(look));
+    } else {
     // camera theo sau, không chui vào toà nhà
     const tgt = new THREE.Vector3(o.position.x, o.position.y + 1.3, o.position.z);
     const cp = Math.cos(s.camPitch), unit = new THREE.Vector3(-Math.sin(s.camYaw) * cp, Math.sin(s.camPitch), -Math.cos(s.camYaw) * cp);
@@ -308,6 +322,7 @@ export function Walker({ me, net, touch, emote, world = CAMPUS_WORLD, onMove, se
     const want = tgt.clone().add(unit.multiplyScalar(dist)); want.y = Math.max(want.y, 0.6);
     camera.position.lerp(want, 1 - Math.exp(-dt * 10));
     camera.lookAt(tgt);
+    }
     onMove?.(o.position);
     // gửi trạng thái ~12 lần/giây
     const now = state.clock.elapsedTime;

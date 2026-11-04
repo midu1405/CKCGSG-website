@@ -1,6 +1,6 @@
 /** Giao diện chế độ Dạo khuôn viên: bảng nhập tên, thanh trạng thái, động tác, khung chat, cần điều khiển trên điện thoại */
 import { useEffect, useRef, useState } from 'react';
-import { Footprints, LogOut, MapPin, MessageCircle, Send, Users, X } from 'lucide-react';
+import { Eye, Footprints, LogOut, MapPin, MessageCircle, Send, Users, X } from 'lucide-react';
 import { ZONES, type Zone } from '../stage/data';
 import { EMOTES, type EmoteId, type EmoteState, type Me, type TouchInput } from './Walker';
 import { MAX_CHAT, type ChatLine, type NetStatus } from './presence';
@@ -49,7 +49,7 @@ export function JoinDialog({ onJoin, onClose }: { onJoin: (m: Me, z?: Zone) => v
 
 const STATUS: Record<NetStatus, string> = { off: '', connecting: 'Đang kết nối…', online: 'Trực tuyến', local: 'Chỉ thấy các tab trên máy này' };
 
-export function WalkHud({ count, status, onExit, where = 'đang dạo' }: { count: number; status: NetStatus; onExit: () => void; where?: string }) {
+export function WalkHud({ count, status, onExit, where = 'đang dạo', firstPerson, onView }: { count: number; status: NetStatus; onExit: () => void; where?: string; firstPerson?: boolean; onView?: () => void }) {
   return (
     <div className="absolute z-30 top-[88px] left-4 right-4 flex items-start justify-between gap-3 pointer-events-none">
       <div className="pointer-events-auto rounded-2xl bg-black/70 backdrop-blur border border-white/10 px-4 py-3">
@@ -60,12 +60,17 @@ export function WalkHud({ count, status, onExit, where = 'đang dạo' }: { coun
         <div className="text-[11px] text-white/45 mt-0.5">{STATUS[status]}</div>
         <div className="hidden md:block text-[11px] text-white/55 mt-2 leading-relaxed">
           <b className="text-white/80">W A S D</b> di chuyển · <b className="text-white/80">Space</b> nhảy · <b className="text-white/80">Shift</b> chạy<br />
-          <b className="text-white/80">1–5</b> động tác · <b className="text-white/80">Enter</b> để chat · kéo chuột để xoay
+          <b className="text-white/80">1–6</b> động tác · <b className="text-white/80">Enter</b> để chat · <b className="text-white/80">V</b> đổi góc nhìn · kéo chuột để xoay
         </div>
       </div>
-      <button onClick={onExit} className="pointer-events-auto flex items-center gap-2 bg-gold text-black rounded-full px-4 py-2 font-bold text-sm">
-        <LogOut size={16} /> Thoát
-      </button>
+      <div className="pointer-events-auto flex items-center gap-2">
+        {onView && <button onClick={onView} className={`flex items-center gap-1.5 rounded-full px-3 py-2 font-bold text-xs border ${firstPerson ? 'bg-white text-black border-white' : 'bg-black/70 backdrop-blur border-white/15 text-white'}`}>
+          <Eye size={15} /> {firstPerson ? 'Góc thứ 1' : 'Góc thứ 3'}
+        </button>}
+        <button onClick={onExit} className="flex items-center gap-2 bg-gold text-black rounded-full px-4 py-2 font-bold text-sm">
+          <LogOut size={16} /> Thoát
+        </button>
+      </div>
     </div>
   );
 }

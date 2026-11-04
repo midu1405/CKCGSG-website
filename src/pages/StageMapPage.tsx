@@ -44,6 +44,9 @@ export default function StageMapPage() {
   const seat = useRef<SeatCmd>({ want: null, stand: false, sitting: false, back: null });
   const seatSpot = useRef<{ x: number; y: number; z: number; face: number } | null>(null);
   const [picker, setPicker] = useState(false);
+  const [fp, setFp] = useState(false);
+  const fpRef = useRef(false);
+  const toggleView = useCallback(() => setFp(v => { fpRef.current = !v; return !v; }), []);
   const pendingZone = useRef<Zone | null>(null);
   const goZoneRef = useRef<(z: Zone) => void>(() => {});
   const [seatUi, setSeatUi] = useState<'none' | 'sit' | 'stand'>('none');
@@ -106,12 +109,13 @@ export default function StageMapPage() {
       const t = e.target as HTMLElement | null; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
       if (e.key.toLowerCase() === 'e' && nearRef.current) (place === 'chapel' ? exitChapel : enterChapel)();
       if (e.key.toLowerCase() === 'f') sitOrStand();
+      if (e.key.toLowerCase() === 'v' && !e.repeat) toggleView();
     };
     window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k);
-  }, [walkMe, place, enterChapel, exitChapel, sitOrStand]);
+  }, [walkMe, place, enterChapel, exitChapel, sitOrStand, toggleView]);
 
   const walk = useMemo(() => (walkMe ? {
-    me: walkMe, net, ids, touch, emote, place, world: campusWorld, onMove, seat,
+    me: walkMe, net, ids, touch, emote, place, world: campusWorld, onMove, seat, firstPerson: fpRef,
     chapel: { candles: prayer.stats.candlesToday, notes: prayer.stats.notes, onCandle: doCandle, onBoard: () => setDialog('board') },
   } : null), [walkMe, net, ids, place, campusWorld, onMove, prayer.stats, doCandle]);
   const [zone, setZone] = useState<Zone | null>(null);
@@ -136,7 +140,7 @@ export default function StageMapPage() {
       </div>
 
       {walkMe && <>
-        <WalkHud count={count} status={status} onExit={leaveWalk} where={inChapel ? 'trong Nhà nguyện' : 'đang dạo'} />
+        <WalkHud count={count} status={status} onExit={leaveWalk} where={inChapel ? 'trong Nhà nguyện' : 'đang dạo'} firstPerson={fp} onView={toggleView} />
         {!inChapel && <LedControls className="absolute z-30 right-4 top-[200px] md:top-[140px]" />}
         {inChapel
           ? <ChapelBar stats={prayer.stats} music={music} onMusic={toggleMusic} onCandle={doCandle}
