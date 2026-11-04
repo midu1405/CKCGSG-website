@@ -44,6 +44,8 @@ export default function StageMapPage() {
   const seat = useRef<SeatCmd>({ want: null, stand: false, sitting: false, back: null });
   const seatSpot = useRef<{ x: number; y: number; z: number; face: number } | null>(null);
   const [picker, setPicker] = useState(false);
+  const pendingZone = useRef<Zone | null>(null);
+  const goZoneRef = useRef<(z: Zone) => void>(() => {});
   const [seatUi, setSeatUi] = useState<'none' | 'sit' | 'stand'>('none');
   const inChapel = !!walkMe && place === 'chapel';
   const { net, ids, count, status, chat, sendChat } = usePresence(!!walkMe, walkMe?.name ?? '', inChapel ? 'nha-nguyen-v1' : undefined);
@@ -63,6 +65,7 @@ export default function StageMapPage() {
   const onMove = useCallback((p: THREE.Vector3) => {
     const n = place === 'chapel' ? nearExit(p) : Math.hypot(p.x - CHAPEL.door[0], -p.z - CHAPEL.door[1]) < 4.5;
     if (n !== nearRef.current) { nearRef.current = n; setNear(n); }
+    if (pendingZone.current) { const z = pendingZone.current; pendingZone.current = null; goZoneRef.current(z); }
     // ghế trống gần nhất (bỏ qua chỗ người khác đang ngồi)
     let ui: 'none' | 'sit' | 'stand' = 'none';
     if (seat.current.sitting) ui = 'stand';
@@ -85,6 +88,7 @@ export default function StageMapPage() {
     if (r.sit) seat.current.want = { ...r.spot, here: true }; else seat.current.goto = r.spot;
     say(r.sit ? `Bạn đã ngồi ở khu ${z.short}` : `Bạn đã đến ${z.short}`);
   }, [net]);
+  goZoneRef.current = goZone;
   const doCandle = useCallback(async () => {
     const ok = await prayer.lightCandle();
     say(ok ? 'Bạn đã thắp một ngọn nến 🕯 Xin Chúa nhậm lời.' : (prayer.error || 'Chưa thắp được nến, xin thử lại.'));
@@ -150,7 +154,7 @@ export default function StageMapPage() {
       {joining && <JoinDialog onClose={() => { setJoining(false); wantChapel.current = false; }} onJoin={(m, z) => {
         setJoining(false); setPanelOpen(false); setWalkMe(m);
         if (wantChapel.current) { wantChapel.current = false; enterChapel(); }
-        else if (z) setTimeout(() => goZone(z), 50);
+        else if (z) pendingZone.current = z;
       }} />}
 
       {/* Tiêu đề + điều khiển */}
