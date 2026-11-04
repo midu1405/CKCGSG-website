@@ -68,7 +68,9 @@ export function WalkHud({ count, status, onExit, where = 'đang dạo', firstPer
           <div className="flex items-center rounded-full bg-black/70 backdrop-blur border border-white/15 p-0.5" role="group" aria-label="Góc nhìn">
             <Eye size={14} className="mx-1.5 text-gold shrink-0" />
             {([[false, 'Thứ 3'], [true, 'Thứ 1']] as const).map(([fp, label]) => (
-              <button key={label} type="button" onClick={() => { if (fp !== !!firstPerson) onView(); }} aria-pressed={fp === !!firstPerson}
+              <button key={label} type="button" aria-pressed={fp === !!firstPerson}
+                onPointerUp={e => { e.stopPropagation(); if (fp !== !!firstPerson) onView(); }}
+                onClick={e => { if (e.detail === 0 && fp !== !!firstPerson) onView(); }}
                 className={`touch-manipulation rounded-full px-3 py-2 text-xs font-bold whitespace-nowrap ${fp === !!firstPerson ? 'bg-gold text-black' : 'text-white/75'}`}>
                 {label}
               </button>
@@ -146,7 +148,7 @@ export function ChatPanel({ lines, onSend }: { lines: ChatLine[]; onSend: (t: st
 }
 
 /** Cần điều khiển ảo + nút nhảy (chỉ hiện trên màn hình cảm ứng) */
-export function TouchControls({ touch }: { touch: React.MutableRefObject<TouchInput> }) {
+export function TouchControls({ touch, firstPerson, onView }: { touch: React.MutableRefObject<TouchInput>; firstPerson?: boolean; onView?: () => void }) {
   const [coarse, setCoarse] = useState(false);
   const base = useRef<HTMLDivElement>(null);
   const [knob, setKnob] = useState<[number, number]>([0, 0]);
@@ -171,6 +173,13 @@ export function TouchControls({ touch }: { touch: React.MutableRefObject<TouchIn
         onPointerDown={e => { e.stopPropagation(); touch.current.jump = true; }} onPointerUp={() => (touch.current.jump = false)} onPointerCancel={() => (touch.current.jump = false)}>
         Nhảy
       </button>
+      {onView && (
+        <button aria-label={firstPerson ? 'Chuyển sang góc nhìn thứ 3' : 'Chuyển sang góc nhìn thứ 1'}
+          className="absolute z-30 right-8 bottom-[205px] w-14 h-14 rounded-full bg-black/70 backdrop-blur border border-gold/50 text-white text-[11px] font-bold leading-tight flex flex-col items-center justify-center touch-none select-none"
+          onPointerDown={e => { e.stopPropagation(); onView(); }}>
+          <Eye size={16} className="text-gold" />{firstPerson ? 'Thứ 1' : 'Thứ 3'}
+        </button>
+      )}
     </>
   );
 }

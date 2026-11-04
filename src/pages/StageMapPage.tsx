@@ -158,7 +158,7 @@ export default function StageMapPage() {
         {seatUi !== 'none' && !near && <SeatPrompt sitting={seatUi === 'stand'} onGo={sitOrStand} />}
         {!inChapel && <ZonePicker open={picker} onToggle={() => setPicker(o => !o)} onPick={goZone} />}
         {near && <DoorPrompt label={inChapel ? 'Ra ngoài' : 'Vào Nhà nguyện'} onGo={inChapel ? exitChapel : enterChapel} />}
-        <ChatPanel lines={chat} onSend={sendChat} /><TouchControls touch={touch} />
+        <ChatPanel lines={chat} onSend={sendChat} /><TouchControls touch={touch} firstPerson={fp} onView={toggleView} />
         {toast && <Toast text={toast} />}
         {dialog === 'write' && <IntentionDialog defaultName={walkMe.name} error={prayer.error} onSubmit={prayer.submit} onClose={() => setDialog(null)} />}
         {dialog === 'board' && <BoardDialog list={prayer.list} pending={prayer.pending} onClose={() => setDialog(null)} onWrite={() => { prayer.setError(''); setDialog('write'); }} />}
