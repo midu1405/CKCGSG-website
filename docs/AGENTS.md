@@ -21,6 +21,20 @@ Chỉ huy sẽ:
 
 Khi lượt Figma đã làm mới: *"Gọi figma-sync đồng bộ các mục đang chờ."*
 
+## Kiểm tra toàn bộ web
+
+```
+/kiem-tra-web                 # cả web
+/kiem-tra-web /dac-lo         # soát kỹ một trang
+```
+
+Chạy `npm run audit` (máy đo: lỗi, font tiếng Việt, cuộn ngang, độ mượt, link, nút nhỏ) rồi 2 agent `kiem-tra`
+soát ảnh chụp và tính năng, ra `docs/audits/<ngày>/BAO-CAO.md` chia 🔴 / 🟠 / 🟢. Không sửa code.
+Sửa thì gõ tiếp: `/chi-huy sửa các lỗi 🔴 trong docs/audits/<ngày>/BAO-CAO.md`.
+
+Nên chạy: trước khi gộp một việc lớn vào `main`, và khoảng 2 tuần một lần trước ngày diễn.
+Lần đầu trên máy cần: `npm install` rồi `npx playwright install chromium`.
+
 ## Bạn duyệt ở đâu
 
 | Lúc | Xem gì |
