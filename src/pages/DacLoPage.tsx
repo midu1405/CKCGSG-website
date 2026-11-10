@@ -1,58 +1,72 @@
-import { useState, useEffect, type ReactNode } from 'react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import {
-  Calendar, MapPin, Clock, ArrowLeft, BookOpen, Church, Users, Flame, Mail, Phone, User,
-  Music, Shirt, Lightbulb, ScrollText, Theater, Camera, Building2, HandHeart, Box,
+  Calendar, MapPin, Clock, ArrowLeft, BookOpen, Church, Users, Flame, Mail, Phone,
+  Camera, Building2, HandHeart, Map as MapIcon, Star, Send,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import CastingSection from '../components/CastingSection';
-import { CountUp, DrawnTimeline, TimelineItem, staggerParent, staggerChild } from '../components/Motion';
+import { CountUp } from '../components/Motion';
 import IMG_COVER from '../assets/photos/daclo-cover.jpg';
 import IMG_PORTRAIT from '../assets/photos/daclo-portrait-2.jpg';
-import IMG_ENGRAVING from '../assets/photos/daclo-engraving.jpg';
-import IMG_TTMV from '../assets/photos/ttmv-stage.jpg';
-import IMG_AUDIENCE from '../assets/photos/audience.jpg';
-import IMG_CURTAIN from '../assets/photos/curtain-call.jpg';
+import IMG_SEED from '../assets/photos/stage-wide.jpg';
+import IMG_STAGE from '../assets/photos/jericho-stage.jpg';
+import IMG_M1 from '../assets/photos/jericho-3.jpg';
+import IMG_M2 from '../assets/photos/hero.jpg';
+import IMG_M3 from '../assets/photos/jericho-1.jpg';
+import IMG_M4 from '../assets/photos/poster-khi-long-da-tin.jpg';
+import IMG_M5 from '../assets/photos/story.jpg';
 
-/* Nội dung lấy từ "CKCGSG – Proposal Đắc Lộ 2027". Thông tin công diễn là dự kiến. */
+/*
+ * Trang Đắc Lộ — theo Figma "Trang Đắc Lộ - Desktop (Kêu gọi hỗ trợ) - Draft 3".
+ * Bảng màu: kem #f6ebd8 · thẻ #e8d7c2 · đỏ rượu #8b1a1a · nâu tiêu đề #5a3a2d · chữ #6f5a4a · vàng #e8c89a · nâu tối #381c1b.
+ * Thông tin công diễn là dự kiến.
+ */
 const PREMIERE = new Date('2027-06-04T00:00:00+07:00');
 
-const MESSAGES = [
-  { icon: BookOpen, title: 'Nhắc nhớ sự hình thành chữ Quốc Ngữ', desc: 'Làm nổi bật vai trò của các cha Dòng Tên trong việc học hỏi, hệ thống hóa tiếng Việt và đặt nền móng cho chữ Quốc Ngữ.' },
-  { icon: Church, title: 'Khai sinh giáo đoàn Đàng Ngoài (1627)', desc: 'Tái hiện dấu mốc Cha Đắc Lộ đặt nền tảng cho cộng đoàn tín hữu tại Đàng Ngoài – sự kiện trung tâm của chương trình kỷ niệm 400 năm.' },
-  { icon: Users, title: 'Gợi nhớ Hội Thầy Giảng', desc: 'Hội Thầy Giảng – tiền thân của đời sống thánh hiến bản địa, cho thấy vai trò quan trọng của người Việt trong công cuộc xây dựng Giáo Hội.' },
-  { icon: Flame, title: 'Tinh thần sống đạo kiên trung', desc: 'Liên kết hành trình truyền giáo với chứng tá tử đạo của chân phước Anrê Phú Yên – hạt giống đức tin sinh hoa trái nơi chính người con đất Việt.' },
-];
+const C = {
+  cream: '#f6ebd8', card: '#e8d7c2', line: '#cdbe9f', icon: '#d9c2a5',
+  wine: '#8b1a1a', head: '#5a3a2d', body: '#6f5a4a', gold: '#e8c89a', deep: '#381c1b',
+};
 
 const TIMELINE = [
   { year: '1593', text: 'Sinh ngày 15/03 tại Avignon, miền Nam nước Pháp.' },
   { year: '1612', text: 'Gia nhập Dòng Tên tại Rome.' },
   { year: '1624 – 1626', text: 'Truyền giáo tại Đàng Trong.' },
-  { year: '1627 – 1630', text: 'Đến Đàng Ngoài, đặt nền móng cho cộng đoàn tín hữu.' },
-  { year: '1640 – 1645', text: 'Nhiều lần trở lại Đàng Trong; bị trục xuất nhiều lần nhưng vẫn tìm cách trở lại.' },
-  { year: '1651', text: 'Xuất bản "Dictionarium Annamiticum Lusitanum et Latinum" (Từ điển Việt – Bồ – La) tại Rome, khoảng 8.000 mục từ.' },
+  { year: '1627 – 1630', text: 'Đến Đàng Ngoài, đặt nền móng cho Giáo hội tại Đàng Ngoài.' },
+  { year: '1640 – 1645', text: 'Bị trục xuất nhiều lần nhưng vẫn tìm cách trở lại Đàng Trong.' },
+  { year: '1651', text: 'Xuất bản “Dictionarium Annamiticum Lusitanum et Latinum” (Từ điển Việt – Bồ – Latinh) tại Rome, khoảng 8.000 mục từ.' },
   { year: '1660', text: 'Qua đời ngày 05/11.' },
 ];
 
+const MESSAGES = [
+  { icon: BookOpen, top: 'Hình thành', title: 'Chữ Quốc Ngữ', desc: 'Làm nổi bật vai trò của các cha Dòng Tên trong việc học hỏi, hệ thống hóa tiếng Việt và đặt nền móng cho chữ Quốc Ngữ.' },
+  { icon: Church, top: 'Khai sinh', title: 'Giáo Đoàn Đàng Ngoài', desc: 'Năm 1627, Cha Đắc Lộ đã đặt nền tảng cho cộng đoàn tín hữu đầu tiên tại Đàng Ngoài, thắp lên ngọn lửa đức tin xuyên thế kỷ.' },
+  { icon: Users, top: 'Gợi nhớ', title: 'Hội Thầy Giảng', desc: 'Tiền thân của đời sống thánh hiến bản địa – Hội Thầy Giảng, vai trò quan trọng của người Việt trong công cuộc xây dựng Giáo Hội.' },
+  { icon: Flame, top: 'Khơi dậy tinh thần', title: 'Sống Đạo Kiên Trung', desc: 'Hành trình truyền giáo với chứng tá tử đạo – chân phước Anrê Phú Yên cho thấy hạt giống đức tin đã sinh hoa trái nơi chính người con đất Việt.' },
+];
+
 const STATS = [
-  { value: '130+', label: 'Diễn viên' },
-  { value: '30+', label: 'Nhân sự hậu đài' },
-  { value: '6.000 – 7.000', label: 'Khán giả trực tiếp' },
-  { value: '10.000+', label: 'Người theo dõi (trực tiếp & trực tuyến)' },
+  { value: '10.000+', label: 'Khán giả theo dõi', sub: 'Trực tiếp tại sân khấu & trực tuyến qua livestream' },
+  { value: '200+', label: 'Phục trang biểu diễn', sub: 'Tái hiện bối cảnh lịch sử thế kỷ XVII' },
+  { value: '130+', label: 'Diễn viên tham gia', sub: 'Kết hợp diễn xuất, vũ đạo & hợp xướng hoành tráng' },
+  { value: '30+', label: 'Nhân sự hậu đài', sub: 'Phụ trách đạo cụ, cảnh trí, âm thanh, ánh sáng' },
+  { value: '20+', label: 'Tác phẩm âm nhạc', sub: 'Được viết lại lời Việt và dàn dựng riêng theo kịch bản' },
 ];
 
-const PRODUCTION = [
-  { icon: ScrollText, title: 'Kịch bản', desc: 'Mở rộng góc nhìn: không chỉ hành trình cá nhân của Cha Đắc Lộ, mà nhấn mạnh di sản lịch sử và đức tin ngài để lại cho Giáo Hội và dân tộc Việt Nam.' },
-  { icon: Theater, title: 'Diễn viên', desc: 'Khoảng 130+ diễn viên và 30+ nhân sự hậu đài, kết hợp diễn xuất, hợp xướng và vũ đạo.' },
-  { icon: Shirt, title: 'Phục trang & sân khấu', desc: 'Tái hiện bối cảnh thế kỷ XVII, chuyển cảnh linh hoạt theo mạch thời gian Đàng Trong – Đàng Ngoài.' },
-  { icon: Music, title: 'Âm nhạc', desc: 'Lời Việt viết lại trên các tác phẩm có sẵn, dàn dựng phù hợp với nội dung lịch sử – mục vụ.' },
-  { icon: Lightbulb, title: 'Âm thanh – ánh sáng', desc: 'Hệ thống chuyên nghiệp, bảo đảm chất lượng nghệ thuật và hiệu quả trình diễn.' },
-];
-
+const FIELDS = ['Chuyên môn', 'Địa điểm – Cơ sở', 'Tài trợ'] as const;
 const COLLAB = [
-  { icon: Camera, title: 'Chuyên môn', items: ['Livestream, quay phim, chụp hình', 'Truyền thông – lan tỏa trước, trong và sau chương trình', 'Thu âm – phòng thu – sản xuất âm nhạc', 'Biên đạo múa, dàn dựng chuyển động sân khấu', 'May phục trang theo thiết kế của ekip'] },
-  { icon: Building2, title: 'Địa điểm – cơ sở', items: ['Địa điểm tập hát, tập diễn, tập múa', 'Không gian thực hiện và gia công đạo cụ', 'Nơi lưu trữ đạo cụ – phục trang', 'Địa điểm tổng duyệt và chạy vở (tại Trung tâm Mục vụ)'] },
-  { icon: HandHeart, title: 'Đóng góp – tài trợ', items: ['Trang phục (thuê, thiết kế, may, tài trợ vải / công may)', 'Cảnh trí, đạo cụ – thiết kế và thi công', 'Vận chuyển', 'Suất ăn, nước uống cho diễn viên trong các buổi tập', 'Âm thanh, ánh sáng, màn hình LED'] },
+  { icon: Camera, field: FIELDS[0], title: 'Hỗ trợ Chuyên môn', cta: 'Đăng ký cộng tác chuyên môn',
+    items: ['Livestream, quay phim, chụp hình', 'Truyền thông trước, trong và sau chương trình', 'Phòng thu, sản xuất âm nhạc', 'Biên đạo múa, dàn dựng sân khấu', 'May phục trang theo thiết kế riêng'] },
+  { icon: Building2, field: FIELDS[1], title: 'Hỗ trợ Địa điểm – Cơ sở', cta: 'Đề xuất địa điểm / cơ sở',
+    items: ['Địa điểm tập hát, tập diễn, tập múa', 'Không gian gia công đạo cụ', 'Nơi lưu trữ đạo cụ – phục trang', 'Địa điểm tổng duyệt và chạy vở (tại Trung tâm Mục Vụ)'] },
+  { icon: HandHeart, field: FIELDS[2], title: 'Đóng góp – tài trợ', cta: 'Trao đổi hạng mục tài trợ',
+    items: ['Trang phục (thuê, thiết kế, may, tài trợ vải / công may)', 'Cảnh trí, đạo cụ (thiết kế, thi công)', 'Vận chuyển', 'Suất ăn, nước uống cho diễn viên trong các buổi tập', 'Âm thanh, ánh sáng, màn hình LED'] },
+];
+
+const PILLARS = [
+  { tag: '2014 – 2027', title: 'Hơn 12 Năm Gắn Kết', desc: 'Một chặng đường âm thầm kiên trì, nơi các thế hệ người trẻ nâng đỡ nhau trong đức tin để phục vụ Giáo hội.' },
+  { tag: 'Biểu diễn phi lợi nhuận', title: 'Sự Kiện Không Bán Vé', desc: 'Toàn bộ diễn viên tham gia trên tinh thần tự nguyện. Các buổi diễn miễn phí, không bán vé và không có cát xê.' },
+  { tag: 'Sứ mạng', title: 'Loan Báo Tin Mừng', desc: 'Đưa Lời Chúa đến gần hơn với mọi người qua nghệ thuật ca kịch, nhóm hy vọng có thể lan tỏa tình yêu và đức tin đến mọi nơi.' },
 ];
 
 function useCountdown(target: Date) {
@@ -73,345 +87,432 @@ function useCountdown(target: Date) {
   return left;
 }
 
-function Eyebrow({ children, center = false }: { children: ReactNode; center?: boolean }) {
+const fadeUp = {
+  initial: { opacity: 0, y: 28 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-60px' },
+  transition: { duration: 0.6 },
+};
+
+function Eyebrow({ children, center = false, light = false }: { children: ReactNode; center?: boolean; light?: boolean }) {
+  const col = light ? C.gold : C.wine;
   return (
-    <div className={`flex items-center gap-3.5 mb-5 ${center ? 'justify-center' : ''}`}>
-      <span className="w-9 h-px bg-gold" />
-      <span className="text-gold uppercase tracking-[0.25em] text-xs font-bold">{children}</span>
-      {center && <span className="w-9 h-px bg-gold" />}
+    <div className={`flex items-center gap-3 mb-4 ${center ? 'justify-center' : ''}`}>
+      <span className="w-5 h-px" style={{ background: col }} />
+      <span className="uppercase tracking-[0.22em] text-[11px] sm:text-xs font-bold" style={{ color: col }}>{children}</span>
+      {center && <span className="w-5 h-px" style={{ background: col }} />}
     </div>
   );
 }
 
-const fadeUp = {
-  initial: { opacity: 0, y: 30 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6 },
-};
+const H2 = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
+  <h2 className={`serif font-bold text-[2rem] sm:text-4xl lg:text-5xl leading-[1.15] text-balance ${className}`} style={{ color: C.head }}>{children}</h2>
+);
+
+const inputCls = 'w-full rounded-full px-5 py-3 text-sm outline-none border transition-colors focus:border-[#8b1a1a] placeholder:text-[#6f5a4a]/50';
+const inputStyle = { background: C.cream, borderColor: C.line, color: C.head };
 
 export default function DacLoPage() {
   const t = useCountdown(PREMIERE);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [form, setForm] = useState({ field: '', name: '', contact: '', org: '', note: '' });
+  const [sent, setSent] = useState(false);
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubmit = () => {
-    if (!email) return;
-    // TODO: kết nối EmailJS hoặc Google Sheets
-    setSubmitted(true);
+  const pickField = (f: string) => {
+    setForm(s => ({ ...s, field: f }));
+    document.getElementById('dang-ky-cong-tac')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const submitCollab = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.contact.trim()) return;
+    const body = [
+      `Lĩnh vực quan tâm: ${form.field || '(chưa chọn)'}`,
+      `Họ tên: ${form.name}`,
+      `Email / SĐT: ${form.contact}`,
+      `Đơn vị: ${form.org || '—'}`,
+      '', 'Lời nhắn:', form.note || '—',
+    ].join('\n');
+    window.location.href = `mailto:ckcgsg@gmail.com?subject=${encodeURIComponent(`[ĐẮC LỘ 2027] Đăng ký cộng tác – ${form.field || 'Chung'}`)}&body=${encodeURIComponent(body)}`;
+    setSent(true);
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{ background: C.cream, color: C.body }}>
 
       {/* 1 — HERO */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img src={IMG_COVER} alt="Chân dung Cha Đắc Lộ trên sân khấu"
-            className="w-full h-full object-cover object-left opacity-60" />
-          <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/60 to-dark lg:bg-gradient-to-l lg:from-dark lg:via-dark/80 lg:to-transparent" />
-        </div>
-
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-32 pb-20 flex lg:justify-end">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
-            className="w-full lg:max-w-xl text-center lg:text-left">
-            <span className="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-5 block">
-              Kỷ niệm 400 năm Cha Đắc Lộ đến Đàng Ngoài · 1627 – 2027
-            </span>
-            <h1 className="text-7xl md:text-9xl font-bold serif mb-6 leading-none">Đắc Lộ</h1>
-            <p className="text-white/70 text-lg md:text-xl font-light leading-relaxed mb-8">
-              Vở nhạc kịch của Nhóm Ca Kịch Công Giáo Sài Gòn — câu chuyện về sự dấn thân, hội nhập và trao truyền,
-              từ hành trình truyền giáo thế kỷ XVII đến hôm nay.
+      <section className="relative overflow-hidden" style={{ background: '#1a0a00' }}>
+        <img src={IMG_COVER} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover scale-110 blur-sm opacity-60" />
+        <div className="absolute inset-0" style={{ background: 'rgba(26,10,0,0.55)' }} />
+        <div className="relative z-10 max-w-[1240px] mx-auto px-5 sm:px-8 pt-28 pb-16 lg:pt-36 lg:pb-24 grid lg:grid-cols-[1fr_582px] gap-10 lg:gap-14 items-center">
+          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}
+            className="hidden lg:block">
+            <img src={IMG_COVER} alt="Chân dung Cha Đắc Lộ trên sân khấu" className="w-full aspect-[4/5] object-cover object-[30%_center] rounded-[20px] shadow-2xl" />
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
+            className="flex flex-col gap-6">
+            <p className="text-[11px] sm:text-[13px] font-bold uppercase tracking-[0.22em] leading-relaxed" style={{ color: C.gold }}>
+              Kỷ niệm 400 năm Cha Đắc Lộ đến Đàng Ngoài (1627 – 2027)
             </p>
-
-            <div className="flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-3 text-sm text-white/70 mb-10">
-              <span className="flex items-center gap-2"><Calendar size={16} className="text-gold" /> 04.06.2027</span>
-              <span className="flex items-center gap-2"><MapPin size={16} className="text-gold" /> Trung Tâm Mục Vụ TGP Sài Gòn</span>
-              <span className="flex items-center gap-2"><Clock size={16} className="text-gold" /> Khoảng 1 giờ 45 phút</span>
+            <div>
+              <p className="text-base sm:text-xl font-extrabold uppercase tracking-wide mb-1" style={{ color: C.cream }}>Dự án vở ca kịch</p>
+              <h1 className="serif font-bold leading-none text-[5rem] sm:text-[6.5rem] lg:text-[7.75rem]" style={{ color: C.cream }}>Đắc Lộ</h1>
             </div>
-
-            <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-md mx-auto lg:mx-0 mb-10">
-              {[['Ngày', t.days], ['Giờ', t.hours], ['Phút', t.minutes], ['Giây', t.seconds]].map(([label, value]) => (
-                <div key={label} className="bg-white/5 border border-white/10 rounded-2xl py-3 text-center backdrop-blur-sm">
-                  <div className="text-2xl sm:text-4xl font-bold serif text-gold">{String(value).padStart(2, '0')}</div>
-                  <div className="text-[10px] uppercase tracking-widest text-white/40 font-bold">{label}</div>
+            <p className="text-base sm:text-lg lg:text-[21px] leading-relaxed" style={{ color: C.card }}>
+              Hành trình của một hạt giống đức tin được gieo âm thầm từ thế kỷ XVII, nay sẽ bừng sáng trên sân khấu ca kịch với
+              130+ diễn viên. Một câu chuyện về sự dấn thân tạo nên di sản trường tồn cho Giáo Hội và văn hóa dân tộc.
+            </p>
+            <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px]" style={{ color: C.card }}>
+              <span className="flex items-center gap-2"><Calendar size={16} style={{ color: C.gold }} /> 04.06.2027</span>
+              <span className="flex items-center gap-2"><MapPin size={16} style={{ color: C.gold }} /> Trung Tâm Mục Vụ TGP Sài Gòn</span>
+              <span className="flex items-center gap-2"><Clock size={16} style={{ color: C.gold }} /> Thời lượng 1 giờ 45 phút</span>
+            </div>
+            <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-[444px]">
+              {([['Ngày', t.days], ['Giờ', t.hours], ['Phút', t.minutes], ['Giây', t.seconds]] as const).map(([label, value]) => (
+                <div key={label} className="rounded-2xl border h-[72px] sm:h-20 flex flex-col items-center justify-center"
+                  style={{ background: 'rgba(42,16,8,0.6)', borderColor: C.gold }}>
+                  <div className="serif text-[1.7rem] sm:text-4xl font-bold leading-none" style={{ color: C.cream }}>{String(value).padStart(2, '0')}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest mt-1" style={{ color: C.gold }}>{label}</div>
                 </div>
               ))}
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-              <a href="#cong-tac" className="bg-gold text-black px-8 py-4 rounded-full font-bold hover:bg-white transition-all text-center">
-                ĐỒNG HÀNH CÙNG DỰ ÁN
-              </a>
-              <a href="#nhan-tin" className="border border-white/25 px-8 py-4 rounded-full font-bold hover:border-gold hover:text-gold transition-all text-center">
-                NHẬN THÔNG BÁO
-              </a>
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <a href="#cong-tac" className="inline-flex items-center justify-center h-[58px] px-9 rounded-full font-bold text-sm tracking-wide transition-all hover:brightness-110"
+                style={{ background: C.wine, color: C.cream }}>ĐỒNG HÀNH CÙNG DỰ ÁN</a>
+              <a href="#cha-dac-lo" className="inline-flex items-center justify-center h-[58px] px-9 rounded-full font-bold text-sm tracking-wide border-[1.5px] transition-all hover:bg-white/10"
+                style={{ borderColor: C.cream, color: C.cream }}>KHÁM PHÁ VỞ KỊCH</a>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* 2 — CỘT MỐC 400 NĂM */}
-      <section id="cot-moc" className="py-20 md:py-32">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      {/* 2 — SƠ NÉT VỀ CHA ĐẮC LỘ */}
+      <section id="cha-dac-lo" className="scroll-mt-20 px-5 sm:px-8 lg:px-[100px] pt-14 pb-14 lg:pt-11 lg:pb-14">
+        <div className="max-w-[1240px] mx-auto">
+          <motion.p {...fadeUp} className="italic text-[13px] tracking-[0.2em] mb-6" style={{ color: C.wine }}>
+            Người gieo giống ra đi gieo giống... (Mt 13,3b)
+          </motion.p>
+          <div className="grid lg:grid-cols-[489px_1fr] gap-12 lg:gap-16">
+            <motion.div {...fadeUp}>
+              <H2 className="mb-7">Alexandre de Rhodes</H2>
+              <div className="flex flex-col sm:flex-row gap-6 sm:items-start mb-7">
+                <img src={IMG_PORTRAIT} alt="Chân dung Cha Alexandre de Rhodes" loading="lazy"
+                  className="w-40 h-[204px] object-cover rounded-2xl shrink-0 grayscale" />
+                <dl className="space-y-3">
+                  {[['Tên Việt Nam', 'Cha Đắc Lộ'], ['Dòng tu', 'Dòng Tên (Society of Jesus)'], ['Quê quán', 'Avignon, miền Nam nước Pháp'], ['Năm sinh – mất', '1593 – 1660']].map(([k, v]) => (
+                    <div key={k}>
+                      <dt className="text-sm font-bold uppercase tracking-[0.08em]" style={{ color: C.head }}>{k}</dt>
+                      <dd className="text-base sm:text-lg" style={{ color: C.body }}>{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+              <p className="text-lg sm:text-xl leading-relaxed">
+                Nhân vật lịch sử then chốt trong quá trình hình thành chữ Quốc ngữ và đặt nền móng cho công cuộc truyền giáo tại Việt Nam.
+              </p>
+            </motion.div>
+
+            <ol className="relative self-center">
+              <span className="absolute left-[7px] top-3 bottom-3 w-px" style={{ background: C.line }} />
+              {TIMELINE.map((e, i) => (
+                <motion.li key={e.year} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.06 }}
+                  className="relative pl-10 pb-6 last:pb-0">
+                  <span className="absolute left-0 top-2.5 w-[15px] h-[15px] rounded-full border-[3px]" style={{ background: C.wine, borderColor: C.cream, boxShadow: `0 0 0 1px ${C.wine}` }} />
+                  <div className="grid sm:grid-cols-[170px_1fr] gap-x-6 gap-y-1 items-baseline">
+                    <div className="serif font-bold text-2xl lg:text-[30px] leading-tight lining-nums" style={{ color: C.wine }}>{e.year}</div>
+                    <p className="text-base lg:text-lg leading-relaxed">{e.text}</p>
+                  </div>
+                </motion.li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      {/* 3 — CỘT MỐC 400 NĂM: HẠT GIỐNG */}
+      <section id="cot-moc" className="px-5 sm:px-8 lg:px-[100px] py-14 lg:py-[78px]">
+        <div className="max-w-[1240px] mx-auto grid lg:grid-cols-[1fr_593px] gap-10 lg:gap-16 items-center">
           <motion.div {...fadeUp}>
-            <Eyebrow>Cột mốc 400 năm</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold serif leading-tight mb-6 text-balance">
-              Một hạt giống được gieo xuống, bốn thế kỷ sau vẫn sinh hoa kết trái
-            </h2>
-            <div className="space-y-5 text-white/60 text-lg font-light leading-relaxed">
-              <p>
-                Kỷ niệm 400 năm Cha Đắc Lộ đặt chân đến Đàng Ngoài không chỉ là dịp nhìn lại một biến cố lịch sử, nhưng còn là
-                cơ hội suy tư về một di sản vẫn đang tiếp tục sinh hoa trái trong đời sống đức tin và văn hóa Việt Nam hôm nay.
-              </p>
-              <p>
-                Vở diễn được thực hiện như một phần của chương trình kỷ niệm chung, với lời nhắn nhủ: những hạt giống được gieo
-                trong âm thầm và thử thách có thể tạo nên những chuyển biến vượt xa một đời người.
-              </p>
-            </div>
+            <H2 className="mb-6">Một hạt giống đã được gieo xuống...</H2>
+            <p className="text-lg sm:text-xl lg:text-[25px] leading-relaxed">
+              Năm 1627, chiếc thuyền mang Cha Đắc Lộ cùng các nhà truyền giáo Dòng Tên cập bến Đàng Ngoài, gieo hạt giống đức tin
+              cùng mầm sống của chữ Quốc ngữ vào lòng đất Việt.
+            </p>
           </motion.div>
-          <motion.div {...fadeUp} className="relative">
-            <div className="rounded-3xl overflow-hidden border border-white/10">
-              <img src={IMG_ENGRAVING} alt="Tranh khắc về hoạt động truyền giáo thế kỷ XVII" className="w-full h-auto grayscale" loading="lazy" />
-            </div>
-            <blockquote className="lg:absolute lg:-bottom-10 lg:-left-10 mt-6 lg:mt-0 bg-gold text-black p-7 rounded-2xl max-w-sm shadow-2xl">
-              <p className="serif italic text-xl leading-snug mb-3">
-                “Nếu hạt lúa gieo vào lòng đất mà không chết đi, nó vẫn trơ trọi một mình; nhưng nếu chết đi, nó mới sinh được nhiều hạt khác.”
-              </p>
-              <cite className="not-italic text-xs font-bold uppercase tracking-[0.15em]">Ga 12,24</cite>
-            </blockquote>
+          <motion.div {...fadeUp} className="relative rounded-[20px] overflow-hidden aspect-[593/384]">
+            <img src={IMG_SEED} alt="Cảnh sân khấu tái hiện thế kỷ XVII" loading="lazy" className="w-full h-full object-cover" />
+            <div className="absolute inset-0" style={{ background: 'rgba(194,91,74,0.18)' }} />
+            <div className="absolute inset-0" style={{ background: `linear-gradient(212.9deg, ${C.wine}cc 0%, transparent 47.5%)` }} />
           </motion.div>
         </div>
       </section>
 
-      {/* 3 — Ý TƯỞNG & THÔNG ĐIỆP */}
-      <section id="thong-diep" className="py-20 md:py-32 bg-card/50 border-y border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div {...fadeUp} className="max-w-3xl mx-auto text-center mb-14">
-            <Eyebrow center>Ý tưởng chủ đạo</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold serif leading-tight mb-6 text-balance">Bốn thông điệp của vở diễn</h2>
-            <p className="text-white/60 text-lg font-light leading-relaxed">
-              Không chỉ khắc họa chân dung một nhà truyền giáo, vở diễn làm nổi bật những biến cố, thành quả và ảnh hưởng lâu dài
-              mà Cha Đắc Lộ cùng các cha Dòng Tên đã để lại cho Giáo Hội và xã hội Việt Nam.
+      {/* 4 — BỐN THÔNG ĐIỆP */}
+      <section id="thong-diep" className="px-5 sm:px-8 lg:px-[100px] py-12 lg:py-12">
+        <div className="max-w-[1240px] mx-auto">
+          <motion.div {...fadeUp} className="mb-10 max-w-4xl">
+            <H2 className="mb-5">...bốn thế kỷ sau vẫn sinh hoa kết trái</H2>
+            <p className="text-lg sm:text-xl lg:text-[25px] leading-relaxed">
+              Rơi vào “đất tốt” qua bao thế hệ tín hữu Việt Nam, hạt giống ấy nay được tiếp nối trên sân khấu nghệ thuật với các thông điệp:
             </p>
           </motion.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {MESSAGES.map((m, i) => (
               <motion.div key={m.title} {...fadeUp} transition={{ duration: 0.6, delay: i * 0.08 }}
-                className="bg-white/5 border border-white/10 rounded-2xl p-7">
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><m.icon size={24} /></div>
-                  <span className="serif text-4xl text-white/15 font-bold">0{i + 1}</span>
+                className="rounded-[18px] border p-7 flex flex-col gap-4 lg:min-h-[361px] hover:-translate-y-1 transition-transform"
+                style={{ background: C.card, borderColor: C.line }}>
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: C.icon, color: C.wine }}><m.icon size={24} /></div>
+                  <span className="serif text-4xl font-bold" style={{ color: C.head }}>0{i + 1}</span>
                 </div>
-                <h3 className="serif text-xl font-bold mb-3 text-balance">{m.title}</h3>
-                <p className="text-white/55 text-sm leading-relaxed">{m.desc}</p>
+                <h3 className="serif text-[22px] font-bold leading-snug" style={{ color: C.head }}>{m.top}<br />{m.title}</h3>
+                <p className="text-base lg:text-lg leading-relaxed">{m.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4 — CHA ĐẮC LỘ */}
-      <section id="cha-dac-lo" className="py-20 md:py-32">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-20">
-          <motion.div {...fadeUp}>
-            <Eyebrow>Sơ nét về Cha Đắc Lộ</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold serif leading-tight mb-8">Alexandre de Rhodes</h2>
-            <div className="flex gap-6 items-start mb-8">
-              <img src={IMG_PORTRAIT} alt="Chân dung Cha Alexandre de Rhodes" loading="lazy"
-                className="w-32 sm:w-40 rounded-2xl border border-white/10 shrink-0" />
-              <dl className="text-sm space-y-3">
-                {[['Tên Việt Nam', 'Cha Đắc Lộ'], ['Dòng tu', 'Dòng Tên (Society of Jesus)'], ['Quê quán', 'Avignon, miền Nam nước Pháp'], ['Năm sinh – mất', '1593 – 1660']].map(([k, v]) => (
-                  <div key={k}>
-                    <dt className="text-white/40 uppercase tracking-widest text-[10px] font-bold">{k}</dt>
-                    <dd className="text-white/85">{v}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-            <p className="text-white/60 font-light leading-relaxed">
-              Nhân vật then chốt trong giai đoạn hình thành và phát triển chữ Quốc ngữ — hệ thống chữ viết tiếng Việt dùng ký tự
-              Latinh. Ngài truyền giảng Tin Mừng khắp các vùng từ miền Trung ra Bắc và có được sự tin yêu của nhiều người Việt lúc bấy giờ.
-            </p>
-          </motion.div>
-
-          <DrawnTimeline className="self-center">
-            {TIMELINE.map(e => <TimelineItem key={e.year} year={e.year} text={e.text} />)}
-          </DrawnTimeline>
-        </div>
-      </section>
-
-      {/* 5 — KẾ HOẠCH CÔNG DIỄN */}
-      <section id="cong-dien" className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={IMG_TTMV} alt="" className="w-full h-full object-cover opacity-25" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-b from-dark via-dark/85 to-dark" />
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-6">
-          <motion.div {...fadeUp} className="text-center max-w-2xl mx-auto mb-14">
-            <Eyebrow center>Kế hoạch công diễn</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold serif leading-tight text-balance">Hướng tới hơn 10.000 người tham dự</h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-14">
-            {[
-              { icon: Calendar, k: 'Thời gian', v: 'Ngày 04/06/2027', sub: 'Kỷ niệm 400 năm Cha Đắc Lộ đến Đàng Ngoài' },
-              { icon: MapPin, k: 'Địa điểm (dự kiến)', v: 'Trung Tâm Mục Vụ – TGP Sài Gòn', sub: '6bis Tôn Đức Thắng, Bến Nghé, Quận 1, TP.HCM' },
-              { icon: Clock, k: 'Thể loại · Thời lượng', v: 'Nhạc kịch · khoảng 1 giờ 45 phút', sub: 'Sân khấu quy mô lớn, có phát sóng trực tuyến' },
-              { icon: User, k: 'Đạo diễn', v: 'Jean Kiệt', sub: 'Thực hiện: Nhóm Ca Kịch Công Giáo Sài Gòn' },
-              { icon: Church, k: 'Ban tổ chức', v: 'Dòng Tên Việt Nam', sub: 'Một phần của chương trình kỷ niệm 400 năm' },
-              { icon: Users, k: 'Dành cho', v: 'Mọi người', sub: 'Linh mục, tu sĩ, chủng sinh · giới trẻ, sinh viên Công giáo · người yêu lịch sử, văn hóa và chữ Quốc Ngữ' },
-            ].map(c => (
-              <motion.div key={c.k} {...fadeUp} className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-2xl p-7 flex gap-5">
-                <div className="w-11 h-11 bg-gold/10 rounded-xl flex items-center justify-center text-gold shrink-0"><c.icon size={22} /></div>
-                <div>
-                  <div className="text-white/40 uppercase tracking-widest text-[10px] font-bold mb-1">{c.k}</div>
-                  <div className="text-lg font-bold serif mb-1">{c.v}</div>
-                  <div className="text-white/50 text-sm leading-relaxed">{c.sub}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center border-t border-white/10 pt-12">
-            {STATS.map(s => (
-              <div key={s.label}>
-                <div className="text-2xl sm:text-3xl lg:text-[2rem] xl:text-[2.6rem] font-bold serif text-gold mb-2 whitespace-nowrap"><CountUp value={s.value} /></div>
-                <div className="text-xs uppercase tracking-widest text-white/45 font-bold">{s.label}</div>
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-12">
-            <Link to="/dac-lo/so-do" className="inline-flex items-center gap-2 bg-gold text-black px-8 py-4 rounded-full font-bold hover:bg-white transition-all">
-              <Box size={18} /> XEM SƠ ĐỒ SÂN KHẤU 3D
-            </Link>
-          </div>
-          <p className="text-center text-white/35 text-xs mt-8">Thông tin dự kiến, có thể thay đổi.</p>
-        </div>
+      {/* 5 — CÂU CHUYỂN (Ga 12,24) */}
+      <section className="mt-12 px-5 sm:px-8 py-16 lg:py-0 lg:h-[313px] flex items-center justify-center" style={{ background: C.deep }}>
+        <motion.blockquote {...fadeUp} className="max-w-[980px] text-center">
+          <p className="serif italic text-xl sm:text-2xl lg:text-[30px] leading-relaxed" style={{ color: C.cream }}>
+            “Nếu hạt lúa gieo vào lòng đất mà không chết đi, nó vẫn trơ trọi một mình; nhưng nếu chết đi, nó mới sinh được nhiều hạt khác”
+          </p>
+          <cite className="block not-italic mt-4 text-sm font-bold tracking-[0.2em]" style={{ color: C.gold }}>(Ga 12,24)</cite>
+        </motion.blockquote>
       </section>
 
       {/* 6 — QUY MÔ DÀN DỰNG */}
-      <section id="dan-dung" className="py-20 md:py-32">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <motion.div {...fadeUp} className="space-y-4 order-2 lg:order-1">
-            <div className="rounded-3xl overflow-hidden border border-white/10 aspect-[4/3]">
-              <img src={IMG_CURTAIN} alt="Các diễn viên CKCGSG chào khán giả" className="w-full h-full object-cover" loading="lazy" />
-            </div>
-            <div className="rounded-3xl overflow-hidden border border-white/10 aspect-[16/7]">
-              <img src={IMG_AUDIENCE} alt="Khán giả tại một đêm diễn" className="w-full h-full object-cover" loading="lazy" />
-            </div>
-          </motion.div>
-          <motion.div {...fadeUp} className="order-1 lg:order-2">
-            <Eyebrow>Quy mô dàn dựng</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold serif leading-tight mb-10 text-balance">Sân khấu tái hiện thế kỷ XVII</h2>
-            <motion.ol {...staggerParent} className="space-y-7">
-              {PRODUCTION.map((p, i) => (
-                <motion.li key={p.title} {...staggerChild} className="flex gap-5">
-                  <div className="w-11 h-11 bg-gold/10 rounded-xl flex items-center justify-center text-gold shrink-0"><p.icon size={22} /></div>
-                  <div>
-                    <h3 className="font-bold serif text-xl mb-1"><span className="text-gold/60 mr-2">0{i + 1}.</span>{p.title}</h3>
-                    <p className="text-white/55 leading-relaxed">{p.desc}</p>
-                  </div>
-                </motion.li>
+      <section id="dan-dung" style={{ background: '#1a0f0a' }}>
+        <div className="relative overflow-hidden">
+          <img src={IMG_STAGE} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1a0f0a] via-[#1a0f0a]/75 to-[#1a0f0a]/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f0a] via-transparent to-[#1a0f0a]/60" />
+          <div className="relative max-w-[1240px] mx-auto px-5 sm:px-8 pt-20 pb-14 lg:pt-28 lg:pb-16">
+            <motion.div {...fadeUp} className="max-w-[560px]">
+              <Eyebrow light>Từ lịch sử đến sân khấu nghệ thuật</Eyebrow>
+              <h2 className="serif font-bold text-[2rem] sm:text-4xl lg:text-5xl leading-[1.15] mb-6" style={{ color: C.cream }}>
+                Tất cả sẽ được tái hiện trong vở ca kịch “Đắc Lộ”
+              </h2>
+              <p className="text-base sm:text-lg leading-relaxed" style={{ color: C.card }}>
+                Di sản 400 năm và ngọn lửa đức tin được sống lại trọn vẹn qua một công trình nghệ thuật sân khấu quy mô.
+                Vở ca kịch quy tụ nguồn nhân lực lớn, dàn dựng công phu, mở ra một không gian thiêng liêng và giàu chiều kích mục vụ.
+              </p>
+            </motion.div>
+            <div className="mt-14 lg:mt-24 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-8">
+              {STATS.map((s, i) => (
+                <motion.div key={s.label} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.07 }}>
+                  <div className="serif font-bold text-[2.2rem] sm:text-5xl leading-none mb-3 whitespace-nowrap" style={{ color: C.gold }}><CountUp value={s.value} /></div>
+                  <div className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.12em] mb-1.5" style={{ color: C.cream }}>{s.label}</div>
+                  <div className="text-xs leading-relaxed text-white/45">{s.sub}</div>
+                </motion.div>
               ))}
-            </motion.ol>
+            </div>
+          </div>
+        </div>
+
+        {/* mosaic ảnh */}
+        <div className="relative grid grid-cols-2 lg:grid-cols-[780fr_330fr_330fr] gap-1 lg:h-[520px]">
+          <figure className="relative col-span-2 lg:col-span-1 lg:row-span-2 aspect-[16/10] lg:aspect-auto overflow-hidden">
+            <img src={IMG_M1} alt="Cảnh diễn của nhóm" loading="lazy" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1a0f0a]/80 via-transparent to-[#1a0f0a]/50" />
+            <figcaption className="absolute left-6 bottom-6 flex items-center gap-3 text-[11px] tracking-[0.15em] text-white/60">
+              <span className="w-6 h-px" style={{ background: C.gold }} /> Hình ảnh tư liệu từ các vở diễn của nhóm
+            </figcaption>
+          </figure>
+          {[IMG_M2, IMG_M3, IMG_M4, IMG_M5].map((src, i) => (
+            <div key={i} className="relative aspect-[4/3] lg:aspect-auto overflow-hidden">
+              <img src={src} alt="" loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+            </div>
+          ))}
+        </div>
+
+        {/* dải Jericho + CTA sơ đồ 3D */}
+        <div className="relative overflow-hidden">
+          <img src={IMG_SEED} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-45" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1a0f0a] via-[#1a0f0a]/40 to-[#1a0f0a]/70" />
+          <motion.div {...fadeUp} className="relative max-w-[820px] mx-auto px-5 py-16 lg:py-0 lg:h-[340px] flex flex-col items-center justify-center text-center gap-5">
+            <div className="flex items-center gap-3" style={{ color: C.gold }}><span className="w-14 h-px bg-current opacity-60" /><Star size={12} /><span className="w-14 h-px bg-current opacity-60" /></div>
+            <p className="serif font-bold text-xl sm:text-2xl lg:text-[28px] leading-snug" style={{ color: C.cream }}>
+              Cho vinh danh Thiên Chúa hơn – Để di sản tiền nhân tiếp tục sinh hoa kết trái!
+            </p>
+            <div className="flex items-center gap-3" style={{ color: C.gold }}><span className="w-14 h-px bg-current opacity-60" /><Star size={12} /><span className="w-14 h-px bg-current opacity-60" /></div>
+            <Link to="/dac-lo/so-do" className="mt-2 inline-flex items-center gap-2 px-7 py-3.5 rounded-full border text-xs sm:text-sm font-bold tracking-[0.12em] transition-all hover:bg-white/10"
+              style={{ borderColor: C.gold, color: C.cream }}>
+              <MapIcon size={16} /> XEM SƠ ĐỒ SÂN KHẤU 3D
+            </Link>
           </motion.div>
         </div>
       </section>
 
-      {/* 7 — LỜI MỜI CỘNG TÁC */}
-      <section id="cong-tac" className="py-20 md:py-32 bg-card border-y border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div {...fadeUp} className="max-w-3xl mb-14">
+      {/* 7 — LỜI MỜI GỌI CỘNG TÁC */}
+      <section id="cong-tac" className="scroll-mt-16 px-5 sm:px-8 lg:px-[100px] pt-16 lg:pt-[72px] pb-20 lg:pb-[116px]">
+        <div className="max-w-[1240px] mx-auto flex flex-col gap-10 lg:gap-12">
+          <motion.div {...fadeUp}>
             <Eyebrow>Lời mời gọi cộng tác</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold serif leading-tight mb-6 text-balance">Cùng nhau thực hiện một chương trình xứng đáng với cột mốc 400 năm</h2>
-            <p className="text-white/60 text-lg font-light leading-relaxed">
-              “Đắc Lộ” không chỉ là dự án riêng của nhóm, mà là dự án chung của Dòng Tên, đòi hỏi sự đồng hành, cộng tác và nâng đỡ
-              ở nhiều lĩnh vực. Dự án đang trong giai đoạn chuẩn bị và xây dựng kế hoạch tổng thể — rất mong được quý Cha, quý Tu sĩ,
-              quý Cộng đoàn và các đơn vị cùng trao đổi, góp ý và đồng hành.
+            <H2 className="mb-6">Cùng tiếp nối câu chuyện đến thế hệ mai sau</H2>
+            <p className="text-base sm:text-lg leading-relaxed max-w-[1000px]">
+              Nằm trong chuỗi sự kiện kỷ niệm 400 năm, vở ca kịch ‘Đắc Lộ’ không chỉ là dự án riêng của nhóm mà là một dự án chung
+              của Dòng Tên — công trình mang chiều kích lịch sử, mục vụ và văn hóa. Rất mong nhận được sự chung tay góp sức của
+              quý Cha, quý Tu sĩ, quý Cộng đoàn và các đơn vị đồng hành:
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-5 mb-12">
-            {COLLAB.map(c => (
-              <motion.div key={c.title} {...fadeUp} className="bg-white/5 border border-white/10 rounded-3xl p-8">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><c.icon size={24} /></div>
-                  <h3 className="text-2xl font-bold serif">{c.title}</h3>
+          <div className="grid md:grid-cols-3 gap-5 items-start">
+            {COLLAB.map((c, i) => (
+              <motion.div key={c.title} {...fadeUp} transition={{ duration: 0.6, delay: i * 0.08 }}
+                className="rounded-[18px] border p-6 lg:p-7 flex flex-col gap-5" style={{ background: C.card, borderColor: C.line }}>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: C.icon, color: C.wine }}><c.icon size={20} /></div>
+                  <h3 className="serif text-xl lg:text-[22px] font-bold" style={{ color: C.head }}>{c.title}</h3>
                 </div>
-                <motion.ul {...staggerParent} className="space-y-3">
+                <ul className="space-y-2.5">
                   {c.items.map(it => (
-                    <motion.li key={it} {...staggerChild} className="flex gap-3 text-white/65 leading-relaxed text-[15px]">
-                      <span className="text-gold mt-1.5 w-1.5 h-1.5 rounded-full bg-gold shrink-0" />{it}
-                    </motion.li>
+                    <li key={it} className="flex gap-3 text-[15px] leading-relaxed">
+                      <span className="mt-[9px] w-1.5 h-1.5 rounded-full shrink-0" style={{ background: C.wine }} />{it}
+                    </li>
                   ))}
-                </motion.ul>
+                </ul>
+                <button type="button" onClick={() => pickField(c.field)}
+                  className="mt-1 h-12 px-5 rounded-full font-bold text-sm transition-all hover:brightness-110"
+                  style={{ background: C.wine, color: C.cream }}>{c.cta}</button>
               </motion.div>
             ))}
           </div>
 
-          <motion.div {...fadeUp} className="mb-6 text-center">
-            <Link to="/dac-lo/so-do" className="inline-flex items-center gap-2 text-gold font-bold text-sm uppercase tracking-[0.08em] border-b border-gold pb-1 hover:text-white hover:border-white transition-all">
-              Xem vị trí từng hạng mục trên sơ đồ 3D →
-            </Link>
+          {/* form đăng ký */}
+          <motion.div {...fadeUp} id="dang-ky-cong-tac" className="scroll-mt-24 rounded-[18px] border p-6 sm:p-8" style={{ background: C.card, borderColor: C.line }}>
+            <h3 className="serif text-2xl lg:text-[28px] font-bold mb-6" style={{ color: C.head }}>Đăng ký cộng tác</h3>
+            {sent ? (
+              <div className="rounded-2xl p-6 border" style={{ background: C.cream, borderColor: C.line }}>
+                <div className="font-bold mb-1" style={{ color: C.wine }}>Cảm ơn anh chị đã đồng hành!</div>
+                <p className="text-sm">Ứng dụng email của anh chị đã được mở sẵn nội dung — chỉ cần bấm Gửi. Nếu chưa mở được,
+                  xin gửi trực tiếp về <a href="mailto:ckcgsg@gmail.com" className="underline">ckcgsg@gmail.com</a> hoặc gọi 0908 033 357.</p>
+                <button onClick={() => setSent(false)} className="mt-4 text-sm font-bold underline" style={{ color: C.wine }}>Sửa lại thông tin</button>
+              </div>
+            ) : (
+              <form ref={formRef} onSubmit={submitCollab} className="grid sm:grid-cols-2 gap-x-5 gap-y-4">
+                <label className="block">
+                  <span className="block text-xs font-bold mb-1.5" style={{ color: C.head }}>Lĩnh vực quan tâm</span>
+                  <select value={form.field} onChange={e => setForm(s => ({ ...s, field: e.target.value }))} className={`${inputCls} appearance-none`} style={inputStyle}>
+                    <option value="">Chuyên môn / Cơ sở / Tài trợ</option>
+                    {FIELDS.map(f => <option key={f} value={f}>{f}</option>)}
+                  </select>
+                </label>
+                <label className="block">
+                  <span className="block text-xs font-bold mb-1.5" style={{ color: C.head }}>Họ tên *</span>
+                  <input required value={form.name} onChange={e => setForm(s => ({ ...s, name: e.target.value }))} placeholder="Nhập họ tên" className={inputCls} style={inputStyle} />
+                </label>
+                <label className="block">
+                  <span className="block text-xs font-bold mb-1.5" style={{ color: C.head }}>Email / SĐT *</span>
+                  <input required value={form.contact} onChange={e => setForm(s => ({ ...s, contact: e.target.value }))} placeholder="Nhập liên hệ" className={inputCls} style={inputStyle} />
+                </label>
+                <label className="block">
+                  <span className="block text-xs font-bold mb-1.5" style={{ color: C.head }}>Đơn vị (nếu có)</span>
+                  <input value={form.org} onChange={e => setForm(s => ({ ...s, org: e.target.value }))} placeholder="Nhập đơn vị" className={inputCls} style={inputStyle} />
+                </label>
+                <label className="block sm:col-span-2">
+                  <span className="block text-xs font-bold mb-1.5" style={{ color: C.head }}>Lời nhắn / lĩnh vực quan tâm</span>
+                  <textarea rows={3} value={form.note} onChange={e => setForm(s => ({ ...s, note: e.target.value }))} placeholder="Mô tả chi tiết về hạng mục có thể hỗ trợ"
+                    className={`${inputCls} rounded-2xl resize-y`} style={inputStyle} />
+                </label>
+                <div className="sm:col-span-2">
+                  <button type="submit" className="inline-flex items-center gap-2 h-11 px-7 rounded-full font-bold text-sm transition-all hover:brightness-110"
+                    style={{ background: C.wine, color: C.cream }}><Send size={15} /> Gửi thông tin</button>
+                </div>
+              </form>
+            )}
           </motion.div>
 
-          <motion.div {...fadeUp} className="bg-gold text-black rounded-3xl p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
+          {/* liên hệ */}
+          <motion.div {...fadeUp} className="rounded-[18px] p-7 sm:p-9 flex flex-col md:flex-row md:items-center justify-between gap-6" style={{ background: C.wine, color: C.cream }}>
             <div>
-              <div className="uppercase tracking-[0.2em] text-sm font-bold mb-1.5">Liên hệ cộng tác</div>
-              <div className="text-base text-black/75 mb-4"><span className="font-semibold text-black">Teresa Nguyễn Lan Nghi</span> · Đại diện phụ trách dự án</div>
-              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-1 font-bold text-lg md:text-xl">
+              <div className="text-xs font-bold uppercase tracking-[0.2em] mb-2">Liên hệ cộng tác</div>
+              <div className="text-sm mb-3" style={{ color: C.card }}><span className="font-bold" style={{ color: C.cream }}>Teresa Nguyễn Lan Nghi</span> · Đại diện phụ trách dự án</div>
+              <div className="flex flex-col sm:flex-row gap-x-7 gap-y-1 font-bold text-lg lg:text-xl">
                 <a href="tel:0908033357" className="lining-nums tabular-nums hover:underline underline-offset-4">0908 033 357</a>
                 <a href="mailto:ckcgsg@gmail.com" className="break-all hover:underline underline-offset-4">ckcgsg@gmail.com</a>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-              <a href="tel:0908033357"
-                className="inline-flex items-center justify-center gap-3 border-2 border-black px-7 py-3.5 rounded-full font-bold hover:bg-black hover:text-white transition-all">
-                <Phone size={18} /> GỌI ĐIỆN
-              </a>
+              <a href="tel:0908033357" className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full border text-sm font-bold transition-all hover:bg-white/10"
+                style={{ borderColor: C.cream }}><Phone size={16} /> GỌI ĐIỆN</a>
               <a href={`mailto:ckcgsg@gmail.com?subject=${encodeURIComponent('[ĐẮC LỘ 2027] Cộng tác dự án')}`}
-                className="inline-flex items-center justify-center gap-3 bg-black text-white px-7 py-3.5 rounded-full font-bold hover:bg-dark/80 transition-all">
-                <Mail size={18} /> GỬI EMAIL
-              </a>
+                className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full text-sm font-bold transition-all hover:brightness-95"
+                style={{ background: C.cream, color: C.wine }}><Mail size={16} /> GỬI EMAIL</a>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* 8 — NHẬN THÔNG BÁO */}
-      <section id="nhan-tin" className="py-20 md:py-28">
-        <div className="max-w-2xl mx-auto px-6 text-center">
-          <Eyebrow center>Đừng bỏ lỡ</Eyebrow>
-          <h2 className="text-3xl md:text-4xl font-bold serif mb-4 text-balance">Nhận thông báo về vở diễn Đắc Lộ</h2>
-          <p className="text-white/50 mb-8">Lịch diễn chính thức, hành trình tập luyện và các thông tin mới nhất sẽ được gửi qua email.</p>
-          {!submitted ? (
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email của bạn..."
-                className="flex-1 bg-white/5 border border-white/10 rounded-full px-6 py-3 focus:border-gold outline-none transition-colors text-sm" />
-              <button onClick={handleSubmit}
-                className="bg-gold text-black px-8 py-3 rounded-full font-bold text-sm hover:bg-white transition-all whitespace-nowrap">
-                THÔNG BÁO TÔI
-              </button>
-            </div>
-          ) : (
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-              className="max-w-md mx-auto bg-gold/10 border border-gold/30 rounded-2xl p-6">
-              <div className="text-gold font-bold mb-1">Đã đăng ký thành công! 🎭</div>
-              <div className="text-white/50 text-sm">Chúng tôi sẽ thông báo ngay khi có tin mới về vở Đắc Lộ.</div>
+      {/* 8 — ĐƠN VỊ PHỐI HỢP & THỰC HIỆN */}
+      <section id="don-vi" className="py-16 lg:py-20 border-t" style={{ borderColor: C.line }}>
+        <motion.div {...fadeUp} className="text-center px-5 mb-10 lg:mb-14">
+          <Eyebrow center>Tổ chức & đồng hành</Eyebrow>
+          <H2>Đơn Vị Phối Hợp & Thực Hiện</H2>
+        </motion.div>
+
+        {[
+          { img: IMG_SEED, right: false, tag: 'Tổ chức & định hướng mục vụ', title: 'Dòng Tên Việt Nam',
+            text: 'Là dòng tu của Cha Đắc Lộ, Dòng Tên Việt Nam nâng đỡ tâm linh, định hướng lịch sử và mục vụ cho tác phẩm trong chuỗi sự kiện kỷ niệm 400 năm.' },
+          { img: IMG_STAGE, right: true, tag: 'Dàn dựng & thực hiện', title: 'Nhóm Ca Kịch Công Giáo Sài Gòn',
+            text: 'Khởi đầu năm 2014 bởi Đạo diễn Jean Kiệt, nhóm nay quy tụ hơn 120 thành viên nhiệt thành, yêu nghệ thuật bao gồm cả người Công Giáo và không Công Giáo.' },
+        ].map(b => (
+          <div key={b.title} className="relative overflow-hidden">
+            <img src={b.img} alt="" aria-hidden className={`absolute inset-y-0 ${b.right ? 'left-0' : 'right-0'} w-full lg:w-3/4 h-full object-cover opacity-60`} />
+            <div className="absolute inset-0" style={{ background: `linear-gradient(${b.right ? 270 : 90}deg, ${C.cream} 30%, ${C.cream}cc 55%, ${C.cream}55 100%)` }} />
+            <motion.div {...fadeUp} className={`relative max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-[100px] py-12 lg:py-16 flex ${b.right ? 'justify-end text-right' : ''}`}>
+              <div className="max-w-[520px]">
+                <span className="inline-block rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.15em] mb-4" style={{ background: C.wine, color: C.cream }}>{b.tag}</span>
+                <h3 className="serif font-bold text-3xl lg:text-[40px] leading-tight mb-4" style={{ color: C.head }}>{b.title}</h3>
+                <p className="text-base leading-relaxed">{b.text}</p>
+              </div>
             </motion.div>
-          )}
+          </div>
+        ))}
+
+        <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-[100px] mt-10 lg:mt-12">
+          <div className="grid md:grid-cols-3 border-y py-8" style={{ borderColor: C.line }}>
+            {PILLARS.map((p, i) => (
+              <motion.div key={p.title} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.08 }}
+                className={`py-5 md:py-0 md:px-7 ${i ? 'border-t md:border-t-0 md:border-l' : 'md:pl-0'}`} style={{ borderColor: C.line }}>
+                <div className="text-[11px] font-bold uppercase tracking-[0.15em] mb-2" style={{ color: '#b8862e' }}>{p.tag}</div>
+                <h4 className="serif text-2xl font-bold mb-2" style={{ color: C.head }}>{p.title}</h4>
+                <p className="text-sm leading-relaxed">{p.desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 9 — TUYỂN DIỄN VIÊN */}
-      <CastingSection id="casting-daclo" />
-
-      {/* Quay về */}
-      <section className="py-16 text-center">
-        <Link to="/" className="inline-flex items-center gap-2 text-white/40 hover:text-gold transition-colors text-sm uppercase tracking-widest font-bold">
-          <ArrowLeft size={16} /> Quay về trang chủ
-        </Link>
+      {/* 9 — NHẬN THÔNG BÁO */}
+      <section id="nhan-tin" className="py-16 lg:py-20 px-5">
+        <motion.div {...fadeUp} className="max-w-2xl mx-auto text-center">
+          <Eyebrow center>Đừng bỏ lỡ</Eyebrow>
+          <H2 className="mb-4">Nhận thông báo về vở ca kịch Đắc Lộ</H2>
+          <p className="mb-8">Lịch diễn chính thức, hành trình tập luyện và các thông tin mới nhất sẽ được gửi qua email.</p>
+          {!subscribed ? (
+            <form onSubmit={e => { e.preventDefault(); if (email) setSubscribed(true); }} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="Email của bạn..."
+                className={`${inputCls} flex-1`} style={{ ...inputStyle, background: 'transparent' }} />
+              <button type="submit" className="h-12 px-7 rounded-full font-bold text-sm whitespace-nowrap transition-all hover:brightness-110"
+                style={{ background: C.wine, color: C.cream }}>THÔNG BÁO TÔI</button>
+            </form>
+          ) : (
+            <div className="max-w-md mx-auto rounded-2xl p-6 border" style={{ background: C.card, borderColor: C.line }}>
+              <div className="font-bold mb-1" style={{ color: C.wine }}>Đã đăng ký thành công! 🎭</div>
+              <div className="text-sm">Chúng tôi sẽ thông báo ngay khi có tin mới về vở Đắc Lộ.</div>
+            </div>
+          )}
+        </motion.div>
+        <div className="text-center mt-14">
+          <Link to="/" className="inline-flex items-center gap-2 text-sm uppercase tracking-widest font-bold transition-colors hover:text-[#8b1a1a]" style={{ color: C.head }}>
+            <ArrowLeft size={16} /> Quay về trang chủ
+          </Link>
+        </div>
       </section>
     </div>
   );
