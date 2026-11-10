@@ -6,9 +6,10 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CountUp } from '../components/Motion';
-import IMG_COVER from '../assets/photos/daclo-cover.jpg';
 import IMG_PORTRAIT from '../assets/photos/daclo-portrait-2.jpg';
 import IMG_SEED from '../assets/photos/stage-wide.jpg';
+import IMG_HERO_BG from '../assets/photos/daclo-hero-bg.jpg';
+import IMG_BOAT from '../assets/photos/hat-giong-thuyen.webp';
 import IMG_STAGE from '../assets/photos/jericho-stage.jpg';
 import IMG_M1 from '../assets/photos/jericho-3.jpg';
 import IMG_M2 from '../assets/photos/hero.jpg';
@@ -142,15 +143,14 @@ export default function DacLoPage() {
   return (
     <div className="min-h-screen" style={{ background: C.cream, color: C.body }}>
 
-      {/* 1 — HERO */}
+      {/* 1 — HERO: ảnh nền (chân dung trong khung + rèm đỏ) từ Figma, phủ rgba(26,10,0,0.55) */}
       <section className="relative overflow-hidden" style={{ background: '#1a0a00' }}>
-        <img src={IMG_COVER} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover scale-110 blur-sm opacity-60" />
-        <div className="absolute inset-0" style={{ background: 'rgba(26,10,0,0.55)' }} />
-        <div className="relative z-10 max-w-[1240px] mx-auto px-5 sm:px-8 pt-28 pb-16 lg:pt-36 lg:pb-24 grid lg:grid-cols-[1fr_582px] gap-10 lg:gap-14 items-center">
-          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}
-            className="hidden lg:block">
-            <img src={IMG_COVER} alt="Chân dung Cha Đắc Lộ trên sân khấu" className="w-full aspect-[4/5] object-cover object-[30%_center] rounded-[20px] shadow-2xl" />
-          </motion.div>
+        <img src={IMG_HERO_BG} alt="Chân dung Cha Đắc Lộ trong khung tranh trước rèm sân khấu"
+          className="absolute inset-0 w-full h-full object-cover object-[18%_center] lg:object-center" />
+        <div className="absolute inset-0 lg:hidden" style={{ background: 'rgba(26,10,0,0.72)' }} />
+        <div className="absolute inset-0 hidden lg:block" style={{ background: 'rgba(26,10,0,0.55)' }} />
+        <div className="relative z-10 max-w-[1240px] mx-auto px-5 sm:px-8 pt-28 pb-16 lg:pt-36 lg:pb-24 lg:min-h-[734px] grid lg:grid-cols-[1fr_582px] gap-10 lg:gap-14 items-center">
+          <div className="hidden lg:block" aria-hidden />
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
             className="flex flex-col gap-6">
             <p className="text-[11px] sm:text-[13px] font-bold uppercase tracking-[0.22em] leading-relaxed" style={{ color: C.gold }}>
@@ -242,7 +242,7 @@ export default function DacLoPage() {
             </p>
           </motion.div>
           <motion.div {...fadeUp} className="relative rounded-[20px] overflow-hidden aspect-[593/384]">
-            <img src={IMG_SEED} alt="Cảnh sân khấu tái hiện thế kỷ XVII" loading="lazy" className="w-full h-full object-cover" />
+            <img src={IMG_BOAT} alt="Chiếc thuyền mang các nhà truyền giáo cập bến Đàng Ngoài" loading="lazy" className="w-full h-full object-cover" />
             <div className="absolute inset-0" style={{ background: 'rgba(194,91,74,0.18)' }} />
             <div className="absolute inset-0" style={{ background: `linear-gradient(212.9deg, ${C.wine}cc 0%, transparent 47.5%)` }} />
           </motion.div>
@@ -276,12 +276,12 @@ export default function DacLoPage() {
       </section>
 
       {/* 5 — CÂU CHUYỂN (Ga 12,24) */}
-      <section className="mt-12 px-5 sm:px-8 py-16 lg:py-0 lg:h-[313px] flex items-center justify-center" style={{ background: C.deep }}>
+      <section className="mt-10 px-5 sm:px-8 py-10 lg:py-12 flex items-center justify-center" style={{ background: C.deep }}>
         <motion.blockquote {...fadeUp} className="max-w-[980px] text-center">
           <p className="serif italic text-xl sm:text-2xl lg:text-[30px] leading-relaxed" style={{ color: C.cream }}>
             “Nếu hạt lúa gieo vào lòng đất mà không chết đi, nó vẫn trơ trọi một mình; nhưng nếu chết đi, nó mới sinh được nhiều hạt khác”
           </p>
-          <cite className="block not-italic mt-4 text-sm font-bold tracking-[0.2em]" style={{ color: C.gold }}>(Ga 12,24)</cite>
+          <cite className="block not-italic mt-3 text-sm font-bold tracking-[0.2em]" style={{ color: C.gold }}>(Ga 12,24)</cite>
         </motion.blockquote>
       </section>
 
