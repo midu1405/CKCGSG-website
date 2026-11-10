@@ -157,8 +157,8 @@ export default function DacLoPage() {
               Kỷ niệm 400 năm Cha Đắc Lộ đến Đàng Ngoài (1627 – 2027)
             </p>
             <div>
-              <p className="text-base sm:text-xl font-extrabold uppercase tracking-wide mb-1" style={{ color: C.cream }}>Dự án vở ca kịch</p>
-              <h1 className="serif font-bold leading-none text-[5rem] sm:text-[6.5rem] lg:text-[7.75rem]" style={{ color: C.cream }}>Đắc Lộ</h1>
+              <p className="text-base sm:text-xl font-extrabold uppercase tracking-wide mb-2" style={{ color: C.cream }}>Dự án vở ca kịch</p>
+              <h1 className="serif font-bold leading-[1.25] text-[5rem] sm:text-[6.5rem] lg:text-[7.75rem]" style={{ color: C.cream }}>Đắc Lộ</h1>
             </div>
             <p className="text-base sm:text-lg lg:text-[21px] leading-relaxed" style={{ color: C.card }}>
               Hành trình của một hạt giống đức tin được gieo âm thầm từ thế kỷ XVII, nay sẽ bừng sáng trên sân khấu ca kịch với
