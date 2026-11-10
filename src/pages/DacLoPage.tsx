@@ -361,10 +361,10 @@ export default function DacLoPage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-5 items-start">
+          <div className="grid md:grid-cols-3 gap-5 items-stretch">
             {COLLAB.map((c, i) => (
               <motion.div key={c.title} {...fadeUp} transition={{ duration: 0.6, delay: i * 0.08 }}
-                className="rounded-[18px] border p-6 lg:p-7 flex flex-col gap-5" style={{ background: C.card, borderColor: C.line }}>
+                className="rounded-[18px] border p-6 lg:p-7 flex flex-col gap-5 h-full" style={{ background: C.card, borderColor: C.line }}>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: C.icon, color: C.wine }}><c.icon size={20} /></div>
                   <h3 className="serif text-xl lg:text-[22px] font-bold" style={{ color: C.head }}>{c.title}</h3>
@@ -377,7 +377,7 @@ export default function DacLoPage() {
                   ))}
                 </ul>
                 <button type="button" onClick={() => pickField(c.field)}
-                  className="mt-1 h-12 px-5 rounded-full font-bold text-sm transition-all hover:brightness-110"
+                  className="mt-auto h-12 px-5 rounded-full font-bold text-sm transition-all hover:brightness-110"
                   style={{ background: C.wine, color: C.cream }}>{c.cta}</button>
               </motion.div>
             ))}
