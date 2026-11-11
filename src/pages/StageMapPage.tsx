@@ -160,8 +160,8 @@ export default function StageMapPage() {
         {near && <DoorPrompt label={inChapel ? 'Ra ngoài' : 'Vào Nhà nguyện'} onGo={inChapel ? exitChapel : enterChapel} />}
         <ChatPanel lines={chat} onSend={sendChat} /><TouchControls touch={touch} firstPerson={fp} onView={toggleView} />
         {toast && <Toast text={toast} />}
-        {dialog === 'write' && <IntentionDialog defaultName={walkMe.name} error={prayer.error} onSubmit={prayer.submit} onClose={() => setDialog(null)} />}
-        {dialog === 'board' && <BoardDialog list={prayer.list} pending={prayer.pending} onClose={() => setDialog(null)} onWrite={() => { prayer.setError(''); setDialog('write'); }} />}
+        {dialog === 'write' && <IntentionDialog list={prayer.list} mine={prayer.mine} error={prayer.error} onPray={prayer.pray} onClose={() => setDialog(null)} />}
+        {dialog === 'board' && <BoardDialog list={prayer.list} mine={prayer.mine} onClose={() => setDialog(null)} onWrite={() => { prayer.setError(''); setDialog('write'); }} />}
       </>}
       {joining && <JoinDialog onClose={() => { setJoining(false); wantChapel.current = false; }} onJoin={(m, z) => {
         setJoining(false); setPanelOpen(false); setWalkMe(m);

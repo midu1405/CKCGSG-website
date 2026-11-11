@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CountUp } from '../components/Motion';
+import { getSupabase } from '../lib/supabase';
 import IMG_PORTRAIT from '../assets/photos/daclo-portrait-2.jpg';
 import IMG_SEED from '../assets/photos/stage-wide.jpg';
 import IMG_HERO_BG from '../assets/photos/daclo-hero-bg.jpg';
@@ -120,24 +121,41 @@ export default function DacLoPage() {
   const [sent, setSent] = useState(false);
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [busy, setBusy] = useState<'' | 'collab' | 'notify'>('');
+  const [collabErr, setCollabErr] = useState('');
+  const [notifyErr, setNotifyErr] = useState('');
 
   const pickField = (f: string) => {
     setForm(s => ({ ...s, field: f }));
     document.getElementById('dang-ky-cong-tac')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const submitCollab = (e: React.FormEvent) => {
+  const errMsg = (e: unknown) => (e as { message?: string })?.message || 'Chưa gửi được, xin thử lại hoặc liên hệ 0908 033 357.';
+
+  /** Lưu vào Supabase (bảng collab_requests) — xem trong Table Editor */
+  const submitCollab = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.contact.trim()) return;
-    const body = [
-      `Lĩnh vực quan tâm: ${form.field || '(chưa chọn)'}`,
-      `Họ tên: ${form.name}`,
-      `Email / SĐT: ${form.contact}`,
-      `Đơn vị: ${form.org || '—'}`,
-      '', 'Lời nhắn:', form.note || '—',
-    ].join('\n');
-    window.location.href = `mailto:ckcgsg@gmail.com?subject=${encodeURIComponent(`[ĐẮC LỘ 2027] Đăng ký cộng tác – ${form.field || 'Chung'}`)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    if (!form.name.trim() || !form.contact.trim() || busy) return;
+    setBusy('collab'); setCollabErr('');
+    try {
+      const sb = await getSupabase();
+      const { error } = await sb.rpc('submit_collab', { p_field: form.field, p_name: form.name, p_contact: form.contact, p_org: form.org, p_note: form.note });
+      if (error) throw error;
+      setSent(true); setForm({ field: '', name: '', contact: '', org: '', note: '' });
+    } catch (err) { setCollabErr(errMsg(err)); } finally { setBusy(''); }
+  };
+
+  /** Lưu email vào bảng notify_subscribers */
+  const submitNotify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || busy) return;
+    setBusy('notify'); setNotifyErr('');
+    try {
+      const sb = await getSupabase();
+      const { error } = await sb.rpc('subscribe_notify', { p_email: email });
+      if (error) throw error;
+      setSubscribed(true);
+    } catch (err) { setNotifyErr(errMsg(err)); } finally { setBusy(''); }
   };
 
   return (
@@ -389,9 +407,9 @@ export default function DacLoPage() {
             {sent ? (
               <div className="rounded-2xl p-6 border" style={{ background: C.cream, borderColor: C.line }}>
                 <div className="font-bold mb-1" style={{ color: C.wine }}>Cảm ơn anh chị đã đồng hành!</div>
-                <p className="text-sm">Ứng dụng email của anh chị đã được mở sẵn nội dung — chỉ cần bấm Gửi. Nếu chưa mở được,
-                  xin gửi trực tiếp về <a href="mailto:ckcgsg@gmail.com" className="underline">ckcgsg@gmail.com</a> hoặc gọi 0908 033 357.</p>
-                <button onClick={() => setSent(false)} className="mt-4 text-sm font-bold underline" style={{ color: C.wine }}>Sửa lại thông tin</button>
+                <p className="text-sm">Ban tổ chức đã nhận được thông tin và sẽ liên hệ lại với anh chị trong thời gian sớm nhất.
+                  Cần trao đổi ngay, xin gọi 0908 033 357 hoặc email <a href="mailto:ckcgsg@gmail.com" className="underline">ckcgsg@gmail.com</a>.</p>
+                <button onClick={() => setSent(false)} className="mt-4 text-sm font-bold underline" style={{ color: C.wine }}>Gửi thêm một đăng ký khác</button>
               </div>
             ) : (
               <form ref={formRef} onSubmit={submitCollab} className="grid sm:grid-cols-2 gap-x-5 gap-y-4">
@@ -420,8 +438,9 @@ export default function DacLoPage() {
                     className={`${inputCls} rounded-2xl resize-y`} style={inputStyle} />
                 </label>
                 <div className="sm:col-span-2">
-                  <button type="submit" className="inline-flex items-center gap-2 h-11 px-7 rounded-full font-bold text-sm transition-all hover:brightness-110"
-                    style={{ background: C.wine, color: C.cream }}><Send size={15} /> Gửi thông tin</button>
+                  {collabErr && <p className="text-sm mb-3 font-semibold" style={{ color: C.wine }}>{collabErr}</p>}
+                  <button type="submit" disabled={busy === 'collab'} className="disabled:opacity-60 inline-flex items-center gap-2 h-11 px-7 rounded-full font-bold text-sm transition-all hover:brightness-110"
+                    style={{ background: C.wine, color: C.cream }}><Send size={15} /> {busy === 'collab' ? 'Đang gửi…' : 'Gửi thông tin'}</button>
                 </div>
               </form>
             )}
@@ -495,13 +514,15 @@ export default function DacLoPage() {
           <H2 className="mb-4">Nhận thông báo về vở ca kịch Đắc Lộ</H2>
           <p className="mb-8">Lịch diễn chính thức, hành trình tập luyện và các thông tin mới nhất sẽ được gửi qua email.</p>
           {!subscribed ? (
-            <form onSubmit={e => { e.preventDefault(); if (email) setSubscribed(true); }} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <form onSubmit={submitNotify} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="Email của bạn..."
                 className={`${inputCls} flex-1`} style={{ ...inputStyle, background: 'transparent' }} />
-              <button type="submit" className="h-12 px-7 rounded-full font-bold text-sm whitespace-nowrap transition-all hover:brightness-110"
-                style={{ background: C.wine, color: C.cream }}>THÔNG BÁO TÔI</button>
+              <button type="submit" disabled={busy === 'notify'} className="h-12 px-7 rounded-full font-bold text-sm whitespace-nowrap transition-all hover:brightness-110 disabled:opacity-60"
+                style={{ background: C.wine, color: C.cream }}>{busy === 'notify' ? 'ĐANG GỬI…' : 'THÔNG BÁO TÔI'}</button>
             </form>
-          ) : (
+          ) : null}
+          {!subscribed && notifyErr && <p className="text-sm mt-3 font-semibold" style={{ color: C.wine }}>{notifyErr}</p>}
+          {subscribed && (
             <div className="max-w-md mx-auto rounded-2xl p-6 border" style={{ background: C.card, borderColor: C.line }}>
               <div className="font-bold mb-1" style={{ color: C.wine }}>Đã đăng ký thành công! 🎭</div>
               <div className="text-sm">Chúng tôi sẽ thông báo ngay khi có tin mới về vở Đắc Lộ.</div>

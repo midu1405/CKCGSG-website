@@ -31,7 +31,7 @@ export function ChapelBar({ stats, music, onMusic, onCandle, onPray, onWrite, on
     <div className="absolute z-30 left-1/2 -translate-x-1/2 bottom-[150px] md:bottom-6 max-w-[calc(100vw-24px)] overflow-x-auto flex gap-1 rounded-full bg-black/75 backdrop-blur border border-gold/30 p-1.5">
       <button onClick={onCandle} className={btn}><span className="text-base">🕯</span><span>Thắp nến</span><span className="text-gold">{fmt(stats.candlesToday)}</span></button>
       <button onClick={onPray} className={btn}><span className="text-base">🙏</span><span>Quỳ cầu nguyện</span></button>
-      <button onClick={onWrite} className={btn}><span className="text-base">✍️</span><span>Gửi ý</span></button>
+      <button onClick={onWrite} className={btn}><span className="text-base">✍️</span><span>Dâng ý</span></button>
       <button onClick={onBoard} className={btn}><span className="text-base">📜</span><span>Bảng ý</span><span className="text-gold">{fmt(stats.notes)}</span></button>
       <button onClick={onMusic} className={btn} aria-label={music ? 'Tắt nhạc' : 'Bật nhạc'}>{music ? <Music size={15} className="text-gold" /> : <VolumeX size={15} />}</button>
       <button onClick={onExit} className={`${btn} bg-gold text-black hover:bg-gold`}><DoorOpen size={15} /> Ra ngoài</button>
@@ -53,62 +53,64 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
   );
 }
 
-export function IntentionDialog({ defaultName, error, onSubmit, onClose }: { defaultName: string; error: string; onSubmit: (name: string, body: string) => Promise<boolean>; onClose: () => void }) {
-  const [anon, setAnon] = useState(true);
-  const [name, setName] = useState(defaultName);
-  const [body, setBody] = useState('');
+export function IntentionDialog({ list, mine, error, onPray, onClose }: { list: Intention[]; mine: number[]; error: string; onPray: (ids: number[]) => Promise<boolean>; onClose: () => void }) {
+  const [pick, setPick] = useState<number[]>([]);
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
-  const go = async () => { setBusy(true); const ok = await onSubmit(anon ? '' : name, body); setBusy(false); if (ok) setSent(true); };
+  const toggle = (id: number) => setPick(p => (p.includes(id) ? p.filter(x => x !== id) : p.length >= 5 ? p : [...p, id]));
+  const go = async () => { setBusy(true); const ok = await onPray(pick); setBusy(false); if (ok) setSent(true); };
   return (
-    <Modal title="Gửi ý cầu nguyện" onClose={onClose}>
+    <Modal title="Dâng ý cầu nguyện" onClose={onClose}>
       {sent ? (
         <div className="text-center py-4">
           <div className="text-4xl mb-3">🙏</div>
-          <p className="text-white/80 mb-1">Ý cầu nguyện của bạn đã được gửi.</p>
-          <p className="text-white/50 text-sm mb-5">Ý sẽ hiện trên bảng chung sau khi được Ban tổ chức duyệt.</p>
-          <button onClick={onClose} className="rounded-full bg-gold text-black px-6 py-2.5 font-bold">Xong</button>
+          <p className="text-white/80 mb-1">Ý cầu nguyện của bạn đã được dâng lên.</p>
+          <p className="text-white/50 text-sm mb-5">Bạn đang hiệp ý cùng mọi người trong Nhà nguyện.</p>
+          <button onClick={onClose} className="rounded-full bg-gold text-black px-6 py-2.5 font-bold">Amen</button>
         </div>
       ) : <>
-        <p className="text-white/55 text-sm mb-4">Viết điều bạn muốn cầu nguyện — cho gia đình, người thân, người đã khuất, hay cho đêm diễn Đắc Lộ.</p>
-        <textarea value={body} maxLength={300} rows={4} autoFocus onChange={e => setBody(e.target.value)} placeholder="Xin Chúa…"
-          className="w-full rounded-xl bg-black/50 border border-white/15 focus:border-gold outline-none px-3 py-2.5 mb-1 resize-none" />
-        <div className="text-right text-[11px] text-white/35 mb-3">{body.length}/300</div>
-        <label className="flex items-center gap-2 text-sm mb-2 cursor-pointer select-none">
-          <input type="checkbox" checked={anon} onChange={e => setAnon(e.target.checked)} className="accent-[#D4AF37]" /> Gửi ẩn danh
-        </label>
-        {!anon && <input value={name} maxLength={40} onChange={e => setName(e.target.value)} placeholder="Tên của bạn"
-          className="w-full rounded-xl bg-black/50 border border-white/15 focus:border-gold outline-none px-3 py-2 mb-2 text-sm" />}
+        <p className="text-white/55 text-sm mb-3">Chọn ý bạn muốn hiệp lời cầu nguyện (tối đa 5 ý).</p>
+        <div className="overflow-y-auto -mx-2 px-2 space-y-2 mb-3">
+          {list.length === 0 && <p className="text-white/45 text-sm py-2">Đang tải các ý cầu nguyện…</p>}
+          {list.map(it => {
+            const on = pick.includes(it.id);
+            return (
+              <button key={it.id} type="button" onClick={() => toggle(it.id)}
+                className={`w-full text-left rounded-xl border px-3 py-2.5 text-sm leading-snug flex gap-2.5 items-start transition ${on ? 'border-gold bg-gold/15 text-white' : 'border-white/12 bg-black/40 text-white/75 hover:border-white/30'}`}>
+                <span className={`mt-0.5 w-4 h-4 shrink-0 rounded border flex items-center justify-center text-[10px] ${on ? 'bg-gold border-gold text-black' : 'border-white/30'}`}>{on ? '✓' : ''}</span>
+                <span className="flex-1">{it.body}{mine.includes(it.id) && <span className="ml-1.5 text-[10px] text-gold/80">· bạn đã dâng</span>}</span>
+              </button>
+            );
+          })}
+        </div>
         {error && <p className="text-[13px] text-amber-300 mb-2">{error}</p>}
-        <button onClick={go} disabled={busy || body.trim().length < 3}
-          className="mt-2 w-full flex items-center justify-center gap-2 bg-gold text-black rounded-full py-3 font-bold disabled:opacity-40">
-          <Send size={16} /> {busy ? 'Đang gửi…' : 'Gửi ý cầu nguyện'}
+        <button onClick={go} disabled={busy || !pick.length}
+          className="w-full flex items-center justify-center gap-2 bg-gold text-black rounded-full py-3 font-bold disabled:opacity-40">
+          <Send size={16} /> {busy ? 'Đang dâng…' : pick.length ? `Dâng ${pick.length} ý cầu nguyện` : 'Chọn ý cầu nguyện'}
         </button>
-        <p className="text-[11px] text-white/35 mt-3">Ý cầu nguyện được Ban tổ chức xem trước khi hiện công khai. Xin đừng ghi số điện thoại, địa chỉ hay thông tin riêng tư.</p>
       </>}
     </Modal>
   );
 }
 
-export function BoardDialog({ list, pending, onClose, onWrite }: { list: Intention[]; pending: string[]; onClose: () => void; onWrite: () => void }) {
+export function BoardDialog({ list, mine, onClose, onWrite }: { list: Intention[]; mine: number[]; onClose: () => void; onWrite: () => void }) {
+  const sorted = [...list].sort((a, b) => b.total - a.total);
   return (
     <Modal title="Bảng ý cầu nguyện" onClose={onClose}>
-      <div className="overflow-y-auto -mx-2 px-2 space-y-2.5">
-        {pending.length > 0 && (
-          <div className="rounded-xl border border-dashed border-white/20 p-3">
-            <div className="text-[11px] uppercase tracking-widest font-bold text-white/40 mb-1.5">Của bạn · đang chờ duyệt</div>
-            {pending.map((p, i) => <p key={i} className="text-sm text-white/60 italic">“{p}”</p>)}
-          </div>
-        )}
-        {list.length === 0 && <p className="text-white/45 text-sm py-2">Chưa có ý cầu nguyện nào được duyệt. Hãy là người đầu tiên gửi ý.</p>}
-        {list.map(it => (
-          <div key={it.id} className="rounded-xl bg-[#fbf6e8] text-[#2a2118] p-3 shadow">
-            <p className="text-[14px] leading-relaxed">“{it.body}”</p>
-            <p className="text-[11px] text-[#7a6a55] mt-1.5">— {it.name || 'Ẩn danh'} · {new Date(it.created_at).toLocaleDateString('vi-VN')}</p>
+      <p className="text-white/50 text-sm mb-3">Số người đã cùng hiệp ý cầu nguyện cho từng ý.</p>
+      <div className="overflow-y-auto -mx-2 px-2 space-y-2">
+        {sorted.length === 0 && <p className="text-white/45 text-sm py-2">Đang tải…</p>}
+        {sorted.map(it => (
+          <div key={it.id} className="rounded-xl bg-[#fbf6e8] text-[#2a2118] px-3 py-2.5 shadow flex items-center gap-3">
+            <p className="flex-1 text-[14px] leading-snug">{it.body}{mine.includes(it.id) && <span className="ml-1 text-[11px] text-[#8b1a1a]">· có bạn</span>}</p>
+            <div className="text-right shrink-0">
+              <div className="font-bold text-[15px]">🙏 {fmt(it.total)}</div>
+              {it.today > 0 && <div className="text-[10px] text-[#7a6a55]">+{fmt(it.today)} hôm nay</div>}
+            </div>
           </div>
         ))}
       </div>
-      <button onClick={onWrite} className="mt-4 w-full rounded-full border border-gold/60 text-gold py-2.5 font-bold hover:bg-gold hover:text-black transition">✍️ Gửi ý cầu nguyện</button>
+      <button onClick={onWrite} className="mt-4 w-full rounded-full border border-gold/60 text-gold py-2.5 font-bold hover:bg-gold hover:text-black transition">🙏 Dâng ý cầu nguyện</button>
     </Modal>
   );
 }
