@@ -9,6 +9,7 @@ import ActivitiesPage from './pages/ActivitiesPage';
 import StoryPage from './pages/StoryPage';
 import CastingPage from './pages/CastingPage';
 import ContactPage from './pages/ContactPage';
+import UpdateChecker from './components/UpdateChecker';
 
 // Trang 3D nặng (three.js) — chỉ tải khi mở trang
 const StageMapPage = lazy(() => import('./pages/StageMapPage'));
@@ -30,6 +31,7 @@ function ScrollManager() {
 export default function App() {
   return (
     <BrowserRouter>
+      <UpdateChecker />
       <ScrollManager />
       <div className="min-h-screen selection:bg-gold selection:text-black">
         <Navbar />
