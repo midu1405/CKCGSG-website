@@ -18,6 +18,7 @@
   --color-cocoa: #6f5a4a;      /* chữ thân trên kem */
   --color-champagne: #e8c89a;  /* vàng nhạt trên nền tối */
   --color-deep: #381c1b;       /* nâu tối */
+  --color-night: color-mix(in srgb, #381c1b 35%, #0A0A0A); /* nền tối pha nâu (khu Quy mô dàn dựng) */
 }
 
 body {

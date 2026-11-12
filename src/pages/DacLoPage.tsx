@@ -30,7 +30,6 @@ const PREMIERE = new Date('2027-06-04T00:00:00+07:00');
 /** màu token pha trong suốt (giống mã hex có kênh alpha) để dùng trong gradient */
 const tint = (token: string, pct: number) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
 /** nền tối khu ảnh sân khấu: 35% `deep` + 65% `dark` ≈ màu nâu đen của Figma (Chỉ huy có thể thêm token riêng) */
-const NIGHT = 'color-mix(in srgb, var(--color-deep) 35%, var(--color-dark))';
 const SEND_FAIL = 'Chưa gửi được — có thể do mạng yếu. Xin thử lại hoặc gọi 0908 033 357.';
 
 const TIMELINE = [
@@ -330,11 +329,11 @@ export default function DacLoPage() {
       </section>
 
       {/* 6 — QUY MÔ DÀN DỰNG */}
-      <section id="dan-dung" className="bg-(--night)" style={{ '--night': NIGHT } as CSSProperties}>
+      <section id="dan-dung" className="bg-night">
         <div className="relative overflow-hidden">
           <img src={IMG_STAGE} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-70" />
-          <div className="absolute inset-0 bg-gradient-to-r from-(--night) via-(--night)/75 to-(--night)/10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-(--night) via-transparent to-(--night)/60" />
+          <div className="absolute inset-0 bg-gradient-to-r from-night via-night/75 to-night/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-night via-transparent to-night/60" />
           <div className="relative max-w-[1240px] mx-auto px-5 sm:px-8 pt-20 pb-14 lg:pt-28 lg:pb-16">
             <motion.div {...fadeUp} className="max-w-[560px]">
               <Eyebrow light>Từ lịch sử đến sân khấu nghệ thuật</Eyebrow>
@@ -362,7 +361,7 @@ export default function DacLoPage() {
         <div className="relative grid grid-cols-2 lg:grid-cols-[780fr_330fr_330fr] gap-1 lg:h-[520px]">
           <figure className="relative col-span-2 lg:col-span-1 lg:row-span-2 aspect-[16/10] lg:aspect-auto overflow-hidden">
             <img src={IMG_M1} alt="Cảnh diễn của nhóm" loading="lazy" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-(--night)/80 via-transparent to-(--night)/50" />
+            <div className="absolute inset-0 bg-gradient-to-t from-night/80 via-transparent to-night/50" />
             <figcaption className="absolute left-6 bottom-6 flex items-center gap-3 text-[11px] tracking-[0.15em] text-white/60">
               <span className="w-6 h-px bg-champagne" /> Hình ảnh tư liệu từ các vở diễn của nhóm
             </figcaption>
@@ -377,7 +376,7 @@ export default function DacLoPage() {
         {/* dải Jericho + CTA sơ đồ 3D */}
         <div className="relative overflow-hidden">
           <img src={IMG_SEED} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-45" />
-          <div className="absolute inset-0 bg-gradient-to-b from-(--night) via-(--night)/40 to-(--night)/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-night via-night/40 to-night/70" />
           <motion.div {...fadeUp} className="relative max-w-[820px] mx-auto px-5 py-16 lg:py-0 lg:h-[340px] flex flex-col items-center justify-center text-center gap-5">
             <div className="flex items-center gap-3 text-champagne"><span className="w-14 h-px bg-current opacity-60" /><Star size={12} /><span className="w-14 h-px bg-current opacity-60" /></div>
             <p className="serif font-bold text-xl sm:text-2xl lg:text-[28px] leading-snug text-balance text-cream">
