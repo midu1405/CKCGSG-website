@@ -7,6 +7,17 @@
   --color-gold: #D4AF37;
   --color-dark: #0A0A0A;
   --color-card: #141414;
+
+  /* Bảng màu trang Đắc Lộ — Figma "Kêu gọi hỗ trợ" Draft 3 (nền sáng) */
+  --color-cream: #f6ebd8;      /* nền kem */
+  --color-parchment: #e8d7c2;  /* thẻ trên nền kem */
+  --color-line: #cdbe9f;       /* viền, gạch ngang */
+  --color-sand: #d9c2a5;       /* nền icon */
+  --color-wine: #8b1a1a;       /* đỏ rượu: nút, nhãn, nhấn (7,9:1 trên kem) */
+  --color-umber: #5a3a2d;      /* tiêu đề trên kem */
+  --color-cocoa: #6f5a4a;      /* chữ thân trên kem */
+  --color-champagne: #e8c89a;  /* vàng nhạt trên nền tối */
+  --color-deep: #381c1b;       /* nâu tối */
 }
 
 body {

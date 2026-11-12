@@ -38,12 +38,12 @@ const Footer = () => {
         <div className="text-white/30 text-xs uppercase tracking-widest font-medium text-center">
           © {new Date().getFullYear()} Nhóm Ca Kịch Công Giáo Sài Gòn
         </div>
-        <div className="flex gap-6">
-          <a href="https://www.youtube.com/@CKCGSG" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-white/40 hover:text-gold transition-colors"><Youtube size={20} /></a>
-          <a href="https://www.facebook.com/CKCGSG" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white/40 hover:text-gold transition-colors">
+        <div className="flex gap-8">
+          <a href="https://www.youtube.com/@CKCGSG" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-white/40 hover:text-gold transition-colors p-3 -m-3 inline-flex"><Youtube size={20} /></a>
+          <a href="https://www.facebook.com/CKCGSG" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white/40 hover:text-gold transition-colors p-3 -m-3 inline-flex">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
           </a>
-          <a href="mailto:ckcgsg@gmail.com" aria-label="Email" className="text-white/40 hover:text-gold transition-colors"><Mail size={20} /></a>
+          <a href="mailto:ckcgsg@gmail.com" aria-label="Email" className="text-white/40 hover:text-gold transition-colors p-3 -m-3 inline-flex"><Mail size={20} /></a>
         </div>
       </div>
     </div>

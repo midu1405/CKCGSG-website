@@ -23,12 +23,17 @@ Các agent con không nói chuyện với nhau. Mọi trao đổi đi qua file t
    `docs/tasks/<MÃ>/PLAN.md`. Cần sửa file ngoài danh sách → ghi vào report, không tự sửa.
 3. **File dùng chung chỉ Chỉ huy được sửa:** `src/App.tsx`, `src/components/Navbar.tsx`,
    `src/components/Footer.tsx`, `src/index.css`, `src/types.ts`, `src/constants.ts`, `package.json`,
-   `docs/FIGMA_SYNC.md`, `README.md`.
+   `src/lib/*`, `docs/FIGMA_SYNC.md`, `README.md`, `CLAUDE.md`.
 4. **Tách nội dung khỏi giao diện.** Nội dung mới đặt trong `src/content/<tinh-nang>.ts`
    (export mảng/đối tượng có kiểu). Component chỉ đọc dữ liệu, không chứa đoạn văn dài.
    Trang cũ (ví dụ `DacLoPage.tsx` có dữ liệu ngay đầu file) giữ nguyên, chỉ tách khi kế hoạch yêu cầu.
-5. **Dùng token có sẵn, không gõ mã màu:** `text-gold`, `bg-dark`, `bg-card`, `font-serif` (tiêu đề, con số),
-   `font-sans` (chữ thường). Tái sử dụng `PageParts.tsx`, `Motion.tsx` trước khi viết mới.
+5. **Dùng token có sẵn, không gõ mã màu** (khai báo trong `src/index.css`):
+   - Nền tối (đa số trang): `text-gold`, `bg-dark`, `bg-card`.
+   - Nền kem (trang Đắc Lộ, Figma Draft 3): `bg-cream`, `bg-parchment`, `border-line`, `bg-sand`, `text-wine`,
+     `text-umber` (tiêu đề), `text-cocoa` (chữ thân), `text-champagne`, `bg-deep`. Trong `style={}` dùng `var(--color-wine)`.
+   - Chữ: `font-serif` (tiêu đề, con số), `font-sans` (chữ thường). Tiêu đề nhiều dòng thêm `text-balance`.
+   - Chữ nhỏ phải đạt tương phản ≥ 4,5:1 với nền. Cần màu mới → ghi report để Chỉ huy thêm token.
+   Tái sử dụng `PageParts.tsx`, `Motion.tsx` trước khi viết mới. Báo lỗi form dùng `friendlyError()` trong `src/lib/errors.ts`.
 6. **Ảnh** đặt ở `src/assets/photos/`, tên không dấu, nén < 300KB, rộng ≤ 2000px.
 7. **Mỗi agent kết thúc bằng một file report** `docs/tasks/<MÃ>/<mã-việc>.report.md` theo mẫu bên dưới.
 8. Code phải qua `npm run lint` và `npm run build`.
