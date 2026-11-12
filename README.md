@@ -9,6 +9,7 @@ Website chính thức của **Nhóm Ca Kịch Công Giáo Sài Gòn (CKCGSG)** �
 
 **Thực hiện:** Nguyễn Minh Đức (Midu) — [github.com/midu1405](https://github.com/midu1405)
 **Nội dung & hình ảnh:** Nhóm Ca Kịch Công Giáo Sài Gòn
+🤖 **Làm web bằng nhiều agent:** [`docs/AGENTS.md`](docs/AGENTS.md) — gõ `/chi-huy <yêu cầu>` trong Claude Code
 
 ---
 

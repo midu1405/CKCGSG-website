@@ -1,0 +1,1336 @@
+{
+  "base": "http://localhost:4173",
+  "date": "2026-11-05",
+  "pages": [
+    {
+      "route": "/",
+      "viewport": "mobile",
+      "loadMs": 1186,
+      "cls": 0.001,
+      "jank": {
+        "frames": 126,
+        "longFrames": 0,
+        "worstMs": 17
+      },
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 italic",
+        "Playfair Display 700 italic",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "home-mobile.png"
+    },
+    {
+      "route": "/",
+      "viewport": "tablet",
+      "loadMs": 717,
+      "cls": 0.011,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 italic",
+        "Playfair Display 700 italic",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "home-tablet.png"
+    },
+    {
+      "route": "/",
+      "viewport": "desktop",
+      "loadMs": 683,
+      "cls": 0.004,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [
+        "Inter (1 ký tự): \"Vở Đắc Lộ →\"",
+        "Inter (1 ký tự): \"Đọc câu chuyện của nhóm →\""
+      ],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 italic",
+        "Playfair Display 700 italic",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "home-desktop.png"
+    },
+    {
+      "route": "/dac-lo",
+      "viewport": "mobile",
+      "loadMs": 1043,
+      "cls": 0.002,
+      "jank": {
+        "frames": 256,
+        "longFrames": 0,
+        "worstMs": 17
+      },
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 600 normal",
+        "Be Vietnam Pro 600 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "dac-lo-mobile.png"
+    },
+    {
+      "route": "/dac-lo",
+      "viewport": "tablet",
+      "loadMs": 735,
+      "cls": 0.003,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 600 normal",
+        "Be Vietnam Pro 600 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "dac-lo-tablet.png"
+    },
+    {
+      "route": "/dac-lo",
+      "viewport": "desktop",
+      "loadMs": 728,
+      "cls": 0.007,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [
+        "Inter (1 ký tự): \"Vở Đắc Lộ →\"",
+        "Inter (1 ký tự): \"Xem vị trí từng hạng mục trên sơ đồ 3D →\""
+      ],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 600 normal",
+        "Be Vietnam Pro 600 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "dac-lo-desktop.png"
+    },
+    {
+      "route": "/dac-lo/so-do",
+      "viewport": "mobile",
+      "loadMs": 1622,
+      "cls": 0,
+      "jank": null,
+      "errors": [],
+      "failed": [
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://www.youtube-nocookie.com/embed/3haB72E5u3M?autoplay=1&mute=1&loop=1&playlist=tg5ANi-IOFQ,f3BLwKxxTrg,6EUV2Vt3NpM,6S4JXFAO2pA,3haB72E5u3M&controls=0&playsinline=1&fs=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1"
+      ],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "dac-lo_so-do-mobile.png"
+    },
+    {
+      "route": "/dac-lo/so-do",
+      "viewport": "desktop",
+      "loadMs": 1139,
+      "cls": 0,
+      "jank": null,
+      "errors": [],
+      "failed": [
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://www.youtube-nocookie.com/embed/3haB72E5u3M?autoplay=1&mute=1&loop=1&playlist=tg5ANi-IOFQ,f3BLwKxxTrg,6EUV2Vt3NpM,6S4JXFAO2pA,3haB72E5u3M&controls=0&playsinline=1&fs=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1"
+      ],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Thu gọn"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "dac-lo_so-do-desktop.png"
+    },
+    {
+      "route": "/dac-lo/khuon-vien",
+      "viewport": "mobile",
+      "loadMs": 1342,
+      "cls": 0,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "<button class=\"flex items-center gap-1.5 px-3 py-1.5 rounded"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "dac-lo_khuon-vien-mobile.png"
+    },
+    {
+      "route": "/dac-lo/khuon-vien",
+      "viewport": "desktop",
+      "loadMs": 933,
+      "cls": 0,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "<button class=\"flex items-center gap-1.5 px-3 py-1.5 rounded",
+        "Thu gọn"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "dac-lo_khuon-vien-desktop.png"
+    },
+    {
+      "route": "/vo-dien",
+      "viewport": "mobile",
+      "loadMs": 1008,
+      "cls": 0,
+      "jank": {
+        "frames": 116,
+        "longFrames": 0,
+        "worstMs": 17
+      },
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "vo-dien-mobile.png"
+    },
+    {
+      "route": "/vo-dien",
+      "viewport": "tablet",
+      "loadMs": 691,
+      "cls": 0,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "vo-dien-tablet.png"
+    },
+    {
+      "route": "/vo-dien",
+      "viewport": "desktop",
+      "loadMs": 671,
+      "cls": 0,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [
+        "Inter (1 ký tự): \"Vở Đắc Lộ →\""
+      ],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "vo-dien-desktop.png"
+    },
+    {
+      "route": "/hoat-dong",
+      "viewport": "mobile",
+      "loadMs": 1175,
+      "cls": 0,
+      "jank": {
+        "frames": 79,
+        "longFrames": 0,
+        "worstMs": 17
+      },
+      "errors": [
+        "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+      ],
+      "failed": [
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/summer/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/tet/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/jrai/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/gioan/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/angel/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/trongduc/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/grace2017/800/600"
+      ],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [
+        "https://picsum.photos/seed/summer/800/600",
+        "https://picsum.photos/seed/tet/800/600",
+        "https://picsum.photos/seed/jrai/800/600",
+        "https://picsum.photos/seed/gioan/800/600",
+        "https://picsum.photos/seed/angel/800/600",
+        "https://picsum.photos/seed/trongduc/800/600",
+        "https://picsum.photos/seed/grace2017/800/600"
+      ],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "hoat-dong-mobile.png"
+    },
+    {
+      "route": "/hoat-dong",
+      "viewport": "tablet",
+      "loadMs": 1003,
+      "cls": 0,
+      "jank": null,
+      "errors": [
+        "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+      ],
+      "failed": [
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/summer/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/tet/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/jrai/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/gioan/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/angel/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/trongduc/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/grace2017/800/600"
+      ],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [
+        "https://picsum.photos/seed/summer/800/600",
+        "https://picsum.photos/seed/tet/800/600",
+        "https://picsum.photos/seed/jrai/800/600",
+        "https://picsum.photos/seed/gioan/800/600",
+        "https://picsum.photos/seed/angel/800/600",
+        "https://picsum.photos/seed/trongduc/800/600",
+        "https://picsum.photos/seed/grace2017/800/600"
+      ],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "hoat-dong-tablet.png"
+    },
+    {
+      "route": "/hoat-dong",
+      "viewport": "desktop",
+      "loadMs": 993,
+      "cls": 0.019,
+      "jank": null,
+      "errors": [
+        "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+      ],
+      "failed": [
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/summer/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/tet/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/jrai/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/gioan/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/angel/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/trongduc/800/600",
+        "net::ERR_TUNNEL_CONNECTION_FAILED https://picsum.photos/seed/grace2017/800/600"
+      ],
+      "fontProblems": [
+        "Inter (1 ký tự): \"Vở Đắc Lộ →\""
+      ],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [
+        "https://picsum.photos/seed/summer/800/600",
+        "https://picsum.photos/seed/tet/800/600",
+        "https://picsum.photos/seed/jrai/800/600",
+        "https://picsum.photos/seed/gioan/800/600",
+        "https://picsum.photos/seed/angel/800/600",
+        "https://picsum.photos/seed/trongduc/800/600",
+        "https://picsum.photos/seed/grace2017/800/600"
+      ],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "hoat-dong-desktop.png"
+    },
+    {
+      "route": "/cau-chuyen",
+      "viewport": "mobile",
+      "loadMs": 931,
+      "cls": 0,
+      "jank": {
+        "frames": 127,
+        "longFrames": 0,
+        "worstMs": 17
+      },
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "cau-chuyen-mobile.png"
+    },
+    {
+      "route": "/cau-chuyen",
+      "viewport": "tablet",
+      "loadMs": 700,
+      "cls": 0,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "cau-chuyen-tablet.png"
+    },
+    {
+      "route": "/cau-chuyen",
+      "viewport": "desktop",
+      "loadMs": 706,
+      "cls": 0,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [
+        "Inter (1 ký tự): \"Vở Đắc Lộ →\""
+      ],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Playfair Display 400 italic",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "cau-chuyen-desktop.png"
+    },
+    {
+      "route": "/tuyen-dien-vien",
+      "viewport": "mobile",
+      "loadMs": 942,
+      "cls": 0,
+      "jank": {
+        "frames": 54,
+        "longFrames": 0,
+        "worstMs": 17
+      },
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 0,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "tuyen-dien-vien-mobile.png"
+    },
+    {
+      "route": "/tuyen-dien-vien",
+      "viewport": "tablet",
+      "loadMs": 648,
+      "cls": 0.001,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 0,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "tuyen-dien-vien-tablet.png"
+    },
+    {
+      "route": "/tuyen-dien-vien",
+      "viewport": "desktop",
+      "loadMs": 666,
+      "cls": 0,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [
+        "Inter (1 ký tự): \"Vở Đắc Lộ →\""
+      ],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 0,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "tuyen-dien-vien-desktop.png"
+    },
+    {
+      "route": "/lien-he",
+      "viewport": "mobile",
+      "loadMs": 905,
+      "cls": 0,
+      "jank": {
+        "frames": 49,
+        "longFrames": 0,
+        "worstMs": 17
+      },
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "lien-he-mobile.png"
+    },
+    {
+      "route": "/lien-he",
+      "viewport": "tablet",
+      "loadMs": 635,
+      "cls": 0.045,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "Mở menu",
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "lien-he-tablet.png"
+    },
+    {
+      "route": "/lien-he",
+      "viewport": "desktop",
+      "loadMs": 641,
+      "cls": 0,
+      "jank": null,
+      "errors": [],
+      "failed": [],
+      "fontProblems": [
+        "Inter (1 ký tự): \"Vở Đắc Lộ →\""
+      ],
+      "hScroll": false,
+      "overflow": [],
+      "brokenImgs": [],
+      "noAlt": [],
+      "h1": 1,
+      "title": "Ca Kịch Công Giáo Sài Gòn",
+      "smallTapTargets": [
+        "YouTube",
+        "Facebook",
+        "Email"
+      ],
+      "fontsLoaded": [
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Playfair Display 700 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 300 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 400 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 500 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal",
+        "Be Vietnam Pro 700 normal"
+      ],
+      "shot": "lien-he-desktop.png"
+    }
+  ],
+  "images": [
+    {
+      "file": "dist/assets/MapTabs-BKcg8OQb.js",
+      "kb": 1040,
+      "note": "JS lớn"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "/cau-chuyen",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "/dac-lo",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "/hoat-dong",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "/lien-he",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "/tuyen-dien-vien",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "/vo-dien",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "https://www.facebook.com/CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "https://www.youtube.com/@CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "mailto:ckcgsg@gmail.com",
+      "ok": true,
+      "note": "liên hệ"
+    },
+    {
+      "href": "/dac-lo/khuon-vien",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "/dac-lo/so-do",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "https://www.google.com/maps/@10.78498,106.70506,260m/data=!3m1!1e3",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "#cong-tac",
+      "from": "/dac-lo",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "#nhan-tin",
+      "from": "/dac-lo",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "https://www.facebook.com/CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "https://www.youtube.com/@CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "mailto:ckcgsg@gmail.com",
+      "ok": true,
+      "note": "liên hệ"
+    },
+    {
+      "href": "mailto:ckcgsg@gmail.com?subject=%5B%C4%90%E1%BA%AEC%20L%E1%BB%98%202027%5D%20C%E1%BB%99ng%20t%C3%A1c%20d%E1%BB%B1%20%C3%A1n",
+      "ok": true,
+      "note": "liên hệ"
+    },
+    {
+      "href": "mailto:ckcgsg@gmail.com?subject=%5BH%E1%BB%8C%20V%C3%80%20T%C3%8AN%5D%20-%20%E1%BB%A8NG%20TUY%E1%BB%82N%20CASTING%20%5BH%C3%81T%2FM%C3%9AA%5D&body=Xin%20ch%C3%A0o%20CKCGSG%2C%0A%0AEm%20xin%20%E1%BB%A9ng%20tuy%E1%BB%83n%20v%E1%BB%8B%20tr%C3%AD%20%5BH%C3%81T%20%2F%20M%C3%9AA%5D.%0A%0AH%E1%BB%8D%20t%C3%AAn%20(k%C3%A8m%20T%C3%AAn%20Th%C3%A1nh%20n%E1%BA%BFu%20c%C3%B3)%3A%20%0AS%E1%BB%91%20%C4%91i%E1%BB%87n%20tho%E1%BA%A1i%20li%C3%AAn%20h%E1%BB%87%3A%20%0AGi%E1%BB%9Bi%20thi%E1%BB%87u%20ng%E1%BA%AFn%20v%E1%BB%81%20b%E1%BA%A3n%20th%C3%A2n%3A%20%0A%0ALink%20Google%20Drive%20h%E1%BB%93%20s%C6%A1%20(%C4%91%C3%A3%20m%E1%BB%9F%20quy%E1%BB%81n%20xem%20cho%20ckcgsg%40gmail.com%20v%C3%A0%20jeankiet%40gmail.com)%3A%20%0A%0ATr%C3%A2n%20tr%E1%BB%8Dng.",
+      "ok": true,
+      "note": "liên hệ"
+    },
+    {
+      "href": "tel:0908033357",
+      "ok": true,
+      "note": "liên hệ"
+    },
+    {
+      "href": "#chuong-trinh",
+      "from": "/hoat-dong",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "#thien-nguyen",
+      "from": "/hoat-dong",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "https://www.facebook.com/CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "https://www.youtube.com/@CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "mailto:ckcgsg@gmail.com",
+      "ok": true,
+      "note": "liên hệ"
+    },
+    {
+      "href": "/dac-lo#cong-tac",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "https://www.facebook.com/CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "https://www.youtube.com/@CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "mailto:ckcgsg@gmail.com",
+      "ok": true,
+      "note": "liên hệ"
+    },
+    {
+      "href": "https://www.facebook.com/CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "https://www.youtube.com/@CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "mailto:ckcgsg@gmail.com",
+      "ok": true,
+      "note": "liên hệ"
+    },
+    {
+      "href": "mailto:ckcgsg@gmail.com?subject=%5BH%E1%BB%8C%20V%C3%80%20T%C3%8AN%5D%20-%20%E1%BB%A8NG%20TUY%E1%BB%82N%20CASTING%20%5BH%C3%81T%2FM%C3%9AA%5D&body=Xin%20ch%C3%A0o%20CKCGSG%2C%0A%0AEm%20xin%20%E1%BB%A9ng%20tuy%E1%BB%83n%20v%E1%BB%8B%20tr%C3%AD%20%5BH%C3%81T%20%2F%20M%C3%9AA%5D.%0A%0AH%E1%BB%8D%20t%C3%AAn%20(k%C3%A8m%20T%C3%AAn%20Th%C3%A1nh%20n%E1%BA%BFu%20c%C3%B3)%3A%20%0AS%E1%BB%91%20%C4%91i%E1%BB%87n%20tho%E1%BA%A1i%20li%C3%AAn%20h%E1%BB%87%3A%20%0AGi%E1%BB%9Bi%20thi%E1%BB%87u%20ng%E1%BA%AFn%20v%E1%BB%81%20b%E1%BA%A3n%20th%C3%A2n%3A%20%0A%0ALink%20Google%20Drive%20h%E1%BB%93%20s%C6%A1%20(%C4%91%C3%A3%20m%E1%BB%9F%20quy%E1%BB%81n%20xem%20cho%20ckcgsg%40gmail.com%20v%C3%A0%20jeankiet%40gmail.com)%3A%20%0A%0ATr%C3%A2n%20tr%E1%BB%8Dng.",
+      "ok": true,
+      "note": "liên hệ"
+    },
+    {
+      "href": "#nhung-nam-dau",
+      "from": "/vo-dien",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "#sap-dien",
+      "from": "/vo-dien",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "#tro-lai",
+      "from": "/vo-dien",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "https://www.facebook.com/CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "https://www.youtube.com/@CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "mailto:ckcgsg@gmail.com",
+      "ok": true,
+      "note": "liên hệ"
+    },
+    {
+      "href": "#vo-sap-toi",
+      "from": "/",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "/hoat-dong#chuong-trinh",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "/hoat-dong#thien-nguyen",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "href": "https://www.facebook.com/CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "https://www.youtube.com/@CKCGSG",
+      "ok": null,
+      "note": "link ngoài — chưa kiểm"
+    },
+    {
+      "href": "mailto:ckcgsg@gmail.com",
+      "ok": true,
+      "note": "liên hệ"
+    }
+  ]
+}
