@@ -110,7 +110,7 @@ export default function StageMapPage() {
   goZoneRef.current = goZone;
   const doCandle = useCallback(async () => {
     const ok = await prayer.lightCandle();
-    say(ok ? 'Bạn đã thắp một ngọn nến 🕯 Xin Chúa nhậm lời.' : (prayer.error || 'Chưa thắp được nến, xin thử lại.'));
+    say(ok ? 'Bạn đã thắp một ngọn nến. Xin Chúa nhậm lời.' : (prayer.error || 'Chưa thắp được nến, xin thử lại.'));
   }, [prayer]);
   const toggleMusic = () => setMusic(m => {
     const next = !m; organ.current ??= new Organ();

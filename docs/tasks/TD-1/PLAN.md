@@ -27,10 +27,10 @@
 | Mã | Agent | Đợt | File sở hữu | Việc (số mục trong BAO-CAO) | Trạng thái |
 |---|---|---|---|---|---|
 | TD-1.0 | Chỉ huy | 0 | `src/index.css`, `src/App.tsx`, `src/components/Navbar.tsx`, `src/components/Footer.tsx`, `src/lib/errors.ts`, `CLAUDE.md` | token màu (#34); `MotionConfig` (#20); màn tải trang 3D (#29); menu mobile: đóng khi bấm link / Esc, khoá cuộn, `aria-expanded`, nút ≥ 44px (#12, #19); "→" trong menu (#28); icon footer ≥ 44px (#19); helper lỗi form (#6) | ☑ |
-| TD-1.1 | giao-dien (A) | 1 | `src/pages/DacLoPage.tsx`, `src/pages/StageMapPage.tsx`, `src/pages/CampusMapPage.tsx` | xem mục **Việc A** | ☐ |
-| TD-1.2 | giao-dien (B) | 1 | `src/components/Modal.tsx`, `src/components/ProjectCard.tsx`, `src/components/PageParts.tsx`, `src/components/UpdateChecker.tsx`, `src/components/CastingSection.tsx`, `src/pages/ContactPage.tsx`, `src/pages/HomePage.tsx`, `src/pages/StoryPage.tsx`, `src/pages/PlaysPage.tsx`, `src/pages/ActivitiesPage.tsx`, `src/pages/CastingPage.tsx` | xem mục **Việc B** | ☐ |
-| TD-1.3 | kiem-tra | 2 | `docs/tasks/TD-1/review.md` | chạy lại `npm run audit` + bấm thử đúng các mục đã sửa | ☐ |
-| TD-1.4 | Chỉ huy | 3 | gộp, `docs/FIGMA_SYNC.md` | đẩy nhánh, ghi mục chờ Figma | ☐ |
+| TD-1.1 | giao-dien (A) | 1 | `src/pages/DacLoPage.tsx`, `src/pages/StageMapPage.tsx`, `src/pages/CampusMapPage.tsx` | xem mục **Việc A** | ☑ |
+| TD-1.2 | giao-dien (B) | 1 | `src/components/Modal.tsx`, `src/components/ProjectCard.tsx`, `src/components/PageParts.tsx`, `src/components/UpdateChecker.tsx`, `src/components/CastingSection.tsx`, `src/pages/ContactPage.tsx`, `src/pages/HomePage.tsx`, `src/pages/StoryPage.tsx`, `src/pages/PlaysPage.tsx`, `src/pages/ActivitiesPage.tsx`, `src/pages/CastingPage.tsx` | xem mục **Việc B** | ☑ |
+| TD-1.3 | kiem-tra | 2 | `docs/tasks/TD-1/review.md` | chạy lại `npm run audit` + bấm thử đúng các mục đã sửa | ☑ |
+| TD-1.4 | Chỉ huy | 3 | gộp, `docs/FIGMA_SYNC.md` | đẩy nhánh, ghi mục chờ Figma | ☑ |
 
 ### Việc A — Đắc Lộ + trang 3D
 1. **#6** Hai form (`errMsg` dòng ~133): dùng `friendlyError(err, 'Chưa gửi được — có thể do mạng yếu. Xin thử lại hoặc gọi 0908 033 357.')`.

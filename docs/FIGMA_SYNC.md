@@ -8,6 +8,19 @@ Vì vậy các thay đổi code được **gom lại và cập nhật sang Figma
 
 ## Đang chờ cập nhật sang Figma
 
+- [ ] **TD-1 · Sửa lỗi giao diện (12/11/2026, nhánh `claude/td-1-sua-giao-dien`)** — chi tiết trong
+  `docs/tasks/TD-1/TD-1.1.report.md` và `TD-1.2.report.md`, mục "Cần đưa sang Figma":
+  - **Đắc Lộ desktop + mobile:** nhãn 3 cột "2014 – 2027…" vàng → đỏ rượu; chữ phụ số liệu trắng 70%; form cộng tác:
+    "Chọn lĩnh vực…" + mũi tên xổ, nhãn "Lời nhắn", trạng thái lỗi (viền + chữ đỏ rượu dưới ô); form nhận tin: lỗi email,
+    icon dấu tích thay 🎭; mobile: khối "Nhóm Ca Kịch…" căn trái, eyebrow 2 dòng thẳng lề.
+  - **Sơ đồ 3D + Khuôn viên:** tiêu đề trong khung đen 60% bo góc; mobile: hàng nút vuốt ngang cao 44px,
+    dòng hướng dẫn cảm ứng dưới hàng nút.
+  - **Popup vở diễn:** nút X 44px cố định góc trên; mobile hiện sẵn 2 mũi tên ảnh; trạng thái "Đã sao chép link".
+  - **Thẻ vở (mobile):** dòng "Xem chi tiết" + mũi tên; ngày trắng 60% không xuống dòng.
+  - **Thanh "Đã có phiên bản mới":** nền tối viền vàng, nút ✕, trạng thái cảnh báo khi đang gõ form.
+  - **Menu mobile:** nút ☰ vùng bấm 44px, mỗi link cao 48px; nút "Vở Đắc Lộ" dùng icon mũi tên.
+  - **/lien-he:** ô Chủ đề có mũi tên xổ; lỗi dưới từng ô; "(mở trang mới)". **Trang chủ 768:** H1 cỡ 7xl.
+    **/cau-chuyen:** h1 ngắt "…nay là một / gia đình 120+.".
 - [ ] **02 · Trang Đắc Lộ – Desktop** và **05 · Đắc Lộ – Mobile**: dựng lại theo landing page mới
   (nhánh `claude/dac-lo-landing`): hero kỷ niệm 400 năm + đếm ngược tới 04/06/2027, cột mốc 400 năm,
   4 thông điệp, sơ nét Cha Đắc Lộ + dòng thời gian, kế hoạch công diễn + số liệu, quy mô dàn dựng,
