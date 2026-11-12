@@ -1,5 +1,6 @@
-import { useState, type ReactNode } from 'react';
+import { useCallback, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useSearchParams } from 'react-router-dom';
 import { Project } from '../types';
 import Modal from './Modal';
 import ProjectCard from './ProjectCard';
@@ -7,9 +8,9 @@ import ProjectCard from './ProjectCard';
 export function Eyebrow({ children, center = false }: { children: ReactNode; center?: boolean }) {
   return (
     <div className={`flex items-center gap-3.5 mb-5 ${center ? 'justify-center' : ''}`}>
-      <span className="w-9 h-px bg-gold" />
+      <span className="w-9 h-px bg-gold shrink-0" />
       <span className="text-gold uppercase tracking-[0.25em] text-xs font-bold">{children}</span>
-      {center && <span className="w-9 h-px bg-gold" />}
+      {center && <span className="w-9 h-px bg-gold shrink-0" />}
     </div>
   );
 }
@@ -42,14 +43,32 @@ export function PageHeader({ eyebrow, title, intro, image }: { eyebrow: string; 
   );
 }
 
-/** Lưới thẻ vở diễn / chương trình; bấm thẻ mở popup chi tiết. */
+/**
+ * Popup chi tiết gắn với tham số `?vo=<id>` trên địa chỉ trang — để link chia sẻ mở thẳng đúng vở.
+ * `selected` là mục trong `items` khớp `?vo=`; id không có trong `items` → không mở gì (không báo lỗi).
+ * `open(p)` đặt `?vo=p.id`, `close()` xoá tham số. Dùng `replace` nên không chồng thêm lịch sử trình duyệt.
+ */
+export function useVoParam(items: Project[]) {
+  const [params, setParams] = useSearchParams();
+  const id = params.get('vo');
+  const selected = id ? items.find(p => p.id === id) ?? null : null;
+  const open = useCallback((p: Project) => {
+    setParams(prev => { const n = new URLSearchParams(prev); n.set('vo', p.id); return n; }, { replace: true, preventScrollReset: true });
+  }, [setParams]);
+  const close = useCallback(() => {
+    setParams(prev => { const n = new URLSearchParams(prev); n.delete('vo'); return n; }, { replace: true, preventScrollReset: true });
+  }, [setParams]);
+  return { selected, open, close };
+}
+
+/** Lưới thẻ vở diễn / chương trình; bấm thẻ mở popup chi tiết (đồng bộ với `?vo=<id>`). */
 export function ProjectGrid({ items }: { items: Project[] }) {
-  const [selected, setSelected] = useState<Project | null>(null);
+  const { selected, open, close } = useVoParam(items);
   return (
     <>
-      <AnimatePresence>{selected && <Modal project={selected} onClose={() => setSelected(null)} />}</AnimatePresence>
+      <AnimatePresence>{selected && <Modal key={selected.id} project={selected} onClose={close} />}</AnimatePresence>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {items.map(p => <ProjectCard key={p.id} project={p} onClick={setSelected} />)}
+        {items.map(p => <ProjectCard key={p.id} project={p} onClick={open} />)}
       </div>
     </>
   );

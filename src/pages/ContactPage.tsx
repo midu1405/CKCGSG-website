@@ -1,30 +1,58 @@
-import { useState } from 'react';
-import { Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Mail, ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { PageHeader } from '../components/PageParts';
 import { getSupabase } from '../lib/supabase';
+import { friendlyError, EMAIL_RE } from '../lib/errors';
 
 const TOPICS = ['Ủng hộ / dâng cúng', 'Hợp tác – tài trợ', 'Mời nhóm biểu diễn', 'Tham gia nhóm / tuyển diễn viên', 'Góp ý website', 'Khác'];
-const field = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-gold outline-none transition-colors';
+const field = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-gold outline-none transition-colors placeholder:text-white/40 aria-[invalid=true]:border-amber-300/70';
+const FALLBACK_ERR = 'Chưa gửi được — có thể do mạng yếu. Xin thử lại hoặc email ckcgsg@gmail.com.';
+
+type Fields = { name: string; email: string; topic: string; message: string };
+type FieldErrors = Partial<Record<'name' | 'email' | 'message', string>>;
+
+/** Kiểm dữ liệu sau khi trim; trả câu lỗi tiếng Việt cho từng ô. */
+function validate(v: Fields): FieldErrors {
+  const e: FieldErrors = {};
+  if (!v.name) e.name = 'Xin nhập họ và tên.';
+  if (!v.email) e.email = 'Xin nhập email để nhóm phản hồi.';
+  else if (!EMAIL_RE.test(v.email)) e.email = 'Email chưa đúng dạng — ví dụ ten@gmail.com.';
+  if (v.message.length < 5) e.message = 'Tin nhắn cần ít nhất 5 ký tự.';
+  return e;
+}
+
+const FieldError = ({ id, text }: { id: string; text?: string }) =>
+  text ? <span id={id} className="block text-sm text-amber-300">{text}</span> : null;
 
 export default function ContactPage() {
   const [f, setF] = useState({ name: '', email: '', topic: '', message: '' });
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState('');
-  const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => setF(s => ({ ...s, [k]: e.target.value }));
+  const [fe, setFe] = useState<FieldErrors>({});
+  const formRef = useRef<HTMLFormElement>(null);
+  const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setF(s => ({ ...s, [k]: e.target.value }));
+    if (k in fe) setFe(s => ({ ...s, [k]: undefined }));
+  };
 
   /** Lưu vào Supabase (bảng contact_messages) → tự đổ về Google Sheet */
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (busy) return;
-    setBusy(true); setErr('');
+    const v: Fields = { name: f.name.trim(), email: f.email.trim(), topic: f.topic, message: f.message.trim() };
+    const errors = validate(v);
+    setFe(errors); setErr('');
+    const firstBad = (['name', 'email', 'message'] as const).find(k => errors[k]);
+    if (firstBad) { formRef.current?.querySelector<HTMLElement>(`[name="${firstBad}"]`)?.focus(); return; }
+    setBusy(true);
     try {
       const sb = await getSupabase();
-      const { error } = await sb.rpc('submit_contact', { p_topic: f.topic, p_name: f.name, p_email: f.email, p_message: f.message });
+      const { error } = await sb.rpc('submit_contact', { p_topic: v.topic, p_name: v.name, p_email: v.email, p_message: v.message });
       if (error) throw error;
       setSent(true); setF({ name: '', email: '', topic: '', message: '' });
-    } catch (x) { setErr((x as { message?: string })?.message || 'Chưa gửi được, xin thử lại hoặc email ckcgsg@gmail.com.'); }
+    } catch (x) { setErr(friendlyError(x, FALLBACK_ERR)); }
     finally { setBusy(false); }
   };
 
@@ -78,36 +106,45 @@ export default function ContactPage() {
                 <button onClick={() => setSent(false)} className="text-gold font-bold underline underline-offset-4">Gửi thêm tin nhắn khác</button>
               </div>
             ) : (
-            <form onSubmit={submit} className="space-y-6">
+            <form ref={formRef} onSubmit={submit} noValidate className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
                 <label className="space-y-2 block">
                   <span className="text-xs uppercase tracking-widest font-bold text-white/40">Họ và tên *</span>
-                  <input type="text" required maxLength={80} value={f.name} onChange={set('name')} className={field} placeholder="Nguyễn Văn A" />
+                  <input type="text" name="name" required maxLength={80} value={f.name} onChange={set('name')} className={field} placeholder="Nguyễn Văn A"
+                    aria-invalid={!!fe.name} aria-describedby={fe.name ? 'lh-name-err' : undefined} />
+                  <FieldError id="lh-name-err" text={fe.name} />
                 </label>
                 <label className="space-y-2 block">
                   <span className="text-xs uppercase tracking-widest font-bold text-white/40">Email *</span>
-                  <input type="email" required maxLength={160} value={f.email} onChange={set('email')} className={field} placeholder="example@gmail.com" />
+                  <input type="email" name="email" inputMode="email" autoComplete="email" required maxLength={160} value={f.email} onChange={set('email')} className={field} placeholder="example@gmail.com"
+                    aria-invalid={!!fe.email} aria-describedby={fe.email ? 'lh-email-err' : undefined} />
+                  <FieldError id="lh-email-err" text={fe.email} />
                 </label>
               </div>
               <label className="space-y-2 block">
                 <span className="text-xs uppercase tracking-widest font-bold text-white/40">Chủ đề</span>
-                <select value={f.topic} onChange={set('topic')} className={`${field} appearance-none ${f.topic ? '' : 'text-white/40'}`}>
-                  <option value="" className="bg-[#111]">Chọn chủ đề…</option>
-                  {TOPICS.map(t => <option key={t} value={t} className="bg-[#111] text-white">{t}</option>)}
-                </select>
+                <span className="relative block">
+                  <select name="topic" value={f.topic} onChange={set('topic')} className={`${field} appearance-none pr-11 cursor-pointer ${f.topic ? '' : 'text-white/50'}`}>
+                    <option value="" className="bg-card">Chọn chủ đề…</option>
+                    {TOPICS.map(t => <option key={t} value={t} className="bg-card text-white">{t}</option>)}
+                  </select>
+                  <ChevronDown size={18} aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-white/60" />
+                </span>
               </label>
               {f.topic === 'Hợp tác – tài trợ' && (
                 <div className="rounded-xl border border-gold/30 bg-gold/5 px-4 py-3 text-sm text-white/75">
                   Nếu bạn muốn đồng hành cùng <b>vở ca kịch Đắc Lộ 2027</b>, xin điền{' '}
-                  <Link to="/dac-lo#dang-ky-cong-tac" className="text-gold font-bold underline underline-offset-2">form đăng ký cộng tác</Link>{' '}
+                  <a href="/dac-lo#dang-ky-cong-tac" target="_blank" rel="noopener" className="text-gold font-bold underline underline-offset-2">form đăng ký cộng tác (mở trang mới)</a>{' '}
                   để Ban tổ chức sắp xếp đúng hạng mục.
                 </div>
               )}
               <label className="space-y-2 block">
                 <span className="text-xs uppercase tracking-widest font-bold text-white/40">Tin nhắn *</span>
-                <textarea rows={4} required minLength={5} maxLength={3000} value={f.message} onChange={set('message')} className={field} placeholder="Nội dung tin nhắn..." />
+                <textarea name="message" rows={4} required maxLength={3000} value={f.message} onChange={set('message')} className={field} placeholder="Nội dung tin nhắn..."
+                  aria-invalid={!!fe.message} aria-describedby={fe.message ? 'lh-message-err' : undefined} />
+                <FieldError id="lh-message-err" text={fe.message} />
               </label>
-              {err && <p className="text-sm text-amber-300">{err}</p>}
+              {err && <p role="alert" className="text-sm text-amber-300">{err}</p>}
               <button type="submit" disabled={busy} className="w-full bg-gold text-black font-bold py-4 rounded-xl hover:bg-white transition-all duration-300 disabled:opacity-60">
                 {busy ? 'ĐANG GỬI…' : 'GỬI TIN NHẮN'}
               </button>

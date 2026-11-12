@@ -32,7 +32,7 @@ export default function StoryPage() {
     <div>
       <PageHeader
         eyebrow="Câu chuyện của chúng tôi"
-        title={<>Bắt đầu từ 33 trái tim,<br />nay là một gia đình 120+.</>}
+        title={<>Bắt đầu từ 33 trái tim,<br />nay là một gia&nbsp;đình&nbsp;120+.</>}
         image={HEADER_IMG}
       />
 
@@ -62,15 +62,15 @@ export default function StoryPage() {
         <div className="max-w-7xl mx-auto px-6">
           <motion.div {...fadeUp} className="mb-14">
             <Eyebrow>Hành trình</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold serif">Những cột mốc</h2>
+            <h2 className="text-4xl md:text-5xl font-bold serif text-balance">Những cột mốc</h2>
           </motion.div>
           <ol className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12">
             {TIMELINE.map((t, i) => (
               <motion.li key={t.when} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.6, delay: (i % 3) * 0.15 }}>
                 <GrowLine delay={(i % 3) * 0.15 + 0.1} />
-                <div className="text-gold serif text-3xl font-bold mb-2">{t.when}</div>
-                <h3 className="text-xl font-bold serif mb-2">{t.title}</h3>
+                <div className="text-gold serif text-3xl font-bold mb-2 whitespace-nowrap">{t.when}</div>
+                <h3 className="text-xl font-bold serif mb-2 text-balance">{t.title}</h3>
                 <p className="text-white/55 leading-relaxed">{t.text}</p>
               </motion.li>
             ))}
@@ -83,14 +83,14 @@ export default function StoryPage() {
         <div className="max-w-7xl mx-auto px-6">
           <motion.div {...fadeUp} className="max-w-2xl mb-14">
             <Eyebrow>Cách chúng tôi sống cùng nhau</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold serif leading-tight">Một gia đình trong đức tin</h2>
+            <h2 className="text-4xl md:text-5xl font-bold serif leading-tight text-balance">Một gia đình trong đức tin</h2>
           </motion.div>
           <div className="grid sm:grid-cols-2 gap-6">
             {VALUES.map(v => (
               <motion.div key={v.title} {...fadeUp} className="bg-card border border-white/8 rounded-3xl overflow-hidden">
                 <div className="aspect-[16/9] overflow-hidden"><img src={v.img} alt="" className="w-full h-full object-cover" loading="lazy" /></div>
                 <div className="p-7">
-                  <h3 className="serif text-2xl font-bold mb-2">{v.title}</h3>
+                  <h3 className="serif text-2xl font-bold mb-2 text-balance">{v.title}</h3>
                   <p className="text-white/55 leading-relaxed">{v.text}</p>
                 </div>
               </motion.div>
@@ -108,7 +108,7 @@ export default function StoryPage() {
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <motion.div {...fadeUp}>
             <Eyebrow center>Thông điệp & sứ mệnh</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold serif mb-10">Nhóm ra đời với mong muốn</h2>
+            <h2 className="text-4xl md:text-5xl font-bold serif mb-10 text-balance">Nhóm ra đời với mong muốn</h2>
             <div className="grid md:grid-cols-3 gap-5 mb-14 text-left">
               {['Đem Chúa đến gần mọi người hơn', 'Sinh động hoá Kinh Thánh qua hình thức nghệ thuật', 'Người trẻ cùng nhau sống đam mê và lan tỏa Tin Mừng'].map((m, i) => (
                 <div key={m} className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
@@ -129,7 +129,7 @@ export default function StoryPage() {
       {/* Tiếp theo */}
       <section className="py-20 text-center">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold serif mb-8">Cùng viết tiếp câu chuyện</h2>
+          <h2 className="text-3xl md:text-4xl font-bold serif mb-8 text-balance">Cùng viết tiếp câu chuyện</h2>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/vo-dien" className="bg-gold text-black px-8 py-4 rounded-full font-bold hover:bg-white transition-all">XEM CÁC VỞ DIỄN</Link>
             <Link to="/tuyen-dien-vien" className="border border-white/25 px-8 py-4 rounded-full font-bold hover:border-gold hover:text-gold transition-all">THAM GIA CÙNG NHÓM</Link>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Heart, Star, Calendar } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { CHARITY, OTHER_PROGRAMS } from '../constants';
 import { PageHeader, ProjectGrid, Eyebrow, fadeUp } from '../components/PageParts';
 import HEADER_IMG from '../assets/photos/value-gia-dinh.jpg';
@@ -8,7 +9,12 @@ import HEADER_IMG from '../assets/photos/value-gia-dinh.jpg';
 export default function ActivitiesPage() {
   const years = Array.from(new Set(OTHER_PROGRAMS.map(p => p.date).filter((d): d is string => !!d && /^\d{4}$/.test(d))))
     .sort((a, b) => Number(b) - Number(a));
-  const [year, setYear] = useState(years[0] ?? '');
+  // Link chia sẻ ?vo=<id> trỏ tới một chương trình → mở sẵn đúng năm của chương trình đó để popup hiện được
+  const [params] = useSearchParams();
+  const [year, setYear] = useState(() => {
+    const shared = OTHER_PROGRAMS.find(p => p.id === params.get('vo'))?.date;
+    return shared && years.includes(shared) ? shared : years[0] ?? '';
+  });
   const programs = OTHER_PROGRAMS.filter(p => p.date === year);
 
   return (
