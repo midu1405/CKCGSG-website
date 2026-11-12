@@ -1,4 +1,4 @@
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Map as MapIcon, Box, Crosshair, Copy, Check, X, Info, Satellite, Navigation } from 'lucide-react';
 import MapTabs from '../components/MapTabs';
 import CampusScene, { type CampusHandle } from '../components/campus/CampusScene';
@@ -8,6 +8,21 @@ const fmt = (n: number) => n.toLocaleString('vi-VN');
 const ll = (p: XY) => toLatLon(p).map(v => v.toFixed(6)).join(',');
 const SAT_URL = `https://www.google.com/maps/@${ORIGIN[0].toFixed(5)},${ORIGIN[1].toFixed(5)},260m/data=!3m1!1e3`;
 
+/** Gợi ý thao tác cảm ứng (chỉ hiện dưới md): ẩn sau lần chạm đầu hoặc sau 6 giây. */
+function useTouchHint() {
+  const [show, setShow] = useState(true);
+  useEffect(() => {
+    const hide = () => setShow(false);
+    const t = window.setTimeout(hide, 6000);
+    window.addEventListener('pointerdown', hide, { once: true, capture: true });
+    return () => { window.clearTimeout(t); window.removeEventListener('pointerdown', hide, { capture: true }); };
+  }, []);
+  return show;
+}
+
+/** nút điều khiển: cao 44px trên điện thoại (vùng bấm), giữ cỡ cũ từ md */
+const ctl = 'flex items-center gap-1.5 shrink-0 whitespace-nowrap px-3 py-1.5 max-md:min-h-11 rounded-full text-xs font-bold border';
+
 export default function CampusMapPage() {
   const scene = useRef<CampusHandle>(null);
   const [sel, setSel] = useState<{ type: 'b'; b: Building } | { type: 'm'; m: Marker } | null>(null);
@@ -16,6 +31,7 @@ export default function CampusMapPage() {
   const [picked, setPicked] = useState<XY | null>(null);
   const [copied, setCopied] = useState(false);
   const [panelOpen, setPanelOpen] = useState(() => typeof window === 'undefined' || window.innerWidth >= 768);
+  const touchHint = useTouchHint();
 
   const pickB = (b: Building) => { setSel({ type: 'b', b }); setPanelOpen(true); };
   const pickM = (m: Marker) => { setSel({ type: 'm', m }); setPanelOpen(true); scene.current?.focus(m.pos, m.size ? 150 : 90); setView('3d'); };
@@ -41,17 +57,26 @@ export default function CampusMapPage() {
       <div className="absolute z-20 top-[88px] left-4 right-4 md:right-auto md:max-w-[560px] pointer-events-none">
         <div className="pointer-events-auto">
           <div className="mb-2"><MapTabs active="campus" /></div>
-          <div className="text-gold uppercase tracking-[0.25em] text-[10px] font-bold mb-1">Số 6 Tôn Đức Thắng · Quận 1</div>
-          <h1 className="serif text-2xl md:text-4xl font-bold leading-tight mb-3">Khuôn viên Trung Tâm Mục Vụ<br className="hidden md:block" /> & Đại Chủng Viện Thánh Giuse</h1>
-          <div className="flex flex-wrap gap-2">
-            <button onClick={() => setV('top')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border ${view === 'top' ? 'bg-gold text-black border-gold' : 'bg-black/70 border-white/10'}`}><MapIcon size={14} /> Sơ đồ</button>
-            <button onClick={() => setV('3d')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border ${view === '3d' ? 'bg-gold text-black border-gold' : 'bg-black/70 border-white/10'}`}><Box size={14} /> 3D</button>
-            <a href={SAT_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-black/70 border border-white/10 hover:border-gold/60 px-3 py-1.5 rounded-full text-xs font-bold"><Satellite size={14} className="text-gold" /> Ảnh vệ tinh (Google Maps)</a>
+          {/* nền mờ sau tiêu đề: đọc được cả khi nằm trên mái nhà sáng màu */}
+          <div className="w-fit max-w-full bg-black/60 backdrop-blur-sm rounded-2xl px-3 py-2 mb-3">
+            <div className="text-gold uppercase tracking-[0.25em] text-[10px] font-bold mb-1">Số 6 Tôn Đức Thắng · Quận 1</div>
+            <h1 className="serif text-2xl md:text-4xl font-bold leading-tight text-balance">Khuôn viên Trung Tâm Mục Vụ<br className="hidden md:block" /> & Đại Chủng Viện Thánh Giuse</h1>
+          </div>
+          {/* điện thoại: một hàng vuốt ngang để khối nút không che nửa màn hình; từ md: xuống dòng như cũ */}
+          <div className="flex gap-2 max-md:-mx-4 max-md:px-4 max-md:overflow-x-auto max-md:[scrollbar-width:none] md:flex-wrap">
+            <button onClick={() => setV('top')} className={`${ctl} ${view === 'top' ? 'bg-gold text-black border-gold' : 'bg-black/70 border-white/10'}`}><MapIcon size={14} /> Sơ đồ</button>
+            <button onClick={() => setV('3d')} className={`${ctl} ${view === '3d' ? 'bg-gold text-black border-gold' : 'bg-black/70 border-white/10'}`}><Box size={14} /> 3D</button>
+            <a href={SAT_URL} target="_blank" rel="noopener noreferrer" className={`${ctl} bg-black/70 border-white/10 hover:border-gold/60`}><Satellite size={14} className="text-gold" /> Ảnh vệ tinh (Google Maps)</a>
             <button onClick={() => { setPickMode(m => !m); setPicked(null); }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border ${pickMode ? 'bg-[#ff5a5a] text-black border-[#ff5a5a]' : 'bg-black/70 border-white/10'}`}>
+              className={`${ctl} ${pickMode ? 'bg-red-400 text-black border-red-400' : 'bg-black/70 border-white/10'}`}>
               <Crosshair size={14} /> {pickMode ? 'Đang đánh dấu — bấm lên bản đồ' : 'Chế độ đánh dấu'}
             </button>
           </div>
+          {touchHint && (
+            <p className="md:hidden mt-2 w-fit bg-black/70 backdrop-blur-sm rounded-2xl px-3 py-1.5 text-xs text-white/90 pointer-events-none">
+              Vuốt để xoay · chụm hai ngón để phóng to · chạm vào khu để xem
+            </p>
+          )}
         </div>
       </div>
 
@@ -60,12 +85,12 @@ export default function CampusMapPage() {
           <span className="text-gold leading-none">▲</span><span>B</span>
         </div>
       )}
-      <div className="hidden md:block absolute bottom-4 left-4 text-white/40 text-[11px] pointer-events-none max-w-md">
+      <div className="hidden md:block absolute bottom-4 left-4 bg-black/60 rounded-xl px-3 py-1.5 text-white/75 text-[11px] pointer-events-none max-w-md">
         Dữ liệu bản đồ © <span className="underline">OpenStreetMap</span> contributors (ODbL). Chiều cao toà nhà và vị trí có dấu * là ước lượng.
       </div>
 
       {!panelOpen && (
-        <button onClick={() => setPanelOpen(true)} className="absolute z-30 bottom-4 right-4 md:top-[88px] md:bottom-auto bg-gold text-black rounded-full px-4 py-2 font-bold text-sm flex items-center gap-2">
+        <button onClick={() => setPanelOpen(true)} className="absolute z-30 bottom-4 right-4 md:top-[88px] md:bottom-auto bg-gold text-black rounded-full px-4 py-2 max-md:min-h-11 font-bold text-sm flex items-center gap-2">
           <Info size={16} /> Chú thích
         </button>
       )}
@@ -73,11 +98,11 @@ export default function CampusMapPage() {
         <aside className="absolute z-30 left-0 right-0 bottom-0 max-h-[46svh] md:max-h-none md:left-auto md:right-4 md:top-[88px] md:bottom-4 md:w-[360px] bg-black/85 backdrop-blur-md border border-white/10 rounded-t-3xl md:rounded-3xl overflow-y-auto">
           <div className="sticky top-0 bg-black/90 backdrop-blur px-5 pt-4 pb-3 border-b border-white/10 flex items-center justify-between">
             <div className="text-gold uppercase tracking-[0.2em] text-[11px] font-bold">Khuôn viên · ~{(CAMPUS_AREA / 10000).toFixed(1).replace('.', ',')} ha</div>
-            <button onClick={() => setPanelOpen(false)} aria-label="Thu gọn" className="text-white/50 hover:text-white"><X size={18} /></button>
+            <button onClick={() => setPanelOpen(false)} aria-label="Thu gọn" className="-my-3 -mr-3 w-11 h-11 shrink-0 flex items-center justify-center text-white/50 hover:text-white"><X size={18} /></button>
           </div>
           <div className="p-5 space-y-5">
             {pickMode && (
-              <div className="rounded-2xl border border-[#ff5a5a]/50 bg-[#ff5a5a]/10 p-4 text-sm">
+              <div className="rounded-2xl border border-red-400/50 bg-red-400/10 p-4 text-sm">
                 <div className="font-bold mb-1">Chế độ đánh dấu</div>
                 {picked ? (
                   <>

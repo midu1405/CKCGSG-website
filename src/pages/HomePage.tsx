@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { Calendar, MapPin, Music, Heart, Star, ArrowRight, Mic2, HandHeart } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -6,10 +5,9 @@ import HERO_IMG from '../assets/photos/hero.jpg';
 import STORY_IMG from '../assets/photos/story.jpg';
 import CASTING_BG from '../assets/photos/casting-banner.jpg';
 import { PLAYS, CHARITY, OTHER_PROGRAMS, playSortKey } from '../constants';
-import { Project } from '../types';
 import Modal from '../components/Modal';
 import ProjectCard from '../components/ProjectCard';
-import { Eyebrow, fadeUp } from '../components/PageParts';
+import { Eyebrow, fadeUp, useVoParam } from '../components/PageParts';
 import { CountUp } from '../components/Motion';
 
 const STATS = [
@@ -20,13 +18,14 @@ const STATS = [
 ];
 
 export default function HomePage() {
-  const [selected, setSelected] = useState<Project | null>(null);
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 800], [0, 240]);
 
   const upcoming = PLAYS.find(p => p.status === 'upcoming');
   const archived = PLAYS.filter(p => p.status === 'archived').sort((a, b) => playSortKey(b.date) - playSortKey(a.date));
   const recent = archived.slice(0, 3);
+  // ?vo=<id> mở sẵn popup — tìm trong mọi vở đã diễn để link chia sẻ cũ vẫn mở được khi vở không còn nằm trong 3 vở mới nhất
+  const { selected, open, close } = useVoParam(archived);
 
   const ACTIVITIES = [
     { icon: Music, title: 'Ca kịch', count: `${archived.length} vở diễn`, desc: 'Sinh động hóa Kinh Thánh và lịch sử đức tin qua những vở ca kịch — miễn phí, không bán vé.', to: '/vo-dien' },
@@ -36,7 +35,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <AnimatePresence>{selected && <Modal project={selected} onClose={() => setSelected(null)} />}</AnimatePresence>
+      <AnimatePresence>{selected && <Modal key={selected.id} project={selected} onClose={close} />}</AnimatePresence>
 
       {/* 1 — HERO (giữ theme cũ) */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -47,9 +46,9 @@ export default function HomePage() {
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <span className="text-gold uppercase tracking-[0.5em] text-sm font-bold mb-6 block">Hành trình 10 năm +</span>
-            <h1 className="text-4xl sm:text-5xl md:text-8xl font-bold serif mb-8 leading-[1.04] text-balance">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold serif mb-8 leading-[1.04] text-balance">
               Mang Tin Mừng Qua <br />
-              <span className="text-gold italic">Nghệ Thuật Ca Kịch</span>
+              <span className="text-gold italic">Nghệ Thuật Ca&nbsp;Kịch</span>
             </h1>
             <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
               Nhóm Ca Kịch Công Giáo Sài Gòn lan tỏa tình yêu và đức tin qua những vở diễn đầy ý nghĩa — hoàn toàn miễn phí cho cộng đồng.
@@ -79,7 +78,7 @@ export default function HomePage() {
           <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-24 flex lg:justify-end">
             <motion.div {...fadeUp} className="w-full lg:max-w-xl text-center lg:text-left">
               <span className="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-5 block">Vở diễn sắp tới · Kỷ niệm 400 năm</span>
-              <h2 className="text-7xl md:text-9xl font-bold serif leading-none mb-6">{upcoming.title}</h2>
+              <h2 className="text-7xl md:text-9xl font-bold serif leading-none mb-6 text-balance">{upcoming.title}</h2>
               <p className="text-white/70 text-lg md:text-xl font-light leading-relaxed mb-8">{upcoming.description}</p>
               <div className="flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-3 text-sm text-white/70 mb-10">
                 <span className="flex items-center gap-2"><Calendar size={16} className="text-gold" /> {upcoming.date}</span>
@@ -113,7 +112,7 @@ export default function HomePage() {
                     <div className="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center text-gold"><a.icon size={26} /></div>
                     <span className="text-xs uppercase tracking-widest text-white/40 font-bold">{a.count}</span>
                   </div>
-                  <h3 className="serif text-3xl font-bold mb-3">{a.title}</h3>
+                  <h3 className="serif text-3xl md:text-2xl lg:text-3xl font-bold mb-3 text-balance">{a.title}</h3>
                   <p className="text-white/55 leading-relaxed mb-8">{a.desc}</p>
                   <span className="inline-flex items-center gap-2 text-gold text-sm font-bold uppercase tracking-[0.1em]">
                     Xem thêm <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -130,7 +129,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-20 items-center">
           <motion.div {...fadeUp}>
             <Eyebrow>Câu chuyện của chúng tôi</Eyebrow>
-            <h2 className="text-3xl md:text-5xl font-bold serif leading-[1.08] mb-6 text-balance">Bắt đầu từ 33 trái tim,<br />nay là một gia đình 120+.</h2>
+            <h2 className="text-3xl md:text-5xl font-bold serif leading-[1.08] mb-6 text-balance">Bắt đầu từ 33 trái tim,<br />nay là một gia&nbsp;đình&nbsp;120+.</h2>
             <p className="text-white/60 font-light text-lg leading-[1.8] max-w-md mb-10">
               Thành lập tháng 5 năm 2014, quy tụ cả người Công giáo và không Công giáo — cùng tôn trọng, cùng cầu nguyện, cùng sáng tạo.
             </p>
@@ -142,8 +141,8 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <Link to="/cau-chuyen" className="text-gold font-bold text-sm uppercase tracking-[0.08em] border-b border-gold pb-1 hover:text-white hover:border-white transition-all">
-              Đọc câu chuyện của nhóm →
+            <Link to="/cau-chuyen" className="group inline-flex items-center gap-2 text-gold font-bold text-sm uppercase tracking-[0.08em] border-b border-gold pb-1 hover:text-white hover:border-white transition-all">
+              Đọc câu chuyện của nhóm <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
           <motion.div {...fadeUp} className="relative">
@@ -171,7 +170,7 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {recent.map(p => <ProjectCard key={p.id} project={p} onClick={setSelected} />)}
+            {recent.map(p => <ProjectCard key={p.id} project={p} onClick={open} />)}
           </div>
         </div>
       </section>
@@ -189,7 +188,7 @@ export default function HomePage() {
           ].map(c => (
             <motion.div key={c.title} {...fadeUp} className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-10">
               <div className="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center text-gold mb-6"><c.icon size={24} /></div>
-              <h3 className="serif text-3xl font-bold mb-3">{c.title}</h3>
+              <h3 className="serif text-3xl font-bold mb-3 text-balance">{c.title}</h3>
               <p className="text-white/60 leading-relaxed mb-8">{c.desc}</p>
               <Link to={c.to} className="inline-block bg-gold text-black px-7 py-3 rounded-full font-bold hover:bg-white transition-all">{c.cta}</Link>
             </motion.div>

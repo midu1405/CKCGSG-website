@@ -1,7 +1,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type * as THREE from 'three';
 import { Link } from 'react-router-dom';
-import { Users, Handshake, Eye, Maximize2, ArrowUpFromLine, Theater, Mail, X, Info, Sun, Moon, Footprints } from 'lucide-react';
+import { Users, Handshake, Eye, Maximize2, ArrowUpFromLine, Theater, Mail, X, Info, Sun, Moon, Footprints, ArrowRight } from 'lucide-react';
 import StageScene, { type Mode, type SceneHandle } from '../components/stage/StageScene';
 import { ZONES, SPONSOR, TOTAL_SEATS, TOTAL_STANDING, STAND_DENSITY, zoneCount, nearestChair, zoneSpot, type Zone } from '../components/stage/data';
 import STAGE_DESIGN from '../assets/photos/stage-design.jpg';
@@ -23,6 +23,21 @@ const OUTSIDE_WORLD: World = (() => {
 })();
 
 const fmt = (n: number) => n.toLocaleString('vi-VN');
+
+/** Gợi ý thao tác cảm ứng (chỉ hiện dưới md): ẩn sau lần chạm đầu hoặc sau 6 giây. */
+function useTouchHint() {
+  const [show, setShow] = useState(true);
+  useEffect(() => {
+    const hide = () => setShow(false);
+    const t = window.setTimeout(hide, 6000);
+    window.addEventListener('pointerdown', hide, { once: true, capture: true });
+    return () => { window.clearTimeout(t); window.removeEventListener('pointerdown', hide, { capture: true }); };
+  }, []);
+  return show;
+}
+
+/** nút điều khiển: cao 44px trên điện thoại (vùng bấm), giữ cỡ cũ từ md */
+const ctl = 'flex items-center gap-1.5 shrink-0 whitespace-nowrap px-3 py-1.5 max-md:min-h-11 rounded-full text-xs font-bold';
 
 export default function StageMapPage() {
   const scene = useRef<SceneHandle>(null);
@@ -53,6 +68,7 @@ export default function StageMapPage() {
   const inChapel = !!walkMe && place === 'chapel';
   const { net, ids, count, status, chat, sendChat } = usePresence(!!walkMe, walkMe?.name ?? '', inChapel ? 'nha-nguyen-v1' : undefined);
   const prayer = usePrayer(inChapel);
+  const touchHint = useTouchHint();
 
   const say = (t: string) => { setToast(t); window.setTimeout(() => setToast(x => (x === t ? '' : x)), 3200); };
   const enterChapel = useCallback(() => {
@@ -94,7 +110,7 @@ export default function StageMapPage() {
   goZoneRef.current = goZone;
   const doCandle = useCallback(async () => {
     const ok = await prayer.lightCandle();
-    say(ok ? 'Bạn đã thắp một ngọn nến 🕯 Xin Chúa nhậm lời.' : (prayer.error || 'Chưa thắp được nến, xin thử lại.'));
+    say(ok ? 'Bạn đã thắp một ngọn nến. Xin Chúa nhậm lời.' : (prayer.error || 'Chưa thắp được nến, xin thử lại.'));
   }, [prayer]);
   const toggleMusic = () => setMusic(m => {
     const next = !m; organ.current ??= new Organ();
@@ -173,46 +189,55 @@ export default function StageMapPage() {
       {!walkMe && <div className="absolute z-20 top-[88px] left-4 right-4 md:right-auto md:max-w-[560px] pointer-events-none">
         <div className="pointer-events-auto">
           <div className="mb-2"><MapTabs active="stage" /></div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-gold uppercase tracking-[0.25em] text-[10px] font-bold">Đắc Lộ · 04.06.2027</span>
-            <span className="bg-white/10 text-white/70 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">Bản dự kiến</span>
+          {/* nền mờ sau tiêu đề: đọc được cả khi nằm trên mái nhà sáng màu */}
+          <div className="w-fit max-w-full bg-black/60 backdrop-blur-sm rounded-2xl px-3 py-2 mb-3">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <span className="text-gold uppercase tracking-[0.25em] text-[10px] font-bold whitespace-nowrap">Đắc Lộ · 04.06.2027</span>
+              <span className="bg-white/10 text-white/70 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">Bản dự kiến</span>
+            </div>
+            <h1 className="serif text-3xl md:text-4xl font-bold leading-tight text-balance">Sơ đồ sân khấu 3D</h1>
           </div>
-          <h1 className="serif text-3xl md:text-4xl font-bold leading-tight mb-3">Sơ đồ sân khấu 3D</h1>
           <div className="inline-flex bg-black/70 backdrop-blur border border-white/10 rounded-full p-1 mb-3">
             {([['audience', 'Khán giả', Users], ['sponsor', 'Nhà tài trợ', Handshake]] as const).map(([m, label, Icon]) => (
               <button key={m} onClick={() => switchMode(m)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${mode === m ? 'bg-gold text-black' : 'text-white/70 hover:text-white'}`}>
+                className={`flex items-center gap-2 px-4 py-2 max-md:min-h-11 rounded-full text-sm font-bold transition-all ${mode === m ? 'bg-gold text-black' : 'text-white/70 hover:text-white'}`}>
                 <Icon size={16} /> {label}
               </button>
             ))}
           </div>
-          <div className="flex flex-wrap gap-2">
+          {/* điện thoại: một hàng vuốt ngang để khối nút không che nửa màn hình; từ md: xuống dòng như cũ */}
+          <div className="flex gap-2 max-md:-mx-4 max-md:px-4 max-md:overflow-x-auto max-md:[scrollbar-width:none] md:flex-wrap">
             {([['overview', 'Toàn cảnh', Maximize2], ['top', 'Nhìn từ trên', ArrowUpFromLine], ['stage', 'Từ sân khấu', Theater]] as const).map(([k, label, Icon]) => (
               <button key={k} onClick={() => scene.current?.preset(k)}
-                className="flex items-center gap-1.5 bg-black/70 backdrop-blur border border-white/10 hover:border-gold/60 px-3 py-1.5 rounded-full text-xs font-bold">
+                className={`${ctl} bg-black/70 backdrop-blur border border-white/10 hover:border-gold/60`}>
                 <Icon size={14} className="text-gold" /> {label}
               </button>
             ))}
             <button onClick={() => setJoining(true)}
-              className="flex items-center gap-1.5 bg-gold text-black px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+              className={`${ctl} bg-gold text-black shadow-lg`}>
               <Footprints size={14} /> Dạo khuôn viên
             </button>
-            <LedControls />
+            <LedControls className="shrink-0" />
             <button onClick={() => setNight(n => !n)}
-              className="flex items-center gap-1.5 bg-black/70 backdrop-blur border border-white/10 hover:border-gold/60 px-3 py-1.5 rounded-full text-xs font-bold">
+              className={`${ctl} bg-black/70 backdrop-blur border border-white/10 hover:border-gold/60`}>
               {night ? <Sun size={14} className="text-gold" /> : <Moon size={14} className="text-gold" />} {night ? 'Ban ngày' : 'Đêm diễn'}
             </button>
           </div>
+          {touchHint && (
+            <p className="md:hidden mt-2 w-fit bg-black/70 backdrop-blur-sm rounded-2xl px-3 py-1.5 text-xs text-white/90 pointer-events-none">
+              Vuốt để xoay · chụm hai ngón để phóng to · chạm vào khu để xem
+            </p>
+          )}
         </div>
       </div>}
 
-      {!walkMe && <div className="hidden md:block absolute bottom-4 left-4 text-white/40 text-xs pointer-events-none">
+      {!walkMe && <div className="hidden md:block absolute bottom-4 left-4 bg-black/60 rounded-full px-3 py-1 text-white/75 text-xs pointer-events-none">
         Kéo để xoay · cuộn để phóng to · chuột phải để di chuyển · bấm vào khu để xem
       </div>}
 
       {/* Bảng thông tin */}
       {!walkMe && !panelOpen && (
-        <button onClick={() => setPanelOpen(true)} className="absolute z-30 bottom-4 right-4 md:top-[88px] md:bottom-auto bg-gold text-black rounded-full px-4 py-2 font-bold text-sm flex items-center gap-2">
+        <button onClick={() => setPanelOpen(true)} className="absolute z-30 bottom-4 right-4 md:top-[88px] md:bottom-auto bg-gold text-black rounded-full px-4 py-2 max-md:min-h-11 font-bold text-sm flex items-center gap-2">
           <Info size={16} /> {mode === 'audience' ? 'Các khu' : 'Hạng mục'}
         </button>
       )}
@@ -222,7 +247,7 @@ export default function StageMapPage() {
             <div className="text-gold uppercase tracking-[0.2em] text-[11px] font-bold">
               {mode === 'audience' ? `~${fmt(TOTAL_SEATS)} ghế · ~${fmt(TOTAL_STANDING)} chỗ đứng` : 'Hạng mục cần đồng hành'}
             </div>
-            <button onClick={() => setPanelOpen(false)} aria-label="Thu gọn" className="text-white/50 hover:text-white"><X size={18} /></button>
+            <button onClick={() => setPanelOpen(false)} aria-label="Thu gọn" className="-my-3 -mr-3 w-11 h-11 shrink-0 flex items-center justify-center text-white/50 hover:text-white"><X size={18} /></button>
           </div>
 
           <div className="p-5 space-y-4">
@@ -279,8 +304,8 @@ export default function StageMapPage() {
                   <img src={STAGE_DESIGN} alt="Phối cảnh thiết kế sân khấu Đắc Lộ" className="w-full" loading="lazy" />
                   <figcaption className="text-[11px] text-white/45 px-3 py-2">Phối cảnh thiết kế sân khấu của ekip</figcaption>
                 </figure>
-                <Link to="/dac-lo#cong-tac" className="block text-center text-gold text-sm font-bold border border-gold/50 rounded-full py-2.5 hover:bg-gold hover:text-black transition-all">
-                  Xem lời mời cộng tác →
+                <Link to="/dac-lo#cong-tac" className="flex items-center justify-center gap-2 text-gold text-sm font-bold border border-gold/50 rounded-full py-2.5 hover:bg-gold hover:text-black transition-all">
+                  Xem lời mời cộng tác <ArrowRight size={16} aria-hidden />
                 </Link>
               </>
             )}

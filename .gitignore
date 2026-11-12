@@ -6,3 +6,5 @@ coverage/
 *.log
 .env*
 !.env.example
+# ảnh chụp kiểm tra (nặng) — chỉ giữ audit.json và báo cáo
+docs/audits/*/*.png

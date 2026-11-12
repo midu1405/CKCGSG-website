@@ -43,7 +43,7 @@ export default function PlaysPage() {
             </div>
             <div className="p-8 md:p-12 flex flex-col justify-center">
               <div className="text-gold uppercase tracking-[0.25em] text-xs font-bold mb-4 flex items-center gap-2"><Calendar size={14} /> Sắp diễn · {upcoming.date}</div>
-              <h2 className="serif text-5xl md:text-6xl font-bold mb-4">{upcoming.title}</h2>
+              <h2 className="serif text-5xl md:text-6xl font-bold mb-4 text-balance">{upcoming.title}</h2>
               <p className="text-white/60 text-lg leading-relaxed mb-8">{upcoming.description}</p>
               <Link to="/dac-lo" className="self-start inline-flex items-center gap-2 bg-gold text-black px-7 py-3.5 rounded-full font-bold hover:bg-white transition-all">
                 XEM CHI TIẾT <ArrowRight size={16} />
@@ -61,7 +61,7 @@ export default function PlaysPage() {
             <motion.div {...fadeUp} className="grid lg:grid-cols-[0.8fr_1.2fr] gap-6 lg:gap-16 items-end mb-12 border-t border-white/10 pt-12">
               <div>
                 <Eyebrow>{e.range}</Eyebrow>
-                <h2 className="text-4xl md:text-5xl font-bold serif">{e.title}</h2>
+                <h2 className="text-4xl md:text-5xl font-bold serif text-balance">{e.title}</h2>
               </div>
               <p className="text-white/55 text-lg font-light leading-relaxed">{e.desc}</p>
             </motion.div>

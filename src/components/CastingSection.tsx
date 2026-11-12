@@ -24,7 +24,9 @@ const steps = [
   { icon: Mail, title: 'Gửi hồ sơ', desc: 'Gửi về ckcgsg@gmail.com, tiêu đề: [HỌ VÀ TÊN] - ỨNG TUYỂN CASTING [HÁT/MÚA].' },
 ];
 
-export default function CastingSection({ id = 'casting' }: { id?: string }) {
+/** `asPage`: đứng riêng thành trang /tuyen-dien-vien → tiêu đề là h1; nhúng trong trang khác → h2. */
+export default function CastingSection({ id = 'casting', asPage = false }: { id?: string; asPage?: boolean }) {
+  const Title = asPage ? 'h1' : 'h2';
   return (
     <section id={id} className="relative py-20 md:py-32 overflow-hidden">
       {/* nền banner */}
@@ -39,7 +41,7 @@ export default function CastingSection({ id = 'casting' }: { id?: string }) {
           <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/30 text-gold px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-[0.15em] mb-5">
             <Clock size={14} /> Hạn chót: 30/06/2026
           </div>
-          <h2 className="text-4xl md:text-6xl font-bold serif leading-tight mb-4 text-balance">Tuyển Diễn Viên</h2>
+          <Title className="text-4xl md:text-6xl font-bold serif leading-tight mb-4 text-balance">Tuyển Diễn Viên</Title>
           <p className="text-gold text-lg font-bold uppercase tracking-[0.3em] mb-5">Hát · Múa</p>
           <p className="text-white/60 font-light text-lg leading-relaxed">
             Nhóm Ca Kịch Công Giáo Sài Gòn tìm kiếm những tài năng cùng đồng hành trong các dự án sắp tới. Nếu bạn yêu nghệ thuật và mong muốn loan báo Tin Mừng qua sân khấu — hãy gia nhập cùng chúng tôi.
