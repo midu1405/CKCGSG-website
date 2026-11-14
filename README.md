@@ -141,7 +141,7 @@ Wireframe desktop + mobile và thư viện ảnh nằm trong file Figma ở trê
 - Form liên hệ và ô đăng ký nhận tin Đắc Lộ chưa nối dịch vụ gửi (EmailJS / Google Sheets).
 - Ảnh thẻ Thiện nguyện và Thánh ca & hợp xướng còn là ảnh mẫu tạm.
 - Link YouTube các vở đã gắn theo bảng tư liệu của nhóm (14/11/2026). Còn chờ: bản Official *Con chiên không mỏi* (đang Unlisted), lần 1 *Bức linh ảnh* (kênh a Kiệt).
-- 13 mục trong Hoạt động (thiện nguyện + chương trình khác) vẫn dùng ảnh tạm picsum — chờ ảnh thật.
+- 13 mục trong Hoạt động (thiện nguyện + chương trình khác) vẫn dùng ảnh tạm picsum — chờ ảnh thật. Mục mới "Hướng về Miền Trung – Mằng Lăng, Phú Yên" (11/2016) đã có ảnh thật.
 - Ảnh popup vở diễn (14/11/2026) lấy từ album của nhóm — người chụp: Q+Gấu, Quỳnh–Gấu, Minh Phước, Quang Hứa, Mỹ Kim (ghi ở từng mục trong `src/constants.ts`). Jericho, Inhaxio thêm 6 ảnh mỗi vở (Source TGP, Tomato). Còn thiếu ảnh thêm cho: Don Bosco, Tên tử tù, Một tình yêu.
 
 ---
