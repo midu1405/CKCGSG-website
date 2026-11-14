@@ -1,5 +1,8 @@
 import { motion } from 'motion/react';
-import { Mic2, Footprints, FolderUp, Mail, Clock } from 'lucide-react';
+import { Mic2, Footprints, FolderUp, Mail, Clock, CalendarCheck, ChevronDown, Hammer, Youtube } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { CASTING, SOCIAL } from '../constants';
+import { FacebookIcon } from './SocialIcons';
 import CASTING_BG from '../assets/photos/casting-banner.jpg';
 
 const SUBJECT = encodeURIComponent('[HỌ VÀ TÊN] - ỨNG TUYỂN CASTING [HÁT/MÚA]');
@@ -25,7 +28,12 @@ const steps = [
 ];
 
 /** `asPage`: đứng riêng thành trang /tuyen-dien-vien → tiêu đề là h1; nhúng trong trang khác → h2. */
-export default function CastingSection({ id = 'casting', asPage = false }: { id?: string; asPage?: boolean }) {
+export default function CastingSection(props: { id?: string; asPage?: boolean }) {
+  return CASTING.open ? <OpenCasting {...props} /> : <ClosedCasting {...props} />;
+}
+
+/** Đang nhận hồ sơ. */
+function OpenCasting({ id = 'casting', asPage = false }: { id?: string; asPage?: boolean }) {
   const Title = asPage ? 'h1' : 'h2';
   return (
     <section id={id} className="relative py-20 md:py-32 overflow-hidden">
@@ -39,7 +47,7 @@ export default function CastingSection({ id = 'casting', asPage = false }: { id?
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center max-w-2xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/30 text-gold px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-[0.15em] mb-5">
-            <Clock size={14} /> Hạn chót: 30/06/2026
+            <Clock size={14} /> Hạn chót: {CASTING.deadline}
           </div>
           <Title className="text-4xl md:text-6xl font-bold serif leading-tight mb-4 text-balance">Tuyển Diễn Viên</Title>
           <p className="text-gold text-lg font-bold uppercase tracking-[0.3em] mb-5">Hát · Múa</p>
@@ -104,6 +112,92 @@ export default function CastingSection({ id = 'casting', asPage = false }: { id?
           </a>
           <p className="text-white/40 text-sm mt-4">Nút sẽ mở email với tiêu đề mẫu sẵn — bạn chỉ cần đính kèm link hồ sơ.</p>
         </div>
+      </div>
+    </section>
+  );
+}
+
+const focusRing = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold';
+
+/** Đợt tuyển đã đóng (CASTING.open = false): cảm ơn, chỉ đường đi tiếp, giữ yêu cầu cũ để tham khảo. */
+function ClosedCasting({ id = 'casting', asPage = false }: { id?: string; asPage?: boolean }) {
+  const Title = asPage ? 'h1' : 'h2';
+  return (
+    <section id={id} className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <img src={CASTING_BG} alt="" className="w-full h-full object-cover opacity-25" />
+        <div className="absolute inset-0 bg-gradient-to-b from-dark/80 via-dark/85 to-dark" />
+      </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto px-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-3xl mb-12">
+          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/15 text-white/70 px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+            <CalendarCheck size={16} aria-hidden="true" /> Đã đóng nhận hồ sơ · {CASTING.deadline}
+          </div>
+          <Title className="text-4xl md:text-6xl font-bold serif leading-tight mb-5 text-balance">
+            Đợt tuyển diễn viên {CASTING.round} đã khép lại
+          </Title>
+          <p className="text-white/75 text-lg leading-relaxed">
+            Cảm ơn tất cả các bạn đã gửi hồ sơ. Dàn diễn viên cho vở nhạc kịch <span className="text-gold font-semibold whitespace-nowrap">Đắc Lộ</span> đã
+            đủ và đang tập luyện. Hiện nhóm chưa có dự kiến đợt tuyển mới.
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-5 mb-10">
+          <div className="bg-card border border-gold/30 rounded-3xl p-7 md:p-8 flex flex-col">
+            <Hammer className="text-gold mb-5" size={26} aria-hidden="true" />
+            <h3 className="serif text-2xl font-bold mb-3 text-balance">Vẫn muốn góp sức?</h3>
+            <p className="text-white/70 leading-relaxed mb-7">
+              Vở Đắc Lộ cần người cộng tác hậu trường: trang phục, cảnh trí – đạo cụ, vận chuyển,
+              suất ăn cho buổi tập, âm thanh – ánh sáng.
+            </p>
+            <Link to="/dac-lo#cong-tac" className={`mt-auto self-start inline-flex items-center min-h-11 bg-gold text-black px-7 py-3 rounded-full font-bold hover:bg-white transition-colors ${focusRing}`}>
+              CỘNG TÁC CHO ĐẮC LỘ
+            </Link>
+          </div>
+
+          <div className="bg-card border border-white/10 rounded-3xl p-7 md:p-8 flex flex-col">
+            <Mail className="text-gold mb-5" size={26} aria-hidden="true" />
+            <h3 className="serif text-2xl font-bold mb-3 text-balance">Chờ đợt tuyển sau</h3>
+            <p className="text-white/70 leading-relaxed mb-7">
+              Theo dõi trang Facebook của nhóm để nhận thông báo khi mở đợt tuyển mới.
+            </p>
+            <div className="mt-auto flex flex-wrap gap-3">
+              <a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer"
+                className={`inline-flex items-center gap-2 min-h-11 px-5 py-2.5 rounded-full border border-white/25 font-bold hover:border-gold hover:text-gold transition-colors ${focusRing}`}>
+                <FacebookIcon size={18} /> Facebook
+              </a>
+              <a href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer"
+                className={`inline-flex items-center gap-2 min-h-11 px-5 py-2.5 rounded-full border border-white/25 font-bold hover:border-gold hover:text-gold transition-colors ${focusRing}`}>
+                <Youtube size={18} aria-hidden="true" /> YouTube
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <details className="group bg-white/[0.03] border border-white/10 rounded-2xl">
+          <summary className={`flex items-center justify-between gap-4 cursor-pointer list-none min-h-11 px-6 py-4 rounded-2xl ${focusRing}`}>
+            <span>
+              <span className="font-bold">Yêu cầu hồ sơ đợt {CASTING.round}</span>
+              <span className="text-white/60 text-sm block sm:inline sm:ml-2">— tham khảo để chuẩn bị cho đợt sau</span>
+            </span>
+            <ChevronDown size={20} aria-hidden="true" className="shrink-0 text-white/60 transition-transform group-open:rotate-180" />
+          </summary>
+          <div className="grid md:grid-cols-2 gap-8 px-6 pb-7 pt-2">
+            {[
+              { icon: Mic2, title: 'Diễn viên Hát', items: singRequirements, note: 'Rõ ca từ. Không dùng autotune hoặc chỉnh sửa giọng. Có thể hát với nhạc nền hoặc hát chay.' },
+              { icon: Footprints, title: 'Diễn viên Múa', items: danceRequirements },
+            ].map(g => (
+              <div key={g.title}>
+                <h4 className="flex items-center gap-2 font-bold serif text-lg mb-3"><g.icon size={18} className="text-gold" aria-hidden="true" /> {g.title}</h4>
+                <ul className="space-y-2 text-white/70 leading-relaxed">
+                  {g.items.map(r => <li key={r} className="flex gap-2"><span className="text-gold" aria-hidden="true">·</span>{r}</li>)}
+                </ul>
+                {g.note && <p className="text-white/55 text-sm mt-3">{g.note}</p>}
+              </div>
+            ))}
+          </div>
+        </details>
       </div>
     </section>
   );

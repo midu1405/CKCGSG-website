@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import LOGO_IMG from '../assets/LOGO_MAIN_W.png';
+import { CASTING } from '../constants';
 
 export const NAV_LINKS = [
   { name: 'Vở diễn', to: '/vo-dien' },
   { name: 'Hoạt động', to: '/hoat-dong' },
   { name: 'Câu chuyện', to: '/cau-chuyen' },
-  { name: 'Tuyển diễn viên', to: '/tuyen-dien-vien' },
+  ...(CASTING.open ? [{ name: 'Tuyển diễn viên', to: '/tuyen-dien-vien' }] : []),
   { name: 'Liên hệ', to: '/lien-he' },
 ];
 
