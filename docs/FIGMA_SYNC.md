@@ -8,6 +8,12 @@ Vì vậy các thay đổi code được **gom lại và cập nhật sang Figma
 
 ## Đang chờ cập nhật sang Figma
 
+- [ ] **Link mạng xã hội chính thức (14/11/2026, nhánh `claude/mang-xa-hoi-soat-thiet-ke`)**:
+  - **Footer (mọi trang):** link Facebook → facebook.com/cakichconggiaosaigon, YouTube → youtube.com/@CaKichCongGiaoSaiGon
+    (chỉ đổi link, giao diện giữ nguyên).
+  - **/lien-he desktop + mobile:** khối mới "THEO DÕI NHÓM" ngay dưới Email — 2 nút viền mảnh bo `rounded-xl`, cao ≥ 44px:
+    [icon Facebook] **Facebook** · trang chính thức, [icon YouTube] **YouTube** · kênh chính thức; rê chuột viền + chữ vàng;
+    desktop xếp ngang, mobile xếp dọc.
 - [ ] **TD-1 · Sửa lỗi giao diện (12/11/2026, nhánh `claude/td-1-sua-giao-dien`)** — chi tiết trong
   `docs/tasks/TD-1/TD-1.1.report.md` và `TD-1.2.report.md`, mục "Cần đưa sang Figma":
   - **Đắc Lộ desktop + mobile:** nhãn 3 cột "2014 – 2027…" vàng → đỏ rượu; chữ phụ số liệu trắng 70%; form cộng tác:

@@ -30,6 +30,8 @@ Khi lượt Figma đã làm mới: *"Gọi figma-sync đồng bộ các mục đ
 
 Chạy `npm run audit` (máy đo: lỗi, font tiếng Việt, cuộn ngang, độ mượt, link, nút nhỏ) rồi 2 agent `kiem-tra`
 soát ảnh chụp và tính năng, ra `docs/audits/<ngày>/BAO-CAO.md` chia 🔴 / 🟠 / 🟢. Không sửa code.
+Kèm `npm run soat-ma` (soát mã nguồn) và bảng chấm thiết kế [`SOAT-THIET-KE.md`](SOAT-THIET-KE.md):
+báo cáo có **Điểm thiết kế**, **Điểm AI slop** (A–F, so được với lần trước) và mục **Sửa nhanh**.
 Sửa thì gõ tiếp: `/chi-huy sửa các lỗi 🔴 trong docs/audits/<ngày>/BAO-CAO.md`.
 
 Nên chạy: trước khi gộp một việc lớn vào `main`, và khoảng 2 tuần một lần trước ngày diễn.

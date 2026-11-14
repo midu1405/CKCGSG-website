@@ -1,7 +1,9 @@
 import { useRef, useState } from 'react';
-import { Mail, ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
+import { Mail, ArrowRight, CheckCircle2, ChevronDown, Youtube } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { PageHeader } from '../components/PageParts';
+import { FacebookIcon } from '../components/SocialIcons';
+import { SOCIAL } from '../constants';
 import { getSupabase } from '../lib/supabase';
 import { friendlyError, EMAIL_RE } from '../lib/errors';
 
@@ -72,6 +74,20 @@ export default function ContactPage() {
               <div>
                 <div className="text-sm text-white/40 uppercase tracking-widest font-bold mb-1">Email</div>
                 <a href="mailto:ckcgsg@gmail.com" className="text-xl hover:text-gold transition-colors">ckcgsg@gmail.com</a>
+              </div>
+            </div>
+
+            <div>
+              <div className="text-sm text-white/40 uppercase tracking-widest font-bold mb-3">Theo dõi nhóm</div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 min-h-11 px-5 py-2.5 rounded-xl border border-white/10 hover:border-gold hover:text-gold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
+                  <FacebookIcon /> <span className="font-bold">Facebook</span> <span className="text-white/50 text-sm">trang chính thức</span>
+                </a>
+                <a href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 min-h-11 px-5 py-2.5 rounded-xl border border-white/10 hover:border-gold hover:text-gold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
+                  <Youtube size={20} aria-hidden="true" /> <span className="font-bold">YouTube</span> <span className="text-white/50 text-sm">kênh chính thức</span>
+                </a>
               </div>
             </div>
 

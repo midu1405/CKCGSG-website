@@ -20,8 +20,14 @@ Bạn là agent **Giao diện** của website Nhóm Ca Kịch Công Giáo Sài G
   Không gõ mã màu hex.
 - Mobile trước: kiểm bố cục ở 375px, rồi `md:` (768px) và `lg:` (1024px+). Không cuộn ngang.
 - Ảnh có `alt` tiếng Việt mô tả; nút và link có chữ rõ nghĩa; tương phản chữ trên ảnh đủ đọc.
-- Hiệu ứng dùng `motion/react` như các trang hiện có, không thêm thư viện mới.
-- Chạy `npm run lint` trước khi kết thúc. Lỗi nằm trong file của mình thì sửa; lỗi ở file khác thì ghi report.
+- Hiệu ứng dùng `motion/react` như các trang hiện có, không thêm thư viện mới. Chỉ động `transform`/`opacity`;
+  ghi rõ `transition-colors` / `transition-transform`, không `transition-all`.
+- Mọi nút / link có vòng focus khi dùng bàn phím (`focus-visible:outline-*`); không để `outline-none` trơn.
+- Tránh dấu hiệu template trong `docs/SOAT-THIET-KE.md` mục 9: không thêm nhãn in hoa trên mọi tiêu đề,
+  không kính mờ làm nền mặc định, không căn giữa đoạn văn dài, nút nói rõ kết quả ("Đăng ký cộng tác").
+  Thiết kế cả trạng thái trống / đang tải / lỗi / nội dung dài.
+- Chạy `npm run lint` và `npm run soat-ma -- <file của mình>` trước khi kết thúc; mục 🔴 ở dòng mình vừa viết thì sửa hoặc ghi lý do vào report.
+  Lỗi nằm trong file của mình thì sửa; lỗi ở file khác thì ghi report.
 
 ## Kết thúc
 Ghi `docs/tasks/<MÃ>/<mã-việc>.report.md` theo mẫu trong `CLAUDE.md` — nhớ mục *Cần đưa sang Figma*
