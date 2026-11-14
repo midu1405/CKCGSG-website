@@ -14,7 +14,7 @@ Vì vậy các thay đổi code được **gom lại và cập nhật sang Figma
     2 thẻ: **Vẫn muốn góp sức?** (viền vàng, nút vàng "CỘNG TÁC CHO ĐẮC LỘ" → /dac-lo#cong-tac) và
     **Chờ đợt tuyển sau** (nút viền Facebook, YouTube); khối thu gọn "Yêu cầu hồ sơ đợt 2026 — tham khảo".
     Giữ khung cũ (đang tuyển) làm biến thể để dùng lại khi mở đợt mới.
-  - **Navbar + Footer:** bỏ mục "Tuyển diễn viên".
+  - **Navbar:** bỏ mục "Tuyển diễn viên". **Footer** (cột Khám phá, cuối danh sách): "Tuyển diễn viên (đã đóng)" → /tuyen-dien-vien.
   - **Trang chủ:** link dưới nút chính đổi "Góp sức cho vở Đắc Lộ"; thẻ "Tham gia cùng nhóm" → "Góp sức hậu trường"
     (icon búa, nút "CỘNG TÁC CHO ĐẮC LỘ"). **/cau-chuyen:** nút viền "GÓP SỨC CHO VỞ ĐẮC LỘ".
   - **/lien-he:** chủ đề form "Tham gia nhóm / tuyển diễn viên" → "Tham gia nhóm".
