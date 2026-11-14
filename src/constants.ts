@@ -50,6 +50,7 @@ export function playSortKey(date?: string): number {
   return y ? Number(y[0]) * 100 : 0;
 }
 
+// Link YouTube các vở: nguồn bảng "TƯ LIỆU HÌNH ẢNH/VIDEO CÁC VỞ DIỄN" của nhóm (Midu gửi 14/11/2026).
 export const PLAYS: Project[] = [
   {
     id: 'dac-lo',
@@ -85,7 +86,7 @@ export const PLAYS: Project[] = [
     description: 'Vở diễn chính thức đầu tiên của Nhóm Ca Kịch Công Giáo Sài Gòn.',
     content: 'Vở Don Bosco là vở diễn chính thức đầu tiên của Nhóm Ca Kịch Công Giáo Sài Gòn.',
     imageUrl: POSTER_DON_BOSCO,
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder1',
+    youtubeUrl: 'https://www.youtube.com/watch?v=lk1lkJfL2f4',
     status: 'archived',
     date: '04.2015'
   },
@@ -95,7 +96,7 @@ export const PLAYS: Project[] = [
     description: 'Vở ca kịch về sự hối cải, biểu diễn lần đầu vào năm 2015.',
     content: 'Vở ca kịch Tên Tử Tù được biểu diễn lần đầu vào năm 2015, trong chương trình Cafe Thánh ca số 3, Giới trẻ Giáo xứ Tân Hương. Sau đó là Giáo xứ Thanh Đa và Giáo xứ Mân Côi (Đa Minh).',
     imageUrl: POSTER_TEN_TU_TU,
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder2',
+    youtubeUrl: 'https://www.youtube.com/watch?v=kJ9jsb1zGXk',
     status: 'archived',
     date: '05.2015'
   },
@@ -105,7 +106,7 @@ export const PLAYS: Project[] = [
     description: 'Vở diễn về dụ ngôn 10 cô trinh nữ, công diễn năm 2015 và 2019.',
     content: 'Vở diễn 10 Cô Trinh Nữ được công diễn vào năm 2015. Sau đó, nhóm tiếp tục công diễn vở ca kịch vào năm 2019.',
     imageUrl: POSTER_10_CO_TRINH_NU,
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder3',
+    youtubeUrl: 'https://www.youtube.com/watch?v=UKyJb62B7xU&t=1800s', // bản 19/12/2015, vở bắt đầu từ phút 30
     status: 'archived',
     date: '12.2015 · 2019'
   },
@@ -115,7 +116,7 @@ export const PLAYS: Project[] = [
     description: 'Vở diễn gây quỹ cho người dân Miền Trung năm 2016.',
     content: 'Khi lòng đã Tin - được thực hiện nhằm gây Quỹ cho người dân Miền Trung vào năm 2016 tại Dòng Chúa Cứu Thế - Nhà thờ Kỳ Đồng. Sân khấu của vở được dàn dựng khá đặc biệt, tái hiện lại quang cảnh của một vùng quê nghèo nơi đó có những con người vẫn luôn đặt niềm tin nơi Thiên Chúa.',
     imageUrl: POSTER_KHI_LONG_DA_TIN,
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder4',
+    youtubeUrl: 'https://www.youtube.com/watch?v=lYcCvjpwycg',
     status: 'archived',
     date: '11.2016'
   },
@@ -125,7 +126,7 @@ export const PLAYS: Project[] = [
     description: 'Công diễn lần đầu vào năm 2015 tại Nhà Thờ Kỳ Đồng.',
     content: 'Vở diễn Bức Linh Ảnh Bị Đánh Cắp được công diễn lần đầu vào 10/2015 & 12/2015 tại Dòng Chúa Cứu Thế - Nhà Thờ Kỳ Đồng. Sau đó, nhóm tiếp tục công diễn vở ca kịch vào năm 2017 tại Phú Dòng - Gia Kiệm.',
     imageUrl: POSTER_BUC_LINH_ANH,
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder5',
+    youtubeUrl: 'https://www.youtube.com/watch?v=qZ92bliEi5A', // lần 3 (01/2017, Phú Dòng – Gia Kiệm); lần 1 trên kênh a Kiệt, chưa có link
     status: 'archived',
     date: '10.2015 · 2017'
   },
@@ -135,7 +136,7 @@ export const PLAYS: Project[] = [
     description: 'Vở ca kịch Giáng Sinh công diễn năm 2016 và 2017.',
     content: 'Vở ca kịch Hài Nhi Là Ai được công diễn vào năm 2016 tại Hội trường Anphong, nhà thờ Kỳ Đồng, Giáo xứ Đức Mẹ Hằng Cứu Giúp. Năm 2017, Nhóm đã tái diễn vớ ca kịch này tại Giáo Xứ Tam Hải và Đại Hội Giới trẻ FMA.',
     imageUrl: POSTER_HAI_NHI,
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder6',
+    youtubeUrl: 'https://www.youtube.com/watch?v=dCXOTQieO24',
     status: 'archived',
     date: '06.2016 · 2017'
   },
@@ -145,7 +146,7 @@ export const PLAYS: Project[] = [
     description: 'Vở diễn mừng Giáng Sinh tại Nhà Thờ Kỳ Đồng năm 2016.',
     content: 'Vở Hoàng Tử Nhỏ được công diễn tại Nhà Thờ Kỳ Đồng - Giáo Xứ Đức Mẹ Hằng Cứu Giúp vào năm 2016 - trong khuôn khổ chương trình văn nghệ mừng Giáng Sinh của giáo xứ',
     imageUrl: POSTER_HOANG_TU_NHO,
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder7',
+    youtubeUrl: 'https://www.youtube.com/watch?v=QoxzoKhE2JQ',
     status: 'archived',
     date: '12.2016'
   },
@@ -156,7 +157,7 @@ export const PLAYS: Project[] = [
     content: 'Vở Con Chiên Không Mỏi được công diễn 2 lần vào năm 2023 tại Nhà thờ Kỳ Đồng - Giáo xứ Đức Mẹ Hằng Cứu Giúp - thuộc DCCT Sài Gòn; và tại Dòng Đức Bà Truyền Giáo. Vở ca kịch tái hiện lịch sử cứu độ và cuộc thương khó của Chúa Giê-su. Đây là vở ca kịch mà nhóm đã ấp ủ từ ngày thành lập, cũng là vở diễn tạo nên dấu mốc quan trọng trong hành trình 10 năm của Nhóm Ca Kịch - Đó là sự tái hợp và quay trở lại chính thức của Nhóm.',
     imageUrl: POSTER_CON_CHIEN,
     images: [IMG_STAGE],
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder8',
+    youtubeUrl: 'https://www.youtube.com/watch?v=PHdGP26BlKU', // lần 2 (25/5/2023); bản Official DP_G2BCHo98 đang Unlisted — chờ Midu duyệt
     status: 'archived',
     date: '04.2023'
   },
@@ -167,7 +168,7 @@ export const PLAYS: Project[] = [
     content: '“Một Tình Yêu” được trình diễn trong Đại Hội Giới Trẻ của Tổng Giáo Phận Sài Gòn vào ngày 25.11.2023 tại Trung Tâm Mục Vụ, Tổng Giáo Phận Sài Gòn. Ngoài ra, nhóm đã công diễn lần thứ 2 vở ca kịch này tại Tu Viện Dòng Tên. “Một Tình Yêu” đã để lại nhiều ấn tượng và cảm xúc khác nhau nơi các tham dự viên. Dựa trên suy niệm về chặng đàng thánh giá của Đại Hội Giới Trẻ thế giới tại Lisbon 2023, đạo diễn Jean Kiệt cùng với các thành viên trong Nhóm đã tái hiện lại chặng đàng thánh giá trên hành trình cuộc đời mà người trẻ đang phải đối diện.',
     imageUrl: POSTER_MOT_TINH_YEU,
     images: [IMG_DUO],
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder9',
+    youtubeUrl: 'https://www.youtube.com/watch?v=bUDv_nN7TMQ', // lần 1 (25/11/2023), Truyền thông TGP
     status: 'archived',
     date: '11.2023'
   }
@@ -325,6 +326,7 @@ export const OTHER_PROGRAMS: Project[] = [
       'https://picsum.photos/seed/tet3/800/600'
     ],
     status: 'archived',
+    youtubeUrl: 'https://www.youtube.com/watch?v=m7V-hCdyEAw',
     date: '2016'
   },
   {
