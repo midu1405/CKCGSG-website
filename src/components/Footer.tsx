@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import LOGO_IMG from '../assets/LOGO_MAIN_W.png';
 import { NAV_LINKS } from './Navbar';
 import { FacebookIcon } from './SocialIcons';
-import { SOCIAL } from '../constants';
+import { SOCIAL, CASTING } from '../constants';
 
 const Footer = () => {
   const { pathname } = useLocation();
@@ -25,6 +25,10 @@ const Footer = () => {
             {NAV_LINKS.map(l => (
               <li key={l.to}><Link to={l.to} className="text-white/60 hover:text-gold transition-colors">{l.name}</Link></li>
             ))}
+            {/* Menu trên cùng ẩn mục này khi đã đóng tuyển; chân trang vẫn giữ để ai cần vẫn tìm được */}
+            {!CASTING.open && (
+              <li><Link to="/tuyen-dien-vien" className="text-white/60 hover:text-gold transition-colors">Tuyển diễn viên (đã đóng)</Link></li>
+            )}
           </ul>
         </div>
         <div>
