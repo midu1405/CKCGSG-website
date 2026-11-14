@@ -45,6 +45,18 @@ import IMG_KHI_LONG_DA_TIN_7 from './assets/photos/khi-long-da-tin-7.jpg';
 import IMG_CON_CHIEN_KHONG_MOI_1 from './assets/photos/con-chien-khong-moi-1.jpg';
 import IMG_CON_CHIEN_KHONG_MOI_2 from './assets/photos/con-chien-khong-moi-2.jpg';
 import IMG_CON_CHIEN_KHONG_MOI_3 from './assets/photos/con-chien-khong-moi-3.jpg';
+import IMG_BUC_TUONG_JERICHO_1 from './assets/photos/buc-tuong-jericho-1.jpg';
+import IMG_BUC_TUONG_JERICHO_2 from './assets/photos/buc-tuong-jericho-2.jpg';
+import IMG_BUC_TUONG_JERICHO_3 from './assets/photos/buc-tuong-jericho-3.jpg';
+import IMG_BUC_TUONG_JERICHO_4 from './assets/photos/buc-tuong-jericho-4.jpg';
+import IMG_BUC_TUONG_JERICHO_5 from './assets/photos/buc-tuong-jericho-5.jpg';
+import IMG_BUC_TUONG_JERICHO_6 from './assets/photos/buc-tuong-jericho-6.jpg';
+import IMG_DI_TIM_INHAXIO_1 from './assets/photos/di-tim-inhaxio-1.jpg';
+import IMG_DI_TIM_INHAXIO_2 from './assets/photos/di-tim-inhaxio-2.jpg';
+import IMG_DI_TIM_INHAXIO_3 from './assets/photos/di-tim-inhaxio-3.jpg';
+import IMG_DI_TIM_INHAXIO_4 from './assets/photos/di-tim-inhaxio-4.jpg';
+import IMG_DI_TIM_INHAXIO_5 from './assets/photos/di-tim-inhaxio-5.jpg';
+import IMG_DI_TIM_INHAXIO_6 from './assets/photos/di-tim-inhaxio-6.jpg';
 
 /**
  * Kênh chính thức của nhóm. Nguồn: Midu cung cấp ngày 14/11/2026.
@@ -97,6 +109,7 @@ export const PLAYS: Project[] = [
     description: 'Vở ca kịch trình diễn trong chương trình Tĩnh tâm Mùa Vọng, tháng 12/2025.',
     content: 'Vở ca kịch "Đi Tìm Inhaxio" được trình diễn trong chương trình Tĩnh tâm Mùa Vọng vào tháng 12/2025.',
     imageUrl: IMG_INHAXIO,
+    images: [IMG_DI_TIM_INHAXIO_1, IMG_DI_TIM_INHAXIO_2, IMG_DI_TIM_INHAXIO_3, IMG_DI_TIM_INHAXIO_4, IMG_DI_TIM_INHAXIO_5, IMG_DI_TIM_INHAXIO_6], // nguồn ảnh: 14/12/2025, ảnh Tomato
     status: 'archived',
     date: '12.2025'
   },
@@ -106,7 +119,7 @@ export const PLAYS: Project[] = [
     description: 'Trình diễn tại Đại hội Giới trẻ TGP Sài Gòn, tháng 11/2024.',
     content: 'Vở ca kịch "Bức tường Jericho" được trình diễn tại Đại hội Giới trẻ Tổng Giáo phận Sài Gòn vào tháng 11/2024. Vở diễn tái hiện lại hành trình đức tin của dân Israel dưới sự dẫn dắt của Joshua. Với âm nhạc hào hùng và những màn vũ đạo công phu, chúng tôi hy vọng sẽ mang đến cho khán giả một trải nghiệm tâm linh sâu sắc về sức mạnh của sự vâng phục và lòng tin vào Thiên Chúa.',
     imageUrl: IMG_JERICHO_STAGE,
-    images: [IMG_JERICHO1, IMG_JERICHO3],
+    images: [IMG_JERICHO1, IMG_JERICHO3, IMG_BUC_TUONG_JERICHO_1, IMG_BUC_TUONG_JERICHO_2, IMG_BUC_TUONG_JERICHO_3, IMG_BUC_TUONG_JERICHO_4, IMG_BUC_TUONG_JERICHO_5, IMG_BUC_TUONG_JERICHO_6], // nguồn ảnh: 23/11/2024 — 1–3: Source TGP, 4–6: Tomato
     status: 'archived',
     date: '11.2024'
   },
