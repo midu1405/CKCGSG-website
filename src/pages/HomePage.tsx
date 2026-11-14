@@ -1,10 +1,10 @@
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
-import { Calendar, MapPin, Music, Heart, Star, ArrowRight, Mic2, HandHeart } from 'lucide-react';
+import { Calendar, MapPin, Music, Heart, Star, ArrowRight, Mic2, HandHeart, Hammer } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import HERO_IMG from '../assets/photos/hero.jpg';
 import STORY_IMG from '../assets/photos/story.jpg';
 import CASTING_BG from '../assets/photos/casting-banner.jpg';
-import { PLAYS, CHARITY, OTHER_PROGRAMS, playSortKey } from '../constants';
+import { PLAYS, CHARITY, OTHER_PROGRAMS, CASTING, playSortKey } from '../constants';
 import Modal from '../components/Modal';
 import ProjectCard from '../components/ProjectCard';
 import { Eyebrow, fadeUp, useVoParam } from '../components/PageParts';
@@ -57,8 +57,8 @@ export default function HomePage() {
               <a href="#vo-sap-toi" className="bg-gold text-black px-10 py-4 rounded-full font-bold text-lg hover:bg-white transition-all duration-300 shadow-lg shadow-gold/20">
                 KHÁM PHÁ VỞ DIỄN
               </a>
-              <Link to="/tuyen-dien-vien" className="text-sm uppercase tracking-[0.15em] text-white/50 border-b border-white/20 pb-1 hover:text-gold hover:border-gold transition-all">
-                Tham gia cùng chúng tôi
+              <Link to={CASTING.open ? '/tuyen-dien-vien' : '/dac-lo#cong-tac'} className="text-sm uppercase tracking-[0.15em] text-white/50 border-b border-white/20 pb-1 hover:text-gold hover:border-gold transition-colors">
+                {CASTING.open ? 'Tham gia cùng chúng tôi' : 'Góp sức cho vở Đắc Lộ'}
               </Link>
             </div>
           </motion.div>
@@ -183,7 +183,9 @@ export default function HomePage() {
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-5">
           {[
-            { icon: Mic2, title: 'Tham gia cùng nhóm', desc: 'Bạn yêu ca hát, vũ đạo và muốn loan báo Tin Mừng qua sân khấu? Xem cách ứng tuyển diễn viên.', cta: 'TUYỂN DIỄN VIÊN', to: '/tuyen-dien-vien' },
+            CASTING.open
+              ? { icon: Mic2, title: 'Tham gia cùng nhóm', desc: 'Bạn yêu ca hát, vũ đạo và muốn loan báo Tin Mừng qua sân khấu? Xem cách ứng tuyển diễn viên.', cta: 'TUYỂN DIỄN VIÊN', to: '/tuyen-dien-vien' }
+              : { icon: Hammer, title: 'Góp sức hậu trường', desc: 'Vở Đắc Lộ cần người cộng tác trang phục, cảnh trí – đạo cụ, vận chuyển, suất ăn cho buổi tập và âm thanh – ánh sáng.', cta: 'CỘNG TÁC CHO ĐẮC LỘ', to: '/dac-lo#cong-tac' },
             { icon: HandHeart, title: 'Đồng hành & ủng hộ', desc: 'Mọi đóng góp giúp nhóm tiếp tục những vở diễn miễn phí cho cộng đồng.', cta: 'LIÊN HỆ & ỦNG HỘ', to: '/lien-he' },
           ].map(c => (
             <motion.div key={c.title} {...fadeUp} className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-10">

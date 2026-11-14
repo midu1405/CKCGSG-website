@@ -24,7 +24,7 @@ Website chính thức của **Nhóm Ca Kịch Công Giáo Sài Gòn (CKCGSG)** �
 | `/vo-dien` | Vở diễn | Tất cả vở ca kịch, chia theo giai đoạn |
 | `/hoat-dong` | Hoạt động | Thiện nguyện, thánh ca & hợp xướng |
 | `/cau-chuyen` | Câu chuyện | Đôi nét về nhóm, cột mốc, giá trị, sứ mệnh |
-| `/tuyen-dien-vien` | Tuyển diễn viên | Yêu cầu hồ sơ hát / múa, cách ứng tuyển |
+| `/tuyen-dien-vien` | Tuyển diễn viên | Bật/tắt bằng `CASTING.open` trong `src/constants.ts`. Đang **đóng** (đợt 2026 xong): lời cảm ơn, mời cộng tác Đắc Lộ, theo dõi Facebook, yêu cầu hồ sơ cũ để tham khảo. Khi mở: yêu cầu hát / múa, cách ứng tuyển |
 | `/lien-he` | Liên hệ & Ủng hộ | Email, thông tin chuyển khoản, form liên hệ |
 
 ## Công nghệ

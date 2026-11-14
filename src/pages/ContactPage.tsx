@@ -3,11 +3,11 @@ import { Mail, ArrowRight, CheckCircle2, ChevronDown, Youtube } from 'lucide-rea
 import { Link } from 'react-router-dom';
 import { PageHeader } from '../components/PageParts';
 import { FacebookIcon } from '../components/SocialIcons';
-import { SOCIAL } from '../constants';
+import { SOCIAL, CASTING } from '../constants';
 import { getSupabase } from '../lib/supabase';
 import { friendlyError, EMAIL_RE } from '../lib/errors';
 
-const TOPICS = ['Ủng hộ / dâng cúng', 'Hợp tác – tài trợ', 'Mời nhóm biểu diễn', 'Tham gia nhóm / tuyển diễn viên', 'Góp ý website', 'Khác'];
+const TOPICS = ['Ủng hộ / dâng cúng', 'Hợp tác – tài trợ', 'Mời nhóm biểu diễn', CASTING.open ? 'Tham gia nhóm / tuyển diễn viên' : 'Tham gia nhóm', 'Góp ý website', 'Khác'];
 const field = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-gold outline-none transition-colors placeholder:text-white/40 aria-[invalid=true]:border-amber-300/70';
 const FALLBACK_ERR = 'Chưa gửi được — có thể do mạng yếu. Xin thử lại hoặc email ckcgsg@gmail.com.';
 

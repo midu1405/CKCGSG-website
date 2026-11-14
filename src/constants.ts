@@ -26,6 +26,19 @@ export const SOCIAL = {
 } as const;
 
 /**
+ * Công tắc tuyển diễn viên. Nguồn: Midu, 14/11/2026 — đợt 2026 đã đóng, dàn diễn viên Đắc Lộ đã đủ
+ * và đang tập, chưa có dự kiến đợt mới.
+ * - `open: false` → trang /tuyen-dien-vien hiện bản "đã khép lại", menu ẩn mục Tuyển diễn viên,
+ *   các nút "Tham gia" ở trang chủ / Câu chuyện dẫn sang cộng tác Đắc Lộ.
+ * - Mở đợt mới: đổi `open: true`, sửa `deadline` và `round`.
+ */
+export const CASTING = {
+  open: false,
+  round: '2026',
+  deadline: '30/06/2026',
+} as const;
+
+/**
  * Ngày diễn hiển thị dạng "MM.YYYY" (theo poster trong proposal).
  * Dùng playSortKey() để sắp xếp từ mới đến cũ.
  */

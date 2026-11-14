@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageHeader, Eyebrow, fadeUp } from '../components/PageParts';
 import { GrowLine } from '../components/Motion';
+import { CASTING } from '../constants';
 import HEADER_IMG from '../assets/photos/value-gia-dinh.jpg';
 import IMG_10_NAM from '../assets/photos/story-10-nam.jpg';
 import IMG_STAGE from '../assets/photos/value-san-khau.jpg';
@@ -132,7 +133,7 @@ export default function StoryPage() {
           <h2 className="text-3xl md:text-4xl font-bold serif mb-8 text-balance">Cùng viết tiếp câu chuyện</h2>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/vo-dien" className="bg-gold text-black px-8 py-4 rounded-full font-bold hover:bg-white transition-all">XEM CÁC VỞ DIỄN</Link>
-            <Link to="/tuyen-dien-vien" className="border border-white/25 px-8 py-4 rounded-full font-bold hover:border-gold hover:text-gold transition-all">THAM GIA CÙNG NHÓM</Link>
+            <Link to={CASTING.open ? '/tuyen-dien-vien' : '/dac-lo#cong-tac'} className="border border-white/25 px-8 py-4 rounded-full font-bold hover:border-gold hover:text-gold transition-colors">{CASTING.open ? 'THAM GIA CÙNG NHÓM' : 'GÓP SỨC CHO VỞ ĐẮC LỘ'}</Link>
           </div>
         </div>
       </section>

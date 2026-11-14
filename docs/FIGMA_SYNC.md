@@ -8,6 +8,16 @@ Vì vậy các thay đổi code được **gom lại và cập nhật sang Figma
 
 ## Đang chờ cập nhật sang Figma
 
+- [ ] **Đóng tuyển diễn viên (14/11/2026, nhánh `claude/dong-tuyen-dien-vien`)** — công tắc `CASTING.open = false`:
+  - **/tuyen-dien-vien desktop + mobile:** dựng khung mới "Đợt tuyển diễn viên 2026 đã khép lại" — chip xám
+    "Đã đóng nhận hồ sơ · 30/06/2026", lời cảm ơn + "dàn diễn viên Đắc Lộ đã đủ và đang tập luyện";
+    2 thẻ: **Vẫn muốn góp sức?** (viền vàng, nút vàng "CỘNG TÁC CHO ĐẮC LỘ" → /dac-lo#cong-tac) và
+    **Chờ đợt tuyển sau** (nút viền Facebook, YouTube); khối thu gọn "Yêu cầu hồ sơ đợt 2026 — tham khảo".
+    Giữ khung cũ (đang tuyển) làm biến thể để dùng lại khi mở đợt mới.
+  - **Navbar + Footer:** bỏ mục "Tuyển diễn viên".
+  - **Trang chủ:** link dưới nút chính đổi "Góp sức cho vở Đắc Lộ"; thẻ "Tham gia cùng nhóm" → "Góp sức hậu trường"
+    (icon búa, nút "CỘNG TÁC CHO ĐẮC LỘ"). **/cau-chuyen:** nút viền "GÓP SỨC CHO VỞ ĐẮC LỘ".
+  - **/lien-he:** chủ đề form "Tham gia nhóm / tuyển diễn viên" → "Tham gia nhóm".
 - [ ] **Link mạng xã hội chính thức (14/11/2026, nhánh `claude/mang-xa-hoi-soat-thiet-ke`)**:
   - **Footer (mọi trang):** link Facebook → facebook.com/cakichconggiaosaigon, YouTube → youtube.com/@CaKichCongGiaoSaiGon
     (chỉ đổi link, giao diện giữ nguyên).
