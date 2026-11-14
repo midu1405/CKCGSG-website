@@ -57,6 +57,15 @@ import IMG_DI_TIM_INHAXIO_3 from './assets/photos/di-tim-inhaxio-3.jpg';
 import IMG_DI_TIM_INHAXIO_4 from './assets/photos/di-tim-inhaxio-4.jpg';
 import IMG_DI_TIM_INHAXIO_5 from './assets/photos/di-tim-inhaxio-5.jpg';
 import IMG_DI_TIM_INHAXIO_6 from './assets/photos/di-tim-inhaxio-6.jpg';
+// Thiện nguyện Mằng Lăng – Phú Yên (11/2016): ảnh từ D:\CKCGSG của Midu (album Phú Yên + Hướng về Miền Trung).
+import IMG_PHU_YEN_COVER from './assets/photos/thien-nguyen-phu-yen.jpg';
+import IMG_PHU_YEN_1 from './assets/photos/thien-nguyen-phu-yen-1.jpg';
+import IMG_PHU_YEN_2 from './assets/photos/thien-nguyen-phu-yen-2.jpg';
+import IMG_PHU_YEN_3 from './assets/photos/thien-nguyen-phu-yen-3.jpg';
+import IMG_PHU_YEN_4 from './assets/photos/thien-nguyen-phu-yen-4.jpg';
+import IMG_PHU_YEN_5 from './assets/photos/thien-nguyen-phu-yen-5.jpg';
+import IMG_PHU_YEN_6 from './assets/photos/thien-nguyen-phu-yen-6.jpg';
+import IMG_PHU_YEN_7 from './assets/photos/thien-nguyen-phu-yen-7.jpg';
 
 /**
  * Kênh chính thức của nhóm. Nguồn: Midu cung cấp ngày 14/11/2026.
@@ -303,6 +312,18 @@ export const CHARITY: Project[] = [
     ],
     status: 'archived',
     date: '2017'
+  },
+  {
+    // Nguồn: Midu xác nhận 14/11/2026 (đi sau mưa lũ miền Trung; "Hướng về Miền Trung" là chương trình gây quỹ cho chuyến này);
+    // ngày 16–17/11/2016 theo thông tin chụp của ảnh; tên giáo xứ theo bảng tư liệu của nhóm ("Thiện Nguyện Mằng Lăng").
+    id: 'thien-nguyen-mang-lang-phu-yen',
+    title: 'Hướng về Miền Trung – Mằng Lăng, Phú Yên',
+    description: 'Tập hát gây quỹ và trao quà cho bà con sau mưa lũ miền Trung.',
+    content: 'Sau đợt mưa lũ miền Trung năm 2016, nhóm tập hát cho chương trình "Hướng về Miền Trung" để gây quỹ. Ngày 16–17/11/2016, đoàn đến giáo xứ Mằng Lăng (Phú Yên), thăm các gia đình có nhà bị hư hại và trao quà cho bà con ngay tại nhà thờ.',
+    imageUrl: IMG_PHU_YEN_COVER,
+    images: [IMG_PHU_YEN_6, IMG_PHU_YEN_7, IMG_PHU_YEN_1, IMG_PHU_YEN_2, IMG_PHU_YEN_3, IMG_PHU_YEN_4, IMG_PHU_YEN_5],
+    status: 'archived',
+    date: '11.2016'
   }
 ];
 
