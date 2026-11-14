@@ -15,6 +15,36 @@ import POSTER_KHI_LONG_DA_TIN from './assets/photos/poster-khi-long-da-tin.jpg';
 import POSTER_HOANG_TU_NHO from './assets/photos/poster-hoang-tu-nho.jpg';
 import POSTER_CON_CHIEN from './assets/photos/poster-con-chien-khong-moi.jpg';
 import POSTER_MOT_TINH_YEU from './assets/photos/poster-mot-tinh-yeu.jpg';
+// Ảnh vở diễn từ các album của nhóm (Midu gửi 14/11/2026), đã nén ≤1600px, bỏ EXIF.
+import IMG_MUOI_CO_TRINH_NU_1 from './assets/photos/muoi-co-trinh-nu-1.jpg';
+import IMG_MUOI_CO_TRINH_NU_2 from './assets/photos/muoi-co-trinh-nu-2.jpg';
+import IMG_MUOI_CO_TRINH_NU_3 from './assets/photos/muoi-co-trinh-nu-3.jpg';
+import IMG_MUOI_CO_TRINH_NU_4 from './assets/photos/muoi-co-trinh-nu-4.jpg';
+import IMG_HAI_NHI_LA_AI_1 from './assets/photos/hai-nhi-la-ai-1.jpg';
+import IMG_HAI_NHI_LA_AI_2 from './assets/photos/hai-nhi-la-ai-2.jpg';
+import IMG_HAI_NHI_LA_AI_3 from './assets/photos/hai-nhi-la-ai-3.jpg';
+import IMG_HAI_NHI_LA_AI_4 from './assets/photos/hai-nhi-la-ai-4.jpg';
+import IMG_HAI_NHI_LA_AI_5 from './assets/photos/hai-nhi-la-ai-5.jpg';
+import IMG_HAI_NHI_LA_AI_6 from './assets/photos/hai-nhi-la-ai-6.jpg';
+import IMG_HAI_NHI_LA_AI_7 from './assets/photos/hai-nhi-la-ai-7.jpg';
+import IMG_BUC_LINH_ANH_1 from './assets/photos/buc-linh-anh-1.jpg';
+import IMG_BUC_LINH_ANH_2 from './assets/photos/buc-linh-anh-2.jpg';
+import IMG_BUC_LINH_ANH_3 from './assets/photos/buc-linh-anh-3.jpg';
+import IMG_BUC_LINH_ANH_4 from './assets/photos/buc-linh-anh-4.jpg';
+import IMG_HOANG_TU_NHO_1 from './assets/photos/hoang-tu-nho-1.jpg';
+import IMG_HOANG_TU_NHO_2 from './assets/photos/hoang-tu-nho-2.jpg';
+import IMG_HOANG_TU_NHO_3 from './assets/photos/hoang-tu-nho-3.jpg';
+import IMG_HOANG_TU_NHO_4 from './assets/photos/hoang-tu-nho-4.jpg';
+import IMG_KHI_LONG_DA_TIN_1 from './assets/photos/khi-long-da-tin-1.jpg';
+import IMG_KHI_LONG_DA_TIN_2 from './assets/photos/khi-long-da-tin-2.jpg';
+import IMG_KHI_LONG_DA_TIN_3 from './assets/photos/khi-long-da-tin-3.jpg';
+import IMG_KHI_LONG_DA_TIN_4 from './assets/photos/khi-long-da-tin-4.jpg';
+import IMG_KHI_LONG_DA_TIN_5 from './assets/photos/khi-long-da-tin-5.jpg';
+import IMG_KHI_LONG_DA_TIN_6 from './assets/photos/khi-long-da-tin-6.jpg';
+import IMG_KHI_LONG_DA_TIN_7 from './assets/photos/khi-long-da-tin-7.jpg';
+import IMG_CON_CHIEN_KHONG_MOI_1 from './assets/photos/con-chien-khong-moi-1.jpg';
+import IMG_CON_CHIEN_KHONG_MOI_2 from './assets/photos/con-chien-khong-moi-2.jpg';
+import IMG_CON_CHIEN_KHONG_MOI_3 from './assets/photos/con-chien-khong-moi-3.jpg';
 
 /**
  * Kênh chính thức của nhóm. Nguồn: Midu cung cấp ngày 14/11/2026.
@@ -106,6 +136,7 @@ export const PLAYS: Project[] = [
     description: 'Vở diễn về dụ ngôn 10 cô trinh nữ, công diễn năm 2015 và 2019.',
     content: 'Vở diễn 10 Cô Trinh Nữ được công diễn vào năm 2015. Sau đó, nhóm tiếp tục công diễn vở ca kịch vào năm 2019.',
     imageUrl: POSTER_10_CO_TRINH_NU,
+    images: [IMG_MUOI_CO_TRINH_NU_1, IMG_MUOI_CO_TRINH_NU_2, IMG_MUOI_CO_TRINH_NU_3, IMG_MUOI_CO_TRINH_NU_4], // nguồn ảnh: Kỳ Đồng 19/12/2015
     youtubeUrl: 'https://www.youtube.com/watch?v=UKyJb62B7xU&t=1800s', // bản 19/12/2015, vở bắt đầu từ phút 30
     status: 'archived',
     date: '12.2015 · 2019'
@@ -116,6 +147,7 @@ export const PLAYS: Project[] = [
     description: 'Vở diễn gây quỹ cho người dân Miền Trung năm 2016.',
     content: 'Khi lòng đã Tin - được thực hiện nhằm gây Quỹ cho người dân Miền Trung vào năm 2016 tại Dòng Chúa Cứu Thế - Nhà thờ Kỳ Đồng. Sân khấu của vở được dàn dựng khá đặc biệt, tái hiện lại quang cảnh của một vùng quê nghèo nơi đó có những con người vẫn luôn đặt niềm tin nơi Thiên Chúa.',
     imageUrl: POSTER_KHI_LONG_DA_TIN,
+    images: [IMG_KHI_LONG_DA_TIN_1, IMG_KHI_LONG_DA_TIN_2, IMG_KHI_LONG_DA_TIN_3, IMG_KHI_LONG_DA_TIN_4, IMG_KHI_LONG_DA_TIN_5, IMG_KHI_LONG_DA_TIN_6, IMG_KHI_LONG_DA_TIN_7], // nguồn ảnh: 1–5: ảnh Quang Hứa; 6–7: buổi tập (album Chạy sk)
     youtubeUrl: 'https://www.youtube.com/watch?v=lYcCvjpwycg',
     status: 'archived',
     date: '11.2016'
@@ -126,6 +158,7 @@ export const PLAYS: Project[] = [
     description: 'Công diễn lần đầu vào năm 2015 tại Nhà Thờ Kỳ Đồng.',
     content: 'Vở diễn Bức Linh Ảnh Bị Đánh Cắp được công diễn lần đầu vào 10/2015 & 12/2015 tại Dòng Chúa Cứu Thế - Nhà Thờ Kỳ Đồng. Sau đó, nhóm tiếp tục công diễn vở ca kịch vào năm 2017 tại Phú Dòng - Gia Kiệm.',
     imageUrl: POSTER_BUC_LINH_ANH,
+    images: [IMG_BUC_LINH_ANH_1, IMG_BUC_LINH_ANH_2, IMG_BUC_LINH_ANH_3, IMG_BUC_LINH_ANH_4], // nguồn ảnh: đêm diễn tại Phú Dòng, ảnh Quỳnh–Gấu
     youtubeUrl: 'https://www.youtube.com/watch?v=qZ92bliEi5A', // lần 3 (01/2017, Phú Dòng – Gia Kiệm); lần 1 trên kênh a Kiệt, chưa có link
     status: 'archived',
     date: '10.2015 · 2017'
@@ -136,6 +169,7 @@ export const PLAYS: Project[] = [
     description: 'Vở ca kịch Giáng Sinh công diễn năm 2016 và 2017.',
     content: 'Vở ca kịch Hài Nhi Là Ai được công diễn vào năm 2016 tại Hội trường Anphong, nhà thờ Kỳ Đồng, Giáo xứ Đức Mẹ Hằng Cứu Giúp. Năm 2017, Nhóm đã tái diễn vớ ca kịch này tại Giáo Xứ Tam Hải và Đại Hội Giới trẻ FMA.',
     imageUrl: POSTER_HAI_NHI,
+    images: [IMG_HAI_NHI_LA_AI_1, IMG_HAI_NHI_LA_AI_2, IMG_HAI_NHI_LA_AI_3, IMG_HAI_NHI_LA_AI_4, IMG_HAI_NHI_LA_AI_5, IMG_HAI_NHI_LA_AI_6, IMG_HAI_NHI_LA_AI_7], // nguồn ảnh: 1–4: Kỳ Đồng 6/2016, ảnh Q+Gấu; 5–7: Đại hội Giới trẻ FMA 2017, ảnh Minh Phước
     youtubeUrl: 'https://www.youtube.com/watch?v=dCXOTQieO24',
     status: 'archived',
     date: '06.2016 · 2017'
@@ -146,6 +180,7 @@ export const PLAYS: Project[] = [
     description: 'Vở diễn mừng Giáng Sinh tại Nhà Thờ Kỳ Đồng năm 2016.',
     content: 'Vở Hoàng Tử Nhỏ được công diễn tại Nhà Thờ Kỳ Đồng - Giáo Xứ Đức Mẹ Hằng Cứu Giúp vào năm 2016 - trong khuôn khổ chương trình văn nghệ mừng Giáng Sinh của giáo xứ',
     imageUrl: POSTER_HOANG_TU_NHO,
+    images: [IMG_HOANG_TU_NHO_1, IMG_HOANG_TU_NHO_2, IMG_HOANG_TU_NHO_3, IMG_HOANG_TU_NHO_4], // nguồn ảnh: 23/12/2016, ảnh Q+Gấu
     youtubeUrl: 'https://www.youtube.com/watch?v=QoxzoKhE2JQ',
     status: 'archived',
     date: '12.2016'
@@ -156,7 +191,7 @@ export const PLAYS: Project[] = [
     description: 'Vở ca kịch đánh dấu mốc quan trọng 10 năm hành trình của nhóm.',
     content: 'Vở Con Chiên Không Mỏi được công diễn 2 lần vào năm 2023 tại Nhà thờ Kỳ Đồng - Giáo xứ Đức Mẹ Hằng Cứu Giúp - thuộc DCCT Sài Gòn; và tại Dòng Đức Bà Truyền Giáo. Vở ca kịch tái hiện lịch sử cứu độ và cuộc thương khó của Chúa Giê-su. Đây là vở ca kịch mà nhóm đã ấp ủ từ ngày thành lập, cũng là vở diễn tạo nên dấu mốc quan trọng trong hành trình 10 năm của Nhóm Ca Kịch - Đó là sự tái hợp và quay trở lại chính thức của Nhóm.',
     imageUrl: POSTER_CON_CHIEN,
-    images: [IMG_STAGE],
+    images: [IMG_STAGE, IMG_CON_CHIEN_KHONG_MOI_1, IMG_CON_CHIEN_KHONG_MOI_2, IMG_CON_CHIEN_KHONG_MOI_3], // nguồn ảnh: tập luyện & làm cảnh trí lần dựng 2014, ảnh Mỹ Kim
     youtubeUrl: 'https://www.youtube.com/watch?v=PHdGP26BlKU', // lần 2 (25/5/2023); bản Official DP_G2BCHo98 đang Unlisted — chờ Midu duyệt
     status: 'archived',
     date: '04.2023'
