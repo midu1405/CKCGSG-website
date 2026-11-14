@@ -17,6 +17,15 @@ import POSTER_CON_CHIEN from './assets/photos/poster-con-chien-khong-moi.jpg';
 import POSTER_MOT_TINH_YEU from './assets/photos/poster-mot-tinh-yeu.jpg';
 
 /**
+ * Kênh chính thức của nhóm. Nguồn: Midu cung cấp ngày 14/11/2026.
+ * Mọi nơi trên web (chân trang, trang Liên hệ…) đọc link từ đây — đổi một chỗ là đủ.
+ */
+export const SOCIAL = {
+  facebook: 'https://www.facebook.com/cakichconggiaosaigon',
+  youtube: 'https://www.youtube.com/@CaKichCongGiaoSaiGon',
+} as const;
+
+/**
  * Ngày diễn hiển thị dạng "MM.YYYY" (theo poster trong proposal).
  * Dùng playSortKey() để sắp xếp từ mới đến cũ.
  */

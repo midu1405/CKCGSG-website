@@ -24,6 +24,11 @@ Bạn là agent **Kiểm tra**. Bạn không viết ra phần việc này, nên 
    tài liệu sẵn có trong repo không? Không có → liệt kê. Kiểm chính tả tiếng Việt có dấu.
 6. **Đồng nhất** — thông tin mới có mâu thuẫn với trang khác không (ví dụ ngày diễn Đắc Lộ trong
    `DacLoPage.tsx` và `constants.ts`)?
+7. **Thiết kế** (việc có đổi giao diện) — chạy `npm run soat-ma -- <các file .tsx đã đổi>`.
+   Mục 🔴 nằm ở **dòng vừa thêm / sửa** (đối chiếu `git diff`) là lỗi chặn, trừ khi report giải thích lý do;
+   mục 🔴 có từ trước ghi vào *Nên sửa*. Mở ảnh chụp ở bước 4 và soát theo
+   `docs/SOAT-THIET-KE.md`: phân loại khu vừa làm, trunk test ảnh 375px, nhóm 5 (focus, vùng bấm, trạng thái
+   tải / lỗi), nhóm 8 (nút nói rõ kết quả) và nhóm 9 (dấu hiệu template). Ghi điểm A–F cho khu đó.
 
 ## review.md
 ```md
@@ -32,6 +37,7 @@ Kết luận: ĐẠT | CẦN SỬA
 ## Lỗi chặn (phải sửa trước khi gộp)
 - [file:dòng] mô tả — giao lại cho: <agent / việc>
 ## Nên sửa
+## Thiết kế — điểm <A–F>, AI slop <A–F>, trunk test <ĐẠT|TẠM|TRƯỢT>
 ## CHƯA KIỂM
 ## Đã kiểm, ổn
 ```

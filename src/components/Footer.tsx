@@ -2,6 +2,8 @@ import { Youtube, Mail } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import LOGO_IMG from '../assets/LOGO_MAIN_W.png';
 import { NAV_LINKS } from './Navbar';
+import { FacebookIcon } from './SocialIcons';
+import { SOCIAL } from '../constants';
 
 const Footer = () => {
   const { pathname } = useLocation();
@@ -29,8 +31,8 @@ const Footer = () => {
           <div className="text-gold uppercase tracking-[0.2em] text-xs font-bold mb-5">Kết nối</div>
           <ul className="space-y-3 text-sm text-white/60">
             <li><a href="mailto:ckcgsg@gmail.com" className="hover:text-gold transition-colors">ckcgsg@gmail.com</a></li>
-            <li><a href="https://www.facebook.com/CKCGSG" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">Facebook</a></li>
-            <li><a href="https://www.youtube.com/@CKCGSG" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">YouTube</a></li>
+            <li><a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">Facebook</a></li>
+            <li><a href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">YouTube</a></li>
           </ul>
         </div>
       </div>
@@ -39,9 +41,9 @@ const Footer = () => {
           © {new Date().getFullYear()} Nhóm Ca Kịch Công Giáo Sài Gòn
         </div>
         <div className="flex gap-8">
-          <a href="https://www.youtube.com/@CKCGSG" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-white/40 hover:text-gold transition-colors p-3 -m-3 inline-flex"><Youtube size={20} /></a>
-          <a href="https://www.facebook.com/CKCGSG" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white/40 hover:text-gold transition-colors p-3 -m-3 inline-flex">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
+          <a href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer" aria-label="Kênh YouTube của nhóm" className="text-white/40 hover:text-gold transition-colors p-3 -m-3 inline-flex"><Youtube size={20} /></a>
+          <a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer" aria-label="Trang Facebook của nhóm" className="text-white/40 hover:text-gold transition-colors p-3 -m-3 inline-flex">
+            <FacebookIcon />
           </a>
           <a href="mailto:ckcgsg@gmail.com" aria-label="Email" className="text-white/40 hover:text-gold transition-colors p-3 -m-3 inline-flex"><Mail size={20} /></a>
         </div>

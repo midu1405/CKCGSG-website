@@ -53,7 +53,11 @@ Các lệnh khác:
 npm run build      # đóng gói vào thư mục dist/
 npm run preview    # xem thử bản đã đóng gói
 npm run lint       # kiểm tra lỗi TypeScript
+npm run audit      # kiểm tra cả web bằng trình duyệt thật (lỗi, font, khổ màn hình)
+npm run soat-ma    # soát mã nguồn tìm mẫu template / thiếu focus (xem docs/SOAT-THIET-KE.md)
 ```
+
+Hệ thiết kế (màu, chữ, bo góc, chuyển động, điều không làm): [`DESIGN.md`](DESIGN.md).
 
 ## Cấu trúc thư mục
 
@@ -136,7 +140,7 @@ Wireframe desktop + mobile và thư viện ảnh nằm trong file Figma ở trê
 
 - Form liên hệ và ô đăng ký nhận tin Đắc Lộ chưa nối dịch vụ gửi (EmailJS / Google Sheets).
 - Ảnh thẻ Thiện nguyện và Thánh ca & hợp xướng còn là ảnh mẫu tạm.
-- Link YouTube của các vở đang là đường dẫn giữ chỗ.
+- Link YouTube của từng vở đang là đường dẫn giữ chỗ (kênh chính thức đã gắn ở chân trang và /lien-he).
 
 ---
 
